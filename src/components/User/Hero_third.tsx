@@ -1,6 +1,6 @@
 import React from 'react'
-import mapImg from '../../assets/mapImg.jpg'
-import overlapImg from '../../assets/overlapImg.avif'
+import mapImg from '../../assets/Images/mapImg.jpg'
+import overlapImg from '../../assets/Images/overlapImg.avif'
 
 
 function Hero_third() {

@@ -1,12 +1,12 @@
 import React from 'react'
-import heroImg from '../../assets/hero2.jpg'
-import overlapImg from '../../assets/overlapImg.avif'
+import heroImg from '../../assets/Images/hero2.jpg'
+import overlapImg from '../../assets/Images/overlapImg.avif'
 
 function Hero_second() {
   return (
     <div className='text-black bg-white'>
       <div className="max-w-6xl mx-auto px-4 py-8 md:flex md:items-center md:justify-between md:py-16">
-        <div className='md:w-1/2 md:pl-8 md:mt-0 mt-8 flex justify-center md:justify-start relative'>
+        <div className='md:w-1/2 md:pl-8 md:mt-0 mt-8 flex justify-center md:justify-start md:relative'>
           <img className="rounded-xl" style={{ width: '80%', maxWidth: '440px', height: 'auto' }} src={heroImg} alt="Image" />
           <img className="absolute top-48 left-96 w-1/2 rounded-xl md:block hidden" style={{ maxWidth: '140px', height: 'auto' }} src={overlapImg} alt="Overlapping Image" />
         </div>
