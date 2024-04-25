@@ -4,7 +4,7 @@ import overlapImg from '../../assets/Images/overlapImg.avif'
 
 function Hero_second() {
   return (
-    <div className='text-black bg-white'>
+    <div id='scroll' className='text-black bg-white'>
       <div className="max-w-6xl mx-auto px-4 py-8 md:flex md:items-center md:justify-between md:py-16">
         <div className='md:w-1/2 md:pl-8 md:mt-0 mt-8 flex justify-center md:justify-start md:relative'>
           <img className="rounded-xl" style={{ width: '80%', maxWidth: '440px', height: 'auto' }} src={heroImg} alt="Image" />

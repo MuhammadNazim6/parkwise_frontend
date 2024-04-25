@@ -10,7 +10,7 @@ function Hero() {
           <p className='text-black mt-4 md:text-lg p-5'>Welcome to our Parking Finder project! Say goodbye to circling the block endlessly—our intuitive app locates available parking spaces near you in seconds, making urban parking stress a thing of the past.</p>
           <div className="mx-24 md:mt-16 flex flex-col md:flex-row justify-between ">
             <button className='md:bg-blue-500 hover:text-blue-900 md:hover:bg-blue-700  border-black md:text-white font-bold px-4 py-2 md:rounded'>Get started</button>
-            <button className=' md:hover:bg-amber-100 hover:text-blue-900 md:hover:border-black md:border border-black md:border-black md:text-black font-bold py-2 px-4 rounded p-3'>How it works</button>
+            <button className=' md:hover:bg-amber-100 hover:text-blue-900 md:hover:border-black md:border border-black md:border-black md:text-black font-bold py-2 px-4 rounded p-3'><a href='#scroll'>How it works </a></button>
           </div>
         </div>
         <div className='md:w-1/2 md:pl-8 md:mt-0 mt-8'>

@@ -5,7 +5,7 @@ import { FaGoogle } from 'react-icons/fa';
 export default function SignupForm(props) {
   return (
     <div className='bg-white p-10 lg:border-0 border-2 border-gray-200'>
-      <h1 className='text-4xl font-semibold '>Create Account</h1>
+      <h1 className='text-4xl font-semibold '>Provider Signup</h1>
       <p className='font-medium text-lg text-gray-500 mt-4 tracking-wide'>Please enter your details.</p>
       <div className='mt-8 '>
         <div className="">
@@ -22,7 +22,7 @@ export default function SignupForm(props) {
         </div>
        
         <div className='mt-8 flex flex-col gap-y-4'>
-          <button className='active:scale-[.98] active:duration-75 transition-all hover:scale-[1.01] ease-in-out py-4 rounded-xl bg-secondary-blue text-white text-lg font-bold w-96'>Sign up</button>
+          <button className='active:scale-[.98] active:duration-75 transition-all hover:scale-[1.01] ease-in-out py-4 rounded-xl bg-secondary-provider text-white text-lg font-bold w-96'>Sign up</button>
           <button className='flex items-center justify-center gap-2 active:scale-[.98] active:duration-75 transition-all hover:scale-[1.01] ease-in-out py-3 border-2 border-gray-100 rounded-xl'><FaGoogle/>  Sign up with Google</button>
         </div>
         <div className="mt-8 flex justify-center items-center">

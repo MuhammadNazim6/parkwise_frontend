@@ -43,6 +43,11 @@ function Navbar() {
         <Link to='/user/login'>
           <li className='p-4 cursor-pointer text-lg w-28'>Signin</li>
         </Link>
+        <Link className='bg-secondary-blue w-48 p-1 text-white font-semibold rounded-md flex justify-center items-center tracking-normal' to='/provider/login'>
+        <button className=''>
+        List your property / Login as provider
+        </button>
+        </Link>
 
       </ul>
       <div onClick={handleNav} className='block md:hidden '>
@@ -52,10 +57,11 @@ function Navbar() {
         <h1 className='w-full text-3xl font-bold m-8 text-white'><img className='w-40 cursor-pointer' src={LogoImgBlack} /></h1>
 
         <ul className='uppercase p-4'>
-          <li className='p-4 border-t-2'>Home</li>
-          <li className='p-4 border-t-2'>Find spots</li>
-          <li className='p-4 border-t-2'>About</li>
-          <li className='p-4 border-t-2'>Signin</li>
+        <li className='p-4 border-t-2'><Link to="/">Home</Link></li>
+      <li className='p-4 border-t-2'><Link to="/find_spots">Find spots</Link></li>
+      <li className='p-4 border-t-2'><Link to="/about">About</Link></li>
+      <li className='p-4 border-t-2'><Link to="user/login">Signin</Link></li>
+      <li className='p-4 border-t-2 capitalize'><Link to="/provider/login">List your property / Sign in as a provider</Link></li>
         </ul>
       </div>
     </div>
