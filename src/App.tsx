@@ -5,6 +5,7 @@ import Login_Signup from './screens/Users/Login_Signup';
 import Login_SignupProvider from './screens/Provider/Login_SignupProvider';
 import Login_Admin from './screens/Admin/Login_Admin';
 import EmailVerification from './screens/Common/EmailVerification';
+import FindSpots from './screens/Users/FindSpots';
 import './App.css';
 
 function App() {
@@ -22,6 +23,7 @@ function App() {
         <Route path='/provider/forgotpassword' element={<Login_SignupProvider/>} />
         <Route path='/admin/login' element={<Login_Admin/>} />
         <Route path='/email' element={<EmailVerification/>} />
+        <Route path='/find' element={<FindSpots/>} />
       </Routes>
     </Router>
   )

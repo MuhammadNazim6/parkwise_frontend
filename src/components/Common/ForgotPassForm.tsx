@@ -16,13 +16,13 @@ const location = useLocation()
       <p className='font-medium text-lg text-gray-500 mt-4 tracking-wide'>Dont worry we can help.</p>
       <div className='mt-8 '>
         <div className="">
-          <label className='text-lg font-medium tracking-wide'>Enter you email</label>
+          <label className='text-lg font-medium tracking-wide'>Enter your email</label>
           <input className='w-full border-2 border-gray-100 rounded-xl p-4 mt-1 bg-transparent' placeholder='Enter your email' type="text" />
         </div>
-        <div className="">
-          <label className='text-lg font-medium tracking-wide' >Password</label>
+        {/* <div className="">
+          <label className='text-lg font-medium tracking-wide' >OTP</label>
           <input className='w-full border-2 border-gray-100 rounded-xl p-4 mt-1 bg-transparent' placeholder='Enter your password' type="password" />
-        </div>
+        </div> */}
         <div className="mt-8 flex justify-between items-center">
           <div className="">
           </div>
