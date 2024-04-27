@@ -4,6 +4,7 @@ import LandingPage from './screens/Users/LandingPage';
 import Login_Signup from './screens/Users/Login_Signup';
 import Login_SignupProvider from './screens/Provider/Login_SignupProvider';
 import Login_Admin from './screens/Admin/Login_Admin';
+import EmailVerification from './screens/Common/EmailVerification';
 import './App.css';
 
 function App() {
@@ -15,9 +16,12 @@ function App() {
         <Route path='/home' />
         <Route path='/user/login' element={<Login_Signup/>}/>
         <Route path='/user/signup' element={<Login_Signup/>} />
+        <Route path='/user/forgotpassword' element={<Login_Signup/>} />
         <Route path='/provider/login' element={<Login_SignupProvider/>} />
         <Route path='/provider/signup' element={<Login_SignupProvider/>} />
+        <Route path='/provider/forgotpassword' element={<Login_SignupProvider/>} />
         <Route path='/admin/login' element={<Login_Admin/>} />
+        <Route path='/email' element={<EmailVerification/>} />
       </Routes>
     </Router>
   )

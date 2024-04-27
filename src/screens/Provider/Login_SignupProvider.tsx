@@ -1,21 +1,30 @@
 import React, { useState } from 'react';
-import LoginForm from '../../components/Provider/LoginForm'
+import LoginForm from '../../components/Provider/LoginForm';
 import SignupForm from '../../components/Provider/SignupForm';
+import ForgotPassForm from '../../components/Common/ForgotPassForm';
 import LogoImg from "../../assets/Images/parkwise-high-resolution-logo-white-transparent.png";
 import { useNavigate } from 'react-router-dom';
 
 
 interface MyComponentProps {
   toggleFn: () => void;
+  togglePasswordFn: () => void;
 }
 function Login_SignupProvider() {
 
   const navigate = useNavigate()
   const [toggleLogin, setToggleLogin] = useState(true)
+  const [toggleFPassword, setToggleFPassword] = useState(false)
+
   const toggleFn = () => {
     setToggleLogin(!toggleLogin)
     toggleLogin ? navigate('/provider/signup') : navigate('/provider/login')
   }
+  const togglePasswordFn = () =>{
+    setToggleFPassword(!toggleFPassword)
+    navigate('/provider/forgotpassword')
+  }
+
   return (
     <div className='flex w-full h-screen lg:bg-primary-provider'>
       <div className="hidden relative lg:flex h-full w-1/2 items-center justify-center">
@@ -31,7 +40,8 @@ function Login_SignupProvider() {
         </div>
       </div>
       <div className="w-full flex items-center justify-center lg:w-1/2 bg-white m-2 mr-0 rounded-l-3xl overflow-hidden">
-        {toggleLogin ? <LoginForm toggleFn={toggleFn} /> : <SignupForm toggleFn={toggleFn} />}
+        {toggleFPassword ? <ForgotPassForm togglePasswordFn={togglePasswordFn}/> : (toggleLogin ? <LoginForm toggleFn={toggleFn} togglePasswordFn={togglePasswordFn}/> : <SignupForm toggleFn={toggleFn} />)}
+
       </div>
     </div>
   )

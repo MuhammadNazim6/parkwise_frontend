@@ -4,7 +4,6 @@ import { FaGoogle } from 'react-icons/fa';
 
 export default function LoginForm(props) {
   return (
-    // border-2 border-gray-200
     <div className='bg-white p-10 lg:border-0 border-2 border-gray-200'>
       <h1 className='text-4xl font-semibold '>Provider Login</h1>
       <p className='font-medium text-lg text-gray-500 mt-4 tracking-wide'>Please enter your details.</p>
@@ -20,7 +19,7 @@ export default function LoginForm(props) {
         <div className="mt-8 flex justify-between items-center">
           <div className="">
           </div>
-          <button className='font-medium text-base text-secondary-blue hover:scale-[1.02]'>Forgot password?</button>
+          <button onClick={props.togglePasswordFn} className='font-medium text-base text-secondary-blue hover:scale-[1.02]'>Forgot password?</button>
         </div>
         <div className='mt-8 flex flex-col gap-y-4'>
           <button className='active:scale-[.98] active:duration-75 transition-all hover:scale-[1.01] ease-in-out py-4 rounded-xl bg-secondary-provider text-white text-lg font-bold w-96'>Sign in</button>
