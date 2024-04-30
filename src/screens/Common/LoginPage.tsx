@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import LoginForm from '../../components/User/LoginForm';
-import SignupForm from '../../components/User/SignupForm';
+import LoginForm from '../../components/Common/LoginForm';
 import LogoImg from "../../assets/Images/parkwise-high-resolution-logo-transparent.png";
 import { useNavigate } from 'react-router-dom';
 
@@ -9,7 +8,7 @@ interface MyComponentProps {
   toggleFn: () => void;
   togglePasswordFn: () => void;
 }
-function Login_Signup() {
+function LoginPage() {
 
   const navigate = useNavigate()
   const [toggleLogin, setToggleLogin] = useState(true)
@@ -17,7 +16,7 @@ function Login_Signup() {
     setToggleLogin(!toggleLogin)
     toggleLogin ? navigate('/user/signup') : navigate('/user/login')
   }
-  
+
   return (
     <div className='flex w-full h-screen lg:bg-primary-blue'>
       <div className="hidden relative lg:flex h-full w-1/2 items-center justify-center">
@@ -32,10 +31,10 @@ function Login_Signup() {
         </div>
       </div>
       <div className="w-full flex items-center justify-center lg:w-1/2 bg-white m-2 mr-0 rounded-l-3xl overflow-hidden">
-      {toggleLogin ? <LoginForm toggleFn={toggleFn} /> : <SignupForm toggleFn={toggleFn} />}
+        <LoginForm />
       </div>
     </div>
   )
 }
 
-export default Login_Signup
+export default LoginPage

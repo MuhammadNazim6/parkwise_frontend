@@ -1,6 +1,6 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
-import Login_Signup from '../screens/Users/Login_Signup';
+import LoginPage from '../screens/Common/LoginPage';
 import UserSignup from '../screens/Users/UserSignup';
 import LandingPage from '../screens/Users/LandingPage';
 import EmailVerification from '../screens/Users/EmailVeriyUser';
@@ -11,7 +11,7 @@ function UserRoutes() {
   return (
     <Routes>
       <Route path='/' element={<LandingPage />} />
-      <Route path='user/login' element={<Login_Signup />} />
+      <Route path='/login' element={<LoginPage />} />
       <Route path='user/signup' element={<UserSignup />} />
       <Route path='user/forgotpassword' element={<ForgotPassword />} />
       <Route path='user/email-verify' element={<EmailVerification />} />

@@ -8,7 +8,6 @@ import Loader from '../../components/Common/Loader'
 import { setCredentials, setEmailInfo } from '../../slices/authSlice';
 import { toast } from '../../script/toast'
 
-// import { Button } from "../../../@/components/ui/button"
 
 export default function SignupForm(props) {
 
@@ -109,7 +108,6 @@ export default function SignupForm(props) {
         </div>
 
         <div className='mt-4 gap-y-4 flex justify-center items-center'>
-        <Button variant="outline">Button</Button>
 
           {loading ? <div><Loader /></div> : <button className='active:scale-[.98] active:duration-75 transition-all hover:scale-[1.01] ease-in-out rounded-xl bg-secondary-blue text-white text-lg font-bold w-1/2 h-11' onClick={submitHandler}>Sign up</button>}
         </div>

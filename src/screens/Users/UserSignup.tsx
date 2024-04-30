@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import LoginForm from '../../components/User/LoginForm';
+import LoginForm from '../../components/Common/LoginForm';
 import SignupForm from '../../components/User/SignupForm';
 import LogoImg from "../../assets/Images/parkwise-high-resolution-logo-transparent.png";
 import { useNavigate } from 'react-router-dom';

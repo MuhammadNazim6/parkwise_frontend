@@ -56,7 +56,7 @@ function EmailVeriyUser(props) {
     const checkOtp = await check(data)
     console.log(checkOtp);
     
-    if(checkOtp){
+    if(checkOtp?.data?.success){
       const res = await register(emailInfo).unwrap();
       dispatch(setProviderCredentials({ ...res }))
       toast('success', 'Registered successfully')
