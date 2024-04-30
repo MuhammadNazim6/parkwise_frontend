@@ -41,12 +41,12 @@ function Navbar() {
         </Link>
         {userInfo ? (
           <li className='p-4 cursor-pointer text-lg w-28' onClick={handleLogout}>Logout</li>
-        ) : (<Link to='/user/login'>
+        ) : (<Link to='/login'>
           <li className='p-4 cursor-pointer text-lg w-28'>Signin</li>
         </Link>)}
         <Link className='bg-secondary-blue w-48 p-1 text-white font-semibold rounded-md flex justify-center items-center tracking-normal' to='/provider/login'>
           <button className=''>
-            List your property / Login as provider
+          List your property
           </button>
         </Link>
 
@@ -63,7 +63,7 @@ function Navbar() {
           <li className='p-4 border-t-2'><Link to="/find_spots">Find spots</Link></li>
           <li className='p-4 border-t-2'><Link to="/about">About</Link></li>
           <li className='p-4 border-t-2'>{userInfo ? (<span>Logout</span>) : (<Link to="user/login">Signin</Link>)}</li>
-          <li className='p-4 border-t-2 capitalize'><Link to="/provider/login">List your property / Sign in as a provider</Link></li>
+          <li className='p-4 border-t-2 capitalize'><Link to="/provider/login">List your property</Link></li>
         </ul>
       </div>
     </div>

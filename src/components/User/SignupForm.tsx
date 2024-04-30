@@ -4,7 +4,7 @@ import { FaGoogle } from 'react-icons/fa';
 import { useNavigate, Link } from 'react-router-dom';
 import { useRegisterMutation, useUserVerificationMutation } from '../../slices/userApiSlice';
 import { useSelector, useDispatch } from 'react-redux';
-import Loader from '../../components/Common/Loader'
+import {Loader} from '../Common/BootstrapElems'
 import { setCredentials, setEmailInfo } from '../../slices/authSlice';
 import { toast } from '../../script/toast'
 

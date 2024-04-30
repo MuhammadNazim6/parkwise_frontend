@@ -4,18 +4,32 @@ import { useNavigate, Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useState, useEffect } from "react";
 import { useLoginMutation } from "../../slices/userApiSlice";
+import { useProviderLoginMutation } from "../../slices/providerSlice";
 import { setCredentials } from "../../slices/authSlice";
+import { setProviderCredentials } from "../../slices/authSlice";
 import { toast } from "../../script/toast";
+import { FaEyeSlash, FaEye } from "react-icons/fa";
+import { Loader } from '../Common/BootstrapElems'
+
 
 export default function LoginForm(props) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [role, setRole] = useState("");
+  const [role, setRole] = useState('user');
+  const [emailError, setEmailError] = useState('')
+  const [commonError, setCommonError] = useState('')
+  const [showPassword, setShowPassword] = useState(true);
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const [login, { isLoading }] = useLoginMutation();
+  const [login, { isLoading: loginLoading }] = useLoginMutation();
+  const [providerLogin, { isLoading: providerLoginLoading }] = useProviderLoginMutation();
+
   const { userInfo } = useSelector((state) => state.auth);
 
   useEffect(() => {
@@ -27,27 +41,41 @@ export default function LoginForm(props) {
   const submitHandler = async (e) => {
     try {
       e.preventDefault();
+      setEmailError('')
+      setCommonError('')
       const emailRegex = /^\S+@\S+\.\S+$/;
       const passwordRegex =
         /^(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?])(?=.*[a-zA-Z0-9]).{6,}$/;
-      if (!email || !password) {
-        toast("error", "All fields should be filled");
-      } else if (!email.match(emailRegex)) {
-        toast("error", "Invalid username or password");
-      } else if (!password.match(passwordRegex)) {
-        toast("error", "Incorrect username or password");
+
+      if (!email.match(emailRegex) || !password.match(passwordRegex)) {
+        if (!email) {
+          setEmailError('Email field can\'t be empty')
+        }else if (!email.match(emailRegex)) {
+          setEmailError('Enter a valid email')
+        }
+        if (!password) {
+          setCommonError('Password can\'t be empty ')
+        }else if (!password.match(passwordRegex)) {
+          setCommonError('Incorrect username or password')
+        }
       } else {
         const formData = {
           email,
           password,
         };
-        const res = await login(formData).unwrap();
-        dispatch(setCredentials({ ...res }));
-        toast("success", res.message);
-        navigate("/");
+        if (role === 'user') {
+          const res = await login(formData).unwrap();
+          dispatch(setCredentials({ ...res }));
+          navigate("/");
+        } else {
+          const res = await providerLogin(formData).unwrap();
+          dispatch(setProviderCredentials({ ...res }));
+          navigate("/provider");
+        }
+
       }
     } catch (err) {
-      toast("error", "Incorrect username or password");
+      setCommonError('Incorrect username or password')
     }
   };
 
@@ -68,7 +96,7 @@ export default function LoginForm(props) {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
-            <p className="text-red-400 pl-2">Please enter a valid email</p>
+            {emailError && <p className="text-red-400 pl-2">{emailError}</p>}
           </div>
           <div className="mt-2 h-24">
             <label className="text-lg font-medium tracking-wide">
@@ -82,20 +110,38 @@ export default function LoginForm(props) {
               <option value="user">User</option>
               <option value="provider">Provider</option>
             </select>
-            
+
           </div>
           <div className="mt-2 h-24">
             <label className="text-lg font-medium tracking-wide">
               Password
             </label>
-            <input
-              className="w-full border-2 border-gray-300 rounded-xl p-4 mt-1 bg-transparent h-12"
-              placeholder="Enter your password"
-              type="radiobox"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-           <p className="text-red-400 pl-2">Incorrect email or password</p>
+            <button
+              type="button"
+              onClick={togglePasswordVisibility}
+              className="absolute top-1/2 right-0 transform -translate-y-1/2 px-2 border-l flex items-center"
+            >
+
+            </button>
+            <div className="relative">
+              <input
+                className="w-full border-2 border-gray-300 rounded-xl p-4 mt-1 bg-transparent h-12"
+                placeholder="Enter your password"
+                type={showPassword ? "password" : "text"}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+              <button
+                type="button"
+                onClick={togglePasswordVisibility}
+                className="absolute text-2xl inset-y-7 right-2 flex items-center px-2 "
+              >
+
+                {showPassword ? (< FaEye/>) : (<FaEyeSlash />)}
+              </button>
+            </div>
+
+            {commonError && <p className="text-red-400 pl-2">{commonError}</p>}
 
           </div>
 
@@ -113,12 +159,17 @@ export default function LoginForm(props) {
             </Link>
           </div>
           <div className="mt-4 gap-y-4 flex justify-center items-center">
-            <button
-              type="submit"
-              className="active:scale-[.98] active:duration-75 transition-all hover:scale-[1.01] ease-in-out rounded-xl bg-secondary-blue text-white text-lg font-bold w-11/12 h-11"
-            >
-              Sign in
-            </button>
+            {loginLoading || providerLoginLoading ? (
+              <Loader />
+            ) : (
+              <button
+                type="submit"
+                className="active:scale-[.98] active:duration-75 transition-all hover:scale-[1.01] ease-in-out rounded-xl bg-secondary-blue text-white text-lg font-bold w-11/12 h-11"
+              >
+                Sign in
+              </button>
+            )}
+
           </div>
         </form>
 

@@ -7,7 +7,7 @@ import {
   useProviderVerificationMutation
 } from '../../slices/providerSlice';
 import { useSelector, useDispatch } from 'react-redux';
-import Loader from '../Common/Loader';
+import Loader from '../Common/BootstrapElems';
 import { setProviderCredentials, setEmailInfo } from '../../slices/authSlice';
 import { toast } from '../../script/toast'
 
