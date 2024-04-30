@@ -6,7 +6,6 @@ export interface UserInfo {
   mobile?: number;
   profile_img?: string;
   password?: string;
-  createdAt: string;
 }
 
 export interface AdminInfo {
@@ -49,7 +48,7 @@ const authSlice = createSlice({
   name: 'auth',
   initialState,
   reducers: {
-    setCredential: (state, action) => {
+    setCredentials: (state, action) => {
       state.userInfo = action.payload;
       localStorage.setItem('userInfo', JSON.stringify(action.payload))
     },
@@ -57,7 +56,7 @@ const authSlice = createSlice({
       state.userInfo = null;
       localStorage.removeItem('userInfo')
     },
-    setProviderCredential: (state, action) => {
+    setProviderCredentials: (state, action) => {
       state.providerInfo = action.payload;
       localStorage.setItem("providerInfo", JSON.stringify(action.payload));
     },
@@ -75,17 +74,26 @@ const authSlice = createSlice({
       state.adminInfo = null;
       localStorage.removeItem("adminInfo");
     },
+    setEmailInfo: (state,action)=>{
+      state.emailInfo = action.payload;
+      localStorage.setItem('emailInfo',JSON.stringify(action.payload))
+    },
+
+    getEmailInfo:(state)=>{
+
+    }
 
   }
 })
 
 export const {
-  setCredential,
+  setCredentials,
   userLogout,
-  setProviderCredential,
+  setProviderCredentials,
   providerLogout,
   setAdminCredentials,
   adminLogout,
+  setEmailInfo
 
 } = authSlice.actions;
 

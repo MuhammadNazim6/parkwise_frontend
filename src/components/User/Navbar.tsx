@@ -1,32 +1,31 @@
 import React, { useState } from 'react'
-import { Link } from 'react-router-dom';
-// import {
-//   NavbarContainer,
-//   LeftContainer,
-//   RightContainer,
-//   NavbarInnerContainer,
-//   NavbarExtendedContainer,
-//   NavbarLinkContainer,
-//   NavbarLink,
-//   Logo,
-//   OpenLinkButton,
-//   NavbarLinkExtended,
-//   NavbarButton
-// } from '../styles/Navbar.style';
+import { Link, useNavigate } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
 
-import LogoImg1 from "../../assets/Images/Plogo.png";
 import LogoImg from "../../assets/Images/parkwise-high-resolution-logo-transparent.png";
 import LogoImgBlack from "../../assets/Images/parkwise-high-resolution-logo-black-transparent.png";
 import { AiOutlineClose, AiOutlineMenu } from 'react-icons/ai';
+import { useLogoutMutation } from '../../slices/userApiSlice';
+import { userLogout } from '../../slices/authSlice';
+
+
 
 
 function Navbar() {
-  // const [extendNavbar, setExtendNavbar] = useState(false)
+
   const [nav, setNav] = useState(true)
   const handleNav = () => {
     setNav(!nav)
   }
-
+  const { userInfo } = useSelector((state) => state.auth)
+  const [logout, { isLoading }] = useLogoutMutation()
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
+  const handleLogout = async () => {
+    const res = await logout();
+    dispatch(userLogout())
+    navigate('/')
+  }
   return (
     <div className='flex justify-between items-center h-24 max-w-[1240px] mx-auto px-4  text-black'>
       <h1 className='w-full text-3xl font-bold'><img className='w-40 cursor-pointer' src={LogoImg} /></h1>
@@ -40,14 +39,17 @@ function Navbar() {
         <Link to='/about'>
           <li className='p-4 cursor-pointer text-lg w-28'>About</li>
         </Link>
-        <Link to='/user/login'>
+        {userInfo ? (
+          <li className='p-4 cursor-pointer text-lg w-28' onClick={handleLogout}>Logout</li>
+        ) : (<Link to='/user/login'>
           <li className='p-4 cursor-pointer text-lg w-28'>Signin</li>
-        </Link>
+        </Link>)}
         <Link className='bg-secondary-blue w-48 p-1 text-white font-semibold rounded-md flex justify-center items-center tracking-normal' to='/provider/login'>
-        <button className=''>
-        List your property / Login as provider
-        </button>
+          <button className=''>
+            List your property / Login as provider
+          </button>
         </Link>
+
 
       </ul>
       <div onClick={handleNav} className='block md:hidden '>
@@ -57,43 +59,15 @@ function Navbar() {
         <h1 className='w-full text-3xl font-bold m-8 text-white'><img className='w-40 cursor-pointer' src={LogoImgBlack} /></h1>
 
         <ul className='uppercase p-4'>
-        <li className='p-4 border-t-2'><Link to="/">Home</Link></li>
-      <li className='p-4 border-t-2'><Link to="/find_spots">Find spots</Link></li>
-      <li className='p-4 border-t-2'><Link to="/about">About</Link></li>
-      <li className='p-4 border-t-2'><Link to="user/login">Signin</Link></li>
-      <li className='p-4 border-t-2 capitalize'><Link to="/provider/login">List your property / Sign in as a provider</Link></li>
+          <li className='p-4 border-t-2'><Link to="/">Home</Link></li>
+          <li className='p-4 border-t-2'><Link to="/find_spots">Find spots</Link></li>
+          <li className='p-4 border-t-2'><Link to="/about">About</Link></li>
+          <li className='p-4 border-t-2'>{userInfo ? (<span>Logout</span>) : (<Link to="user/login">Signin</Link>)}</li>
+          <li className='p-4 border-t-2 capitalize'><Link to="/provider/login">List your property / Sign in as a provider</Link></li>
         </ul>
       </div>
     </div>
 
-
-    // <NavbarContainer extendNavbar={extendNavbar}>
-    //   <NavbarInnerContainer>
-    //     <LeftContainer>
-
-    //       <NavbarLinkContainer>
-    //         <NavbarLink to='/'> Home </NavbarLink>
-    //         <NavbarLink to='/findSpots' > Find spots </NavbarLink>
-    //         <NavbarLink to='/about' > About </NavbarLink>
-    //         <NavbarLink to='/signup' > Profile </NavbarLink>
-    //         <OpenLinkButton onClick={() => setExtendNavbar((curr) => !curr)}>
-    //           {extendNavbar ? <>&#10005;</> : <>&#8801;</>}
-    //         </OpenLinkButton>
-    //       </NavbarLinkContainer>
-    //     </LeftContainer>
-    //     <RightContainer>
-    //         <NavbarButton>List your properties / Login </NavbarButton>
-    //       <Logo src={LogoImg}></Logo>
-    //     </RightContainer>
-    //   </NavbarInnerContainer>
-    //   {extendNavbar && (<NavbarExtendedContainer>
-    //     <NavbarLinkExtended to=''> Home </NavbarLinkExtended>
-    //     <NavbarLinkExtended to=''> Find spots </NavbarLinkExtended>
-    //     <NavbarLinkExtended to=''> About </NavbarLinkExtended>
-    //     <NavbarLinkExtended to=''> Profile </NavbarLinkExtended>
-    //     <NavbarLinkExtended to=''> List your properties / Login </NavbarLinkExtended>
-    //   </NavbarExtendedContainer>)}
-    // </NavbarContainer>
   )
 }
 

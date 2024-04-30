@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import LoginForm from '../../components/Admin/LoginForm';
+import LoginForm from '../../components/Provider/LoginForm';
 import LogoImg from "../../assets/Images/parkwise-high-resolution-logo-white-transparent.png";
 import { useNavigate } from 'react-router-dom';
 
@@ -10,8 +10,11 @@ interface MyComponentProps {
 }
 function LoginProvider() {
 
+  const navigate = useNavigate()
+
+
   return (
-    <div className='flex w-full h-screen lg:bg-primary-admin'>
+    <div className='flex w-full h-screen lg:bg-primary-provider'>
       <div className="hidden relative lg:flex h-full w-1/2 items-center justify-center">
         <div className="flex flex-col">
           <div className="p-32">
