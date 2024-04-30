@@ -10,6 +10,7 @@ import { setProviderCredentials } from "../../slices/authSlice";
 import { toast } from "../../script/toast";
 import { FaEyeSlash, FaEye } from "react-icons/fa";
 import { Loader } from '../Common/BootstrapElems'
+import { Button } from "../ui/button";
 
 
 export default function LoginForm(props) {
@@ -49,13 +50,13 @@ export default function LoginForm(props) {
 
       if (!email.match(emailRegex) || !password.match(passwordRegex)) {
         if (!email) {
-          setEmailError('Email field can\'t be empty')
-        }else if (!email.match(emailRegex)) {
+          setEmailError('Email is required')
+        } else if (!email.match(emailRegex)) {
           setEmailError('Enter a valid email')
         }
         if (!password) {
-          setCommonError('Password can\'t be empty ')
-        }else if (!password.match(passwordRegex)) {
+          setCommonError('Password is required')
+        } else if (!password.match(passwordRegex)) {
           setCommonError('Incorrect username or password')
         }
       } else {
@@ -116,13 +117,12 @@ export default function LoginForm(props) {
             <label className="text-lg font-medium tracking-wide">
               Password
             </label>
-            <button
+            {/* <button
               type="button"
               onClick={togglePasswordVisibility}
               className="absolute top-1/2 right-0 transform -translate-y-1/2 px-2 border-l flex items-center"
             >
-
-            </button>
+            </button> */}
             <div className="relative">
               <input
                 className="w-full border-2 border-gray-300 rounded-xl p-4 mt-1 bg-transparent h-12"
@@ -137,7 +137,7 @@ export default function LoginForm(props) {
                 className="absolute text-2xl inset-y-7 right-2 flex items-center px-2 "
               >
 
-                {showPassword ? (< FaEye/>) : (<FaEyeSlash />)}
+                {showPassword ? (< FaEye />) : (<FaEyeSlash />)}
               </button>
             </div>
 
@@ -180,12 +180,13 @@ export default function LoginForm(props) {
         </div>
         <div className="mt-8 flex justify-center items-center">
           <p className="font-medium text-base">Don't have an account?</p>
-          <button
-            className="text-secondary-blue text-base font-medium ml-2 hover:scale-[1.02]"
-            onClick={props.toggleFn}
-          >
-            Sign up
-          </button>
+          <Link to='/user/signup'>
+            <button
+              className="text-secondary-blue text-base font-medium ml-2 hover:scale-[1.02]"
+            >
+              Sign up
+            </button>
+          </Link>
         </div>
       </div>
     </div>

@@ -2,7 +2,7 @@ import React, { useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from '../../script/toast';
 import { useRegisterMutation, useUserCheckOtpMutation } from '../../slices/userApiSlice';
-import { setProviderCredentials } from '../../slices/authSlice';
+import { setCredentials, setProviderCredentials } from '../../slices/authSlice';
 import { useNavigate } from 'react-router-dom';
 
 function EmailVeriyUser(props) {
@@ -58,7 +58,7 @@ function EmailVeriyUser(props) {
     
     if(checkOtp?.data?.success){
       const res = await register(emailInfo).unwrap();
-      dispatch(setProviderCredentials({ ...res }))
+      dispatch(setCredentials({ ...res }))
       toast('success', 'Registered successfully')
       navigate('/')
     }else{
