@@ -10,7 +10,7 @@ export interface UserInfo {
 
 export interface AdminInfo {
   email: string;
-  password: string;
+  password?: string;
   name: string;
 }
 

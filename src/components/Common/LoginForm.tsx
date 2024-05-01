@@ -5,15 +5,20 @@ import { useDispatch, useSelector } from "react-redux";
 import { useState, useEffect } from "react";
 import { useLoginMutation } from "../../slices/userApiSlice";
 import { useProviderLoginMutation } from "../../slices/providerSlice";
+import { useUserSignGoogleMutation } from "../../slices/userApiSlice";
 import { setCredentials } from "../../slices/authSlice";
 import { setProviderCredentials } from "../../slices/authSlice";
-import { toast } from "../../script/toast";
 import { FaEyeSlash, FaEye } from "react-icons/fa";
 import { Loader } from '../Common/BootstrapElems'
-import { Button } from "../ui/button";
+import { GoogleLogin, GoogleLogout } from 'react-google-login';
+import { gapi } from 'gapi-script';
+
 
 
 export default function LoginForm(props) {
+  const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
+  const apiKey = import.meta.env.VITE_GOOGLE_API_KEY;
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [role, setRole] = useState('user');
@@ -29,6 +34,7 @@ export default function LoginForm(props) {
   const dispatch = useDispatch();
 
   const [login, { isLoading: loginLoading }] = useLoginMutation();
+  const [sign] = useUserSignGoogleMutation()
   const [providerLogin, { isLoading: providerLoginLoading }] = useProviderLoginMutation();
 
   const { userInfo } = useSelector((state) => state.auth);
@@ -39,6 +45,48 @@ export default function LoginForm(props) {
     }
   }, [navigate, userInfo]);
 
+  // GOOGLE AUTH
+  const onSuccess = async (res) => {
+    console.log('Login successs, ', res.profileObj);
+    const googleUserData = {
+      name: res.profileObj.name,
+      email: res.profileObj.email,
+      mobile: 0,
+      password: res.profileObj.googleId,
+      google: true
+    }
+
+    try {
+      const signed = await sign(googleUserData)
+      if (signed.data.success) {
+        console.log(googleUserData);
+        dispatch(setCredentials({ ...googleUserData }))
+        navigate('/')
+      } else {
+        alert('Try another login method')
+      }
+    } catch (error) {
+      console.log('CATCH: Some error occured while signing');
+      setCommonError('Some error occured while signing')
+    }
+  }
+
+  const onFailure = (res) => {
+    console.log('Login failed, ', res);
+  }
+ 
+
+  useEffect(() => {
+    function start() {
+      gapi.client.init({
+        clientId: clientId,
+        scope: ""
+      })
+    }
+    gapi.load('client:auth2', start)
+  })
+
+// END  ---------
   const submitHandler = async (e) => {
     try {
       e.preventDefault();
@@ -174,9 +222,19 @@ export default function LoginForm(props) {
         </form>
 
         <div className="mt-4 gap-y-4 flex justify-center items-center">
-          <button className="flex justify-center items-center p-3 gap-2 active:scale-[.98] active:duration-75 transition-all hover:scale-[1.01] ease-in-out py-3 border-2 border-blue-300 rounded-xl h-11 w-11/12">
+          {/* <button className="flex justify-center items-center p-3 gap-2 active:scale-[.98] active:duration-75 transition-all hover:scale-[1.01] ease-in-out py-3 border-2 border-blue-300 rounded-xl h-11 w-11/12">
             <FaGoogle /> Sign in with Google
-          </button>
+          </button> */}
+          <div id='signInButton'>
+            <GoogleLogin
+              clientId={clientId}
+              buttonText="Login with Google"
+              onSuccess={onSuccess}
+              onFailure={onFailure}
+              cookiePolicy={'single_host_origin'}
+              isSIgnedIn={true}
+            />
+          </div>
         </div>
         <div className="mt-8 flex justify-center items-center">
           <p className="font-medium text-base">Don't have an account?</p>

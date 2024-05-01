@@ -2,16 +2,20 @@ import * as React from 'react';
 import { useState, useEffect, useRef } from 'react';
 import { FaGoogle } from 'react-icons/fa';
 import { useNavigate, Link } from 'react-router-dom';
-import { useRegisterMutation, useUserVerificationMutation } from '../../slices/userApiSlice';
+import { useRegisterMutation, useUserVerificationMutation, useUserSignGoogleMutation } from '../../slices/userApiSlice';
 import { useSelector, useDispatch } from 'react-redux';
 import { Loader } from '../Common/BootstrapElems'
 import { FaEyeSlash, FaEye } from "react-icons/fa";
 import { setCredentials, setEmailInfo } from '../../slices/authSlice';
 import { toast } from '../../script/toast'
+import { GoogleLogin, GoogleLogout } from 'react-google-login';
+import { gapi } from 'gapi-script';
 
 
 export default function SignupForm(props) {
-
+  
+  const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
+  const apiKey = import.meta.env.VITE_GOOGLE_API_KEY;
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [mobile, setMobile] = useState("");
@@ -27,6 +31,16 @@ export default function SignupForm(props) {
   const [showPassword, setShowPassword] = useState(false);
   const [showCPassword, setShowCPassword] = useState(false);
 
+  const navigate = useNavigate();
+  const dispatch = useDispatch()
+
+  const [verify] = useUserVerificationMutation()
+  const [sign] = useUserSignGoogleMutation()
+  const [loading, setLoading] = useState(false);
+
+
+  const { userInfo } = useSelector((state) => state.auth)
+
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
@@ -34,14 +48,47 @@ export default function SignupForm(props) {
     setShowCPassword(!showCPassword);
   }
 
-  const navigate = useNavigate();
-  const dispatch = useDispatch()
+  // GOOGLE AUTH
+  const onSuccess = async (res) => {
+    console.log('Login successs, ', res.profileObj);
+    const googleUserData = {
+      name: res.profileObj.name,
+      email: res.profileObj.email,
+      mobile: 0,
+      password: res.profileObj.googleId,
+      google: true
+    }
 
-  const [verify] = useUserVerificationMutation()
-  const [loading, setLoading] = useState(false);
+    try {
+      const signed = await sign(googleUserData)
+      if (signed.data.success) {
+        console.log(googleUserData);
+        dispatch(setCredentials({ ...googleUserData }))
+        navigate('/')
+      } else {
+        alert('Try another login method')
+      }
+    } catch (error) {
+      console.log('CATCH: Some error occured while signing');
+      setCommonError('Some error occured while signing')
+    }
+  }
 
+  const onFailure = (res) => {
+    console.log('Login failed, ', res);
+  }
+ 
 
-  const { userInfo } = useSelector((state) => state.auth)
+  useEffect(() => {
+    function start() {
+      gapi.client.init({
+        clientId: clientId,
+        scope: ""
+      })
+    }
+    gapi.load('client:auth2', start)
+  })
+
 
   useEffect(() => {
     if (userInfo) {
@@ -113,18 +160,16 @@ export default function SignupForm(props) {
   }
 
   interface FormData {
-    name:string;
-    email:string;
-    password:string;
-    mobile:string;
-}
+    name: string;
+    email: string;
+    password: string;
+    mobile: string;
+  }
 
-  const handleRegistration = async (formData:FormData) => {
+  const handleRegistration = async (formData: FormData) => {
     try {
       setLoading(true)
-
       const otpRes = await verify(formData)
-      console.log(otpRes.data.success);
 
       if (otpRes.data.success) {
         dispatch(setEmailInfo(formData))
@@ -134,11 +179,9 @@ export default function SignupForm(props) {
         setCommonError(otpRes.data.message);
         setLoading(false)
       }
-
     } catch (error) {
       console.error('Registration failed:', error);
     }
-
   }
 
 
@@ -150,17 +193,17 @@ export default function SignupForm(props) {
       <div className='mt-1'>
         <div className="h-20 mt-3">
           <label className='text-sm font-medium tracking-wide' >Name</label>
-          <input className='w-full border-2 border-gray-300 rounded-xl p-3 h-11 mt-1 bg-transparent'  type="text" value={name} onChange={(e) => setName(e.target.value)} />
+          <input className='w-full border-2 border-gray-300 rounded-xl p-3 h-11 mt-1 bg-transparent' type="text" value={name} onChange={(e) => setName(e.target.value)} />
           {nameError && <p className="text-red-400 pl-4 text-sm">{nameError}</p>}
         </div>
         <div className="h-20 mt-3">
           <label className='text-sm font-medium tracking-wide' >Email</label>
-          <input className='w-full border-2 border-gray-300 rounded-xl p-3 h-11 mt-1 bg-transparent'  type="text" value={email} onChange={(e) => setEmail(e.target.value)} />
+          <input className='w-full border-2 border-gray-300 rounded-xl p-3 h-11 mt-1 bg-transparent' type="text" value={email} onChange={(e) => setEmail(e.target.value)} />
           {emailError && <p className="text-red-400 pl-4 text-sm">{emailError}</p>}
         </div>
         <div className="h-20 mt-3">
           <label className='text-sm font-medium tracking-wide' >Mobile</label>
-          <input className='w-full border-2 border-gray-300 rounded-xl p-3 mt-1 h-11 bg-transparent'  type="number" value={mobile} onChange={(e) => setMobile(e.target.value)} />
+          <input className='w-full border-2 border-gray-300 rounded-xl p-3 mt-1 h-11 bg-transparent' type="number" value={mobile} onChange={(e) => setMobile(e.target.value)} />
           {mobileError && <p className="text-red-400 pl-4 text-sm">{mobileError}</p>}
         </div>
         <div className="flex h-32">
@@ -205,24 +248,36 @@ export default function SignupForm(props) {
               </button>
             </div>
           </div>
-
         </div>
         <div className="h-6">
-        {commonError && <p className='text-center text-red-500 '>{commonError}</p>}
+          {commonError && <p className='text-center text-red-500 '>{commonError}</p>}
         </div>
 
         <div className='mt-2 gap-y-4 flex justify-center items-center h-10'>
           {loading ? <Loader /> : <button className='active:scale-[.98] active:duration-75 transition-all hover:scale-[1.01] ease-in-out rounded-xl bg-secondary-blue text-white text-lg font-bold w-11/12 h-11' onClick={submitHandler}>Sign up</button>}
         </div>
         <div className='mt-4 gap-y-4 flex justify-center items-center'>
-          <button className='flex justify-center items-center p-3 gap-2 active:scale-[.98] active:duration-75 transition-all hover:scale-[1.01] ease-in-out py-3 border-2 border-blue-300 rounded-xl h-11 w-11/12'><FaGoogle/> Sign up with Google</button>
+          {/* <button className='flex justify-center items-center p-3 gap-2 active:scale-[.98] active:duration-75 transition-all hover:scale-[1.01] ease-in-out py-3 border-2 border-blue-300 rounded-xl h-11 w-11/12'><FaGoogle /> Sign up with Google</button> */}
+          <div id='signInButton'>
+            <GoogleLogin
+              clientId={clientId}
+              buttonText="Signup with Google"
+              onSuccess={onSuccess}
+              onFailure={onFailure}
+              cookiePolicy={'single_host_origin'}
+              isSIgnedIn={true}
+            />
+          </div>
         </div>
         <div className="mt-3 flex justify-center items-center">
           <p className='font-sm text-base text-gray-600'>Already have an account? </p>
           <Link to='/login'><button className='text-secondary-blue text-base font-sm ml-2 hover:scale-[1.02]' onClick={props.toggleFn}>Sign in</button></Link>
         </div>
       </div>
-    </div>
 
+      <div className="flex">
+        
+      </div>
+    </div>
   )
 }
