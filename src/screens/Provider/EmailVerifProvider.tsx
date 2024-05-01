@@ -1,8 +1,8 @@
-import React, { useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from '../../script/toast';
-import { useProviderRegisterMutation } from '../../slices/providerSlice';
-import { setProviderCredentials } from '../../slices/authSlice';
+import { useProviderRegisterMutation, useProviderCheckOtpMutation } from '../../slices/providerSlice';
+import { setCredentials, setProviderCredentials } from '../../slices/authSlice';
 import { useNavigate } from 'react-router-dom';
 
 function EmailVerifProvider(props) {
@@ -11,6 +11,7 @@ function EmailVerifProvider(props) {
   const inputRefs = useRef<HTMLInputElement[]>([]);
   const [enteredOtp, setEnteredOtp] = useState(['', '', '', '', '', ''])
   const [register, { isLoading }] = useProviderRegisterMutation()
+  const [check] = useProviderCheckOtpMutation()
 
 
   const handleOTPInput = (index: number, event: React.KeyboardEvent<HTMLInputElement>) => {
@@ -36,35 +37,42 @@ function EmailVerifProvider(props) {
         inputRefs.current[index - 1].focus();
       }
     }
-    
+
   };
 
   const { emailInfo } = useSelector((state) => state.auth)
 
   const checkOtp = async (e) => {
     e.preventDefault();
-    if(enteredOtp.join('').length !== 6){
-      toast('error','Incorrect OTP')
+    if (enteredOtp.join('').length !== 6) {
+      toast('error', 'Incorrect OTP')
       return
     }
-    if(enteredOtp.join('') !== emailInfo.OTP){
-      toast('error','Incorrect OTP')
-    }else{
-    const res = await register(emailInfo).unwrap();
+    if (isNaN(parseInt(enteredOtp.join('')))) {
+      toast('error', 'Incorrect OTP');
+    }
+
+    const data = { email: emailInfo.email, enteredOtp: enteredOtp.join('') }
+    const checkOtp = await check(data)
+
+    if (checkOtp?.data?.success) {
+      const res = await register(emailInfo).unwrap();
       dispatch(setProviderCredentials({ ...res }))
       toast('success', 'Registered successfully')
-
       navigate('/provider')
-      console.log('Registration successful:', res);
+    } else {
+      toast('error', 'Incorrect OTP')
+    }
+
+
   }
-}
 
   return (
     <div className='flex w-full h-screen bg-primary-provider'>
       <div className="hidden relative lg:flex h-full w-1/2 items-center justify-center">
         <div className="flex flex-col">
           <div className="p-32">
-            <h1 className='text-2xl text-center text-white leading-normal'>Please enter the OTP sent to your email ending with ***********{emailInfo.email.slice(+emailInfo.email.length-15)} and verify that its you</h1>
+            <h1 className='text-2xl text-center text-white leading-normal'>Please enter the OTP sent to your email ending with ***********{emailInfo.email.slice(+emailInfo.email.length - 15)} and verify that its you</h1>
           </div>
         </div>
       </div>
@@ -91,7 +99,7 @@ function EmailVerifProvider(props) {
             <div className="text-center h-1/2 lg:h-1/3">
               <p>Try "Resend OTP" if you didn't get it</p>
               <p className='text-blue-500 cursor-pointer hover:text-blue-800 active:scale-[.98] active:duration-75 transition-all'>resend OTP</p>
-              <button type='submit' className='text-white mt-5 bg-primary-provider p-3 w-3/6 lg:w-5/6 text-base font-medium ml-2 hover:scale-[1.02] rounded-lg active:scale-[.98] active:duration-75 transition-all'>Verify</button>
+              <button type='submit' className='text-white mt-5 bg-secondary-provider p-3 w-3/6 lg:w-5/6 text-base font-medium ml-2 hover:scale-[1.02] rounded-lg active:scale-[.98] active:duration-75 transition-all'>Verify</button>
             </div>
           </form>
         </div>

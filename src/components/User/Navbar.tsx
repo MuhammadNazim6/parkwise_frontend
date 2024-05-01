@@ -74,7 +74,7 @@ function Navbar() {
         ) : (<Link to='/login'>
           <li className='p-4 cursor-pointer text-lg w-28'>Signin</li>
         </Link>)}
-        <Link className='bg-secondary-blue w-48 p-1 text-white font-semibold rounded-md flex justify-center items-center tracking-normal' to='/provider/login'>
+        <Link className='bg-secondary-blue w-48 p-1 text-white font-semibold rounded-md flex justify-center items-center tracking-normal' to='/provider/signup'>
           <button className=''>
             List your property
           </button>
@@ -109,8 +109,8 @@ function Navbar() {
                 </AlertDialogFooter>
               </AlertDialogContent>
             </AlertDialog>
-          ) : (<Link to="user/login">Signin</Link>)}</li>
-          <li className='p-4 border-t-2 capitalize'><Link to="/provider/login">List your property</Link></li>
+          ) : (<Link to="/login">Signin</Link>)}</li>
+          <li className='p-4 border-t-2 capitalize'><Link to="/provider/signup">List your property</Link></li>
         </ul>
       </div>
     </div>

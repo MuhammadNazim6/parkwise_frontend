@@ -45,7 +45,15 @@ export const providerApiSlice = apiSlice.injectEndpoints({
         method: 'POST',
         body: data,
       })
-    })
+    }),
+
+    providerCheckOtp: builder.mutation({
+      query: (data) => ({
+        url: `${PROVIDER_URL}/check-otp`,
+        method: 'POST',
+        body: data,
+      })
+    }),
 
   })
 })
@@ -54,6 +62,7 @@ export const { useProviderLoginMutation,
   useProviderRegisterMutation,
   useProviderLogoutMutation,
   useProviderVerificationMutation,
+  useProviderCheckOtpMutation
 
 } = providerApiSlice
 

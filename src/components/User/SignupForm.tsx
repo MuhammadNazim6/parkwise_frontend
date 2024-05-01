@@ -23,8 +23,7 @@ export default function SignupForm(props) {
   const [emailError, setEmailError] = useState('')
   const [mobileError, setMobileError] = useState('')
   const [passwordError, setPasswordError] = useState('')
-  const [cpasswordError, setCPasswordError] = useState('')
-  const [reqError, setReqError] = useState('')
+  const [commonError, setCommonError] = useState('')
   const [showPassword, setShowPassword] = useState(false);
   const [showCPassword, setShowCPassword] = useState(false);
 
@@ -38,7 +37,6 @@ export default function SignupForm(props) {
   const navigate = useNavigate();
   const dispatch = useDispatch()
 
-  const [register, { isLoading }] = useRegisterMutation()
   const [verify] = useUserVerificationMutation()
   const [loading, setLoading] = useState(false);
 
@@ -61,8 +59,7 @@ export default function SignupForm(props) {
     setNameError('');
     setEmailError('');
     setPasswordError('');
-    setCPasswordError('');
-    setReqError('');
+    setCommonError('');
     setMobileError('');
     let hasError = false;
 
@@ -96,13 +93,11 @@ export default function SignupForm(props) {
     } else if (!password.match(passwordRegex)) {
       setPasswordError("Password must be at least 6 characters and contain at least one special character");
       hasError = true;
-    }
-
-    if (!confirmPassword) {
-      setCPasswordError("Please confirm your password");
+    } else if (!confirmPassword) {
+      setPasswordError("Please confirm your password");
       hasError = true;
     } else if (password !== confirmPassword) {
-      setCPasswordError("Passwords do not match");
+      setPasswordError("Passwords do not match");
       hasError = true;
     }
 
@@ -117,14 +112,29 @@ export default function SignupForm(props) {
     }
   }
 
+  interface FormData {
+    name:string;
+    email:string;
+    password:string;
+    mobile:string;
+}
 
-  const handleRegistration = async (formData) => {
+  const handleRegistration = async (formData:FormData) => {
     try {
-      setLoading(true);
-      const otpRes = await verify(formData).unwrap();
-      dispatch(setEmailInfo(formData))
-      setLoading(false);
-      navigate('/user/email-verify')
+      setLoading(true)
+
+      const otpRes = await verify(formData)
+      console.log(otpRes.data.success);
+
+      if (otpRes.data.success) {
+        dispatch(setEmailInfo(formData))
+        setLoading(false);
+        navigate('/user/email-verify')
+      } else {
+        setCommonError(otpRes.data.message);
+        setLoading(false)
+      }
+
     } catch (error) {
       console.error('Registration failed:', error);
     }
@@ -137,20 +147,20 @@ export default function SignupForm(props) {
       <h1 className='text-2xl font-semibold '>Create Account</h1>
       <p className='font-medium text-lg text-gray-500 mt-1 tracking-wide'>Please enter your details.</p>
 
-      <div className='mt-3'>
+      <div className='mt-1'>
         <div className="h-20 mt-3">
           <label className='text-sm font-medium tracking-wide' >Name</label>
-          <input className='w-full border-2 border-gray-200 rounded-xl p-3 h-11 mt-1 bg-transparent' placeholder='Enter your name' type="text" value={name} onChange={(e) => setName(e.target.value)} />
+          <input className='w-full border-2 border-gray-300 rounded-xl p-3 h-11 mt-1 bg-transparent'  type="text" value={name} onChange={(e) => setName(e.target.value)} />
           {nameError && <p className="text-red-400 pl-4 text-sm">{nameError}</p>}
         </div>
         <div className="h-20 mt-3">
           <label className='text-sm font-medium tracking-wide' >Email</label>
-          <input className='w-full border-2 border-gray-200 rounded-xl p-3 h-11 mt-1 bg-transparent' placeholder='Enter your email' type="text" value={email} onChange={(e) => setEmail(e.target.value)} />
+          <input className='w-full border-2 border-gray-300 rounded-xl p-3 h-11 mt-1 bg-transparent'  type="text" value={email} onChange={(e) => setEmail(e.target.value)} />
           {emailError && <p className="text-red-400 pl-4 text-sm">{emailError}</p>}
         </div>
         <div className="h-20 mt-3">
           <label className='text-sm font-medium tracking-wide' >Mobile</label>
-          <input className='w-full border-2 border-gray-200 rounded-xl p-3 mt-1 h-11 bg-transparent' placeholder='Enter your mobile' type="number" value={mobile} onChange={(e) => setMobile(e.target.value)} />
+          <input className='w-full border-2 border-gray-300 rounded-xl p-3 mt-1 h-11 bg-transparent'  type="number" value={mobile} onChange={(e) => setMobile(e.target.value)} />
           {mobileError && <p className="text-red-400 pl-4 text-sm">{mobileError}</p>}
         </div>
         <div className="flex h-32">
@@ -159,8 +169,8 @@ export default function SignupForm(props) {
             <label className='text-sm font-medium tracking-wide'>Password</label>
             <div className="relative">
               <input
-                className='w-full border-2 border-gray-200 rounded-xl p-3 mt-1 h-11 bg-transparent'
-                placeholder='Enter your password'
+                className='w-full border-2 border-gray-300 rounded-xl p-3 mt-1 h-11 bg-transparent'
+                placeholder=''
                 type={showPassword ? "text" : "password"}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
@@ -168,7 +178,7 @@ export default function SignupForm(props) {
               <button
                 type="button"
                 onClick={togglePasswordVisibility}
-                className="absolute text-2xl inset-y-0 right-2 flex items-center px-2"
+                className="absolute text-xl inset-y-5 right-2 flex items-center px-2 text-gray-500"
               >
                 {showPassword ? (<FaEyeSlash />) : (<FaEye />)}
               </button>
@@ -180,8 +190,8 @@ export default function SignupForm(props) {
             <label className='text-sm font-medium tracking-wide'>Confirm password</label>
             <div className="relative">
               <input
-                className='w-full border-2 border-gray-200 rounded-xl p-3 mt-1 h-11 bg-transparent'
-                placeholder='Confirm your password'
+                className='w-full border-2 border-gray-300 rounded-xl p-3 mt-1 h-11 bg-transparent'
+                placeholder=''
                 type={showCPassword ? "text" : "password"}
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
@@ -189,21 +199,23 @@ export default function SignupForm(props) {
               <button
                 type="button"
                 onClick={toggleCPasswordVisibility}
-                className="absolute text-2xl inset-y-0 right-2 flex items-center px-2"
+                className="absolute text-xl inset-y-5 right-2 flex items-center px-2 text-gray-500"
               >
                 {showCPassword ? (<FaEyeSlash />) : (<FaEye />)}
               </button>
             </div>
           </div>
-          {reqError && <p className="text-red-400 pl-2">{reqError}</p>}
 
         </div>
-        <div className='mt-4 gap-y-4 flex justify-center items-center'>
+        <div className="h-6">
+        {commonError && <p className='text-center text-red-500 '>{commonError}</p>}
+        </div>
 
-          {loading ? <Loader /> : <button className='active:scale-[.98] active:duration-75 transition-all hover:scale-[1.01] ease-in-out rounded-xl bg-secondary-blue text-white text-lg font-bold w-1/2 h-11' onClick={submitHandler}>Sign up</button>}
+        <div className='mt-2 gap-y-4 flex justify-center items-center h-10'>
+          {loading ? <Loader /> : <button className='active:scale-[.98] active:duration-75 transition-all hover:scale-[1.01] ease-in-out rounded-xl bg-secondary-blue text-white text-lg font-bold w-11/12 h-11' onClick={submitHandler}>Sign up</button>}
         </div>
         <div className='mt-4 gap-y-4 flex justify-center items-center'>
-          <button className='flex justify-center items-center p-3 gap-2 active:scale-[.98] active:duration-75 transition-all hover:scale-[1.01] ease-in-out py-3 border-2 border-blue-300 w-1/2 rounded-xl h-11'><FaGoogle />  Sign up with Google</button>
+          <button className='flex justify-center items-center p-3 gap-2 active:scale-[.98] active:duration-75 transition-all hover:scale-[1.01] ease-in-out py-3 border-2 border-blue-300 rounded-xl h-11 w-11/12'><FaGoogle/> Sign up with Google</button>
         </div>
         <div className="mt-3 flex justify-center items-center">
           <p className='font-sm text-base text-gray-600'>Already have an account? </p>

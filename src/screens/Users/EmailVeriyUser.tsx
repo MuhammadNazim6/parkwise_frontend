@@ -52,9 +52,8 @@ function EmailVeriyUser(props) {
       toast('error', 'Incorrect OTP');
     }
 
-    const data = {email:emailInfo.email,userOtp:enteredOtp.join('')}
+    const data = {email:emailInfo.email,enteredOtp:enteredOtp.join('')}
     const checkOtp = await check(data)
-    console.log(checkOtp);
     
     if(checkOtp?.data?.success){
       const res = await register(emailInfo).unwrap();

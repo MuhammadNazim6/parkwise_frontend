@@ -134,7 +134,7 @@ export default function LoginForm(props) {
               <button
                 type="button"
                 onClick={togglePasswordVisibility}
-                className="absolute text-2xl inset-y-7 right-2 flex items-center px-2 "
+                className="absolute text-xl inset-y-7 right-2 flex items-center px-2 text-gray-500"
               >
 
                 {showPassword ? (< FaEye />) : (<FaEyeSlash />)}
