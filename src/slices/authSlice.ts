@@ -79,8 +79,9 @@ const authSlice = createSlice({
       localStorage.setItem('emailInfo',JSON.stringify(action.payload))
     },
 
-    getEmailInfo:(state)=>{
-
+    deleteEmailInfo:(state)=>{
+      state.emailInfo = null;
+      localStorage.removeItem("emailInfo");
     }
 
   }
@@ -93,7 +94,8 @@ export const {
   providerLogout,
   setAdminCredentials,
   adminLogout,
-  setEmailInfo
+  setEmailInfo,
+  deleteEmailInfo
 
 } = authSlice.actions;
 

@@ -88,7 +88,7 @@ export default function LoginForm(props) {
 
 // END  ---------
   const submitHandler = async (e) => {
-    try {
+    // try {
       e.preventDefault();
       setEmailError('')
       setCommonError('')
@@ -123,9 +123,9 @@ export default function LoginForm(props) {
         }
 
       }
-    } catch (err) {
-      setCommonError('Incorrect username or password')
-    }
+    // } catch (err) {
+    //   setCommonError('Incorrect username or password')
+    // }
   };
 
   return (

@@ -8,7 +8,7 @@ function Hero_second() {
       <div className="max-w-6xl mx-auto px-4 py-8 md:flex md:items-center md:justify-between md:py-16">
         <div className='md:w-1/2 md:pl-8 md:mt-0 mt-8 flex justify-center md:justify-start md:relative'>
           <img className="rounded-xl" style={{ width: '80%', maxWidth: '440px', height: 'auto' }} src={heroImg} alt="Image" />
-          <img className="absolute top-48 left-96 w-1/2 rounded-xl md:block hidden" style={{ maxWidth: '140px', height: 'auto' }} src={overlapImg} alt="Overlapping Image" />
+          <img className="absolute top-48 left-96 w-1/2 rounded-xl hidden xl:block" style={{ maxWidth: '140px', height: 'auto' }} src={overlapImg} alt="Overlapping Image" />
         </div>
 
         <div className="md:w-1/2 md:pr-8">

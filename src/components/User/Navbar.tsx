@@ -42,7 +42,9 @@ function Navbar() {
   const handleLogout = async () => {
     const res = await logout();
     dispatch(userLogout())
+    setNav(!nav)
     navigate('/')
+    
   }
   return (
     <div className='flex justify-between items-center h-24 max-w-[1240px] mx-auto px-4  text-black'>
@@ -53,7 +55,7 @@ function Navbar() {
         <Link to='/'>
           <li className='p-4 cursor-pointer text-lg w-28'>Home</li>
         </Link>
-        <Link to='/user/find'>
+        <Link to='/user/home'>
           <li className='p-4 cursor-pointer text-lg w-32'>Find spots</li>
         </Link>
         <Link to='/about'>
@@ -117,7 +119,7 @@ function Navbar() {
                 </AlertDialogHeader>
                 <AlertDialogFooter>
                   <AlertDialogCancel>Cancel</AlertDialogCancel>
-                  <AlertDialogAction>Continue</AlertDialogAction>
+                  <AlertDialogAction><span onClick={handleLogout}>Continue</span></AlertDialogAction>
                 </AlertDialogFooter>
               </AlertDialogContent>
             </AlertDialog>
@@ -126,7 +128,6 @@ function Navbar() {
         </ul>
       </div>
     </div>
-
   )
 }
 

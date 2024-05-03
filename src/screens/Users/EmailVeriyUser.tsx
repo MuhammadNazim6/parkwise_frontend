@@ -2,7 +2,7 @@ import React, { useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from '../../script/toast';
 import { useRegisterMutation, useUserCheckOtpMutation } from '../../slices/userApiSlice';
-import { setCredentials, setProviderCredentials } from '../../slices/authSlice';
+import { setCredentials, deleteEmailInfo } from '../../slices/authSlice';
 import { useNavigate } from 'react-router-dom';
 
 function EmailVeriyUser(props) {
@@ -11,7 +11,7 @@ function EmailVeriyUser(props) {
   const inputRefs = useRef<HTMLInputElement[]>([]);
   const [enteredOtp, setEnteredOtp] = useState(['', '', '', '', '', ''])
   const [register, { isLoading }] = useRegisterMutation()
-  const [ check ] = useUserCheckOtpMutation()
+  const [check] = useUserCheckOtpMutation()
 
 
   const handleOTPInput = (index: number, event: React.KeyboardEvent<HTMLInputElement>) => {
@@ -37,42 +37,43 @@ function EmailVeriyUser(props) {
         inputRefs.current[index - 1].focus();
       }
     }
-    
+
   };
 
   const { emailInfo } = useSelector((state) => state.auth)
 
   const checkOtp = async (e) => {
     e.preventDefault();
-    if(enteredOtp.join('').length !== 6){
-      toast('error','Incorrect OTP')
+    if (enteredOtp.join('').length !== 6) {
+      toast('error', 'Incorrect OTP')
       return
     }
     if (isNaN(parseInt(enteredOtp.join('')))) {
       toast('error', 'Incorrect OTP');
     }
 
-    const data = {email:emailInfo.email,enteredOtp:enteredOtp.join('')}
+    const data = { email: emailInfo.email, enteredOtp: enteredOtp.join('') }
     const checkOtp = await check(data)
-    
-    if(checkOtp?.data?.success){
+
+    if (checkOtp?.data?.success) {
       const res = await register(emailInfo).unwrap();
       dispatch(setCredentials({ ...res }))
-      toast('success', 'Registered successfully')
+      dispatch(deleteEmailInfo())
+      // toast('success', 'Registered successfully')
       navigate('/')
-    }else{
+    } else {
       toast('error', 'Incorrect OTP')
     }
-    
-  
-}
+
+
+  }
 
   return (
     <div className='flex w-full h-screen bg-primary-blue'>
       <div className="hidden relative lg:flex h-full w-1/2 items-center justify-center">
         <div className="flex flex-col">
           <div className="p-32">
-            <h1 className='text-2xl text-center text-black leading-normal'>Please enter the OTP sent to your email ending with ***********{emailInfo.email.slice(+emailInfo.email.length-15)} and verify that its you</h1>
+            <h1 className='text-2xl text-center text-black leading-normal'>Please enter the OTP sent to your email ending with ***********{emailInfo.email.slice(+emailInfo.email.length - 15)} and verify that its you</h1>
           </div>
         </div>
       </div>

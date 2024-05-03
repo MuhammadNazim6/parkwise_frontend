@@ -2,8 +2,9 @@ import { useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from '../../script/toast';
 import { useProviderRegisterMutation, useProviderCheckOtpMutation } from '../../slices/providerSlice';
-import { setCredentials, setProviderCredentials } from '../../slices/authSlice';
+import { setProviderCredentials, deleteEmailInfo } from '../../slices/authSlice';
 import { useNavigate } from 'react-router-dom';
+
 
 function EmailVerifProvider(props) {
   const dispatch = useDispatch()
@@ -58,7 +59,8 @@ function EmailVerifProvider(props) {
     if (checkOtp?.data?.success) {
       const res = await register(emailInfo).unwrap();
       dispatch(setProviderCredentials({ ...res }))
-      toast('success', 'Registered successfully')
+      dispatch(deleteEmailInfo())
+      // toast('success', 'Registered successfully')
       navigate('/provider')
     } else {
       toast('error', 'Incorrect OTP')
