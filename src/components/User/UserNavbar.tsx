@@ -1,15 +1,12 @@
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { GoogleLogout } from 'react-google-login';
-import { gapi } from 'gapi-script';
-
-
+import { googleLogout } from '@react-oauth/google';
 import LogoImg from "../../assets/Images/parkwise-high-resolution-logo-transparent.png";
 import LogoImgBlack from "../../assets/Images/parkwise-high-resolution-logo-black-transparent.png";
-import { AiOutlineClose, AiOutlineMenu } from 'react-icons/ai';
-import { useLogoutMutation } from '../../slices/userApiSlice';
-import { userLogout } from '../../slices/authSlice';
+import { AiOutlineClose,  AiOutlineMenu } from 'react-icons/ai';
+import { useLogoutMutation } from '../../redux/slices/userApiSlice';
+import { userLogout } from '../../redux/slices/authSlice';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -65,7 +62,7 @@ function Navbar() {
           <AlertDialog>
             <AlertDialogTrigger>   <li className='text-lg w-28' >Logout 
             <div id="signOutButton" className='hidden'>
-          <GoogleLogout
+          <googleLogout
             clientId={clientId}
             buttonText={"Logout"}
             onLogoutSuccess={onLogoutSuccess}

@@ -2,7 +2,7 @@ import React from 'react'
 import LogoImg from "../../assets/Images/parkwise-high-resolution-logo-white-transparent.png";
 import ForgotPassForm from '../../components/Common/ForgotPassForm'
 
-function ForgotPasswordProvider() {
+function ProviderForgotPassword() {
   return (
     <div className='flex w-full h-screen lg:bg-primary-provider'>
       <div className="hidden relative lg:flex h-full w-1/2 items-center justify-center">
@@ -22,4 +22,4 @@ function ForgotPasswordProvider() {
   )
 }
 
-export default ForgotPasswordProvider
+export default ProviderForgotPassword

@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import Navbar from '../../components/User/Navbar';
+import UserNavbar from '../../components/User/UserNavbar';
 import { PiFunnelSimpleBold } from "react-icons/pi";
 import { Input } from "@/components/ui/input"
 import { IoMdBatteryCharging } from "react-icons/io";
-import parkingLotImg from '../../assets/Images/lot1.jpeg'
+import MapComponent from '@/components/User/MapComponent';
 
 const products = [
   { id: 1, name: 'Product 1', category: 'Electronics', price: 199.99 },
@@ -43,7 +43,7 @@ function UserHome() {
 
   return (
     <>
-      <Navbar />
+      <UserNavbar />
       <div className="md:flex  md:justify-between h-screen">
         <div className="md:w-1/2 text-center h-1/2 m-4">
           {/* <div className="">
@@ -64,35 +64,25 @@ function UserHome() {
 
             </div>
             {/* Use debouncedCategoryFilter and debouncedPriceFilter for filtering */}
-            <ul className='mt-6 overflow-y-auto h-64 md:h-96'>
-              {filteredProducts.map((product) => (
-                <div key={product.id} className='bg-primary-blue h-24 m-3 rounded-md flex justify-between hover:scale-[1.01] transition-all ease-in-out cursor-pointer'>
-                  <div className="p-3 ml-2">
-                    <div className="text-start">
-                      <p className='text-lg'>Metro parking</p>
-                      <p className='text-sm text-gray-700'>Secura mall, opp TK building</p>
-                      <div className="flex items-center">
-                        <IoMdBatteryCharging class="text-green-700" />
-                        <p className="text-gray-700">Ev</p>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="ml-2 flex justify-center items-center">
-                    <div className="m-3">
-                    <div className="pt-4">
-                      3/9 Available
-                    </div>
-                    <div className="p-4">
-                      <button className='bg-primary-blue p-2 rounded-md mb-2 hover:scale-[1.02] transition-all ease-in-out'>Book spots now</button>
-                    </div>
-                    </div>
-                    <div className="">
-                    <img src={parkingLotImg} className='h-20 w-18 mr-3 rounded-r-md'/>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </ul>
+            <ul className='mt-6 overflow-y-auto h-96 md:h-96'>
+  {filteredProducts.map((product) => (
+    <div key={product.id} className='bg-primary-blue md:hover:bg-blue-200  m-3 rounded-md flex  md:flex-row justify-between hover:scale-[1.004] transition-all ease-in-out cursor-pointer p-2'>
+      <div className="p-3 md:ml-4">
+        <div className="text-start">
+          <p className='text-lg '>Metro parking</p>
+          <p className='text-sm md:text-sm line-clamp-1 text-gray-700'>Secura mall, opp TK building hbsadlfkbjhasdlfkjbsa jljhjk</p>
+          <div className="flex items-center">
+            <IoMdBatteryCharging class="text-green-700" />
+            <p className="text-gray-700">Ev</p>
+          </div>
+        </div>
+      </div>
+      <div className="md:ml-2 justify flex justify-items-end">
+        <p className='p-9'>Available</p>
+      </div>
+    </div>
+  ))}
+</ul>
           </div>
 
           {/* _________________________________________________________________ */}
@@ -101,7 +91,8 @@ function UserHome() {
           </div> */}
         </div>
         <div className=" md:w-1/2 h-1/2">
-          HEy
+        {/* <div id="map"></div> */}
+        <MapComponent/>
         </div>
       </div>
     </>

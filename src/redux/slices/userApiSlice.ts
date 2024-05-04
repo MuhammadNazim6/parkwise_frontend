@@ -1,4 +1,6 @@
 import { apiSlice } from "./apiSlice";
+import { onQueryStartedErrorToast } from "../ErrorHandling/ErrorHandling";
+import { toast } from 'react-toastify'; 
 
 const USER_URL = "/api/user";
 interface User {
@@ -21,22 +23,7 @@ export const userApiSlice = apiSlice.injectEndpoints({
         method: "POST",
         body: data,
       }),
-      onError: (error, variables, context) => {
-        // Log the error to the console
-        console.error('An error occurred during login:', error);
-
-        // Check the error status and handle different types of errors
-        if (error.status === 401) {
-            // Unauthorized error handling
-            console.log('Unauthorized access. Please log in again.');
-        } else if (error.status === 500) {
-            // Server error handling
-            console.log('Internal server error. Please try again later.');
-        } else {
-            // Generic error handling
-            alert('An error occurred. Please try again.');
-        }
-    },
+      onQueryStarted: onQueryStartedErrorToast
     }),
 
     logout: builder.mutation({
@@ -44,6 +31,7 @@ export const userApiSlice = apiSlice.injectEndpoints({
         url: `${USER_URL}/logout`,
         method: "POST",
       }),
+      onQueryStarted: onQueryStartedErrorToast
     }),
 
     register: builder.mutation<User, RegisterPayload>({
@@ -52,6 +40,7 @@ export const userApiSlice = apiSlice.injectEndpoints({
         method: "POST",
         body: data,
       }),
+      onQueryStarted: onQueryStartedErrorToast
     }),
 
     userVerification: builder.mutation({
@@ -60,6 +49,7 @@ export const userApiSlice = apiSlice.injectEndpoints({
         method: "POST",
         body: data,
       }),
+      onQueryStarted: onQueryStartedErrorToast
     }),
 
     userCheckOtp: builder.mutation({
@@ -68,6 +58,7 @@ export const userApiSlice = apiSlice.injectEndpoints({
         method: "POST",
         body: data,
       }),
+      onQueryStarted: onQueryStartedErrorToast
     }),
 
     userSignGoogle: builder.mutation({
@@ -76,7 +67,9 @@ export const userApiSlice = apiSlice.injectEndpoints({
         method: "POST",
         body: data,
       }),
+      onQueryStarted: onQueryStartedErrorToast
     }),
+
   }),
 });
 

@@ -2,11 +2,11 @@ import * as React from 'react';
 import { useState, useEffect, useRef } from 'react';
 import { FaGoogle } from 'react-icons/fa';
 import { useNavigate, Link } from 'react-router-dom';
-import { useProviderRegisterMutation, useProviderVerificationMutation } from '../../slices/providerSlice';
+import { useProviderRegisterMutation, useProviderVerificationMutation } from '../../redux/slices/providerSlice';
 import { useSelector, useDispatch } from 'react-redux';
 import { Loader } from '../Common/BootstrapElems'
 import { FaEyeSlash, FaEye } from "react-icons/fa";
-import { setProviderCredentials, setEmailInfo } from '../../slices/authSlice';
+import { setProviderCredentials, setEmailInfo } from '../../redux/slices/authSlice';
 import { toast } from '../../script/toast'
 
 

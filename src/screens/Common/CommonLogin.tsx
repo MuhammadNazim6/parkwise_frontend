@@ -8,7 +8,7 @@ interface MyComponentProps {
   toggleFn: () => void;
   togglePasswordFn: () => void;
 }
-function LoginPage() {
+function CommonLogin() {
 
   const navigate = useNavigate()
   const [toggleLogin, setToggleLogin] = useState(true)
@@ -37,4 +37,4 @@ function LoginPage() {
   )
 }
 
-export default LoginPage
+export default CommonLogin

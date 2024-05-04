@@ -1,11 +1,11 @@
 import React from 'react'
 import { Route, Routes } from 'react-router-dom'
-import Login_Admin from '../screens/Admin/Login_Admin'
+import AdminLogin from '../screens/Admin/AdminLogin'
 
 function AdminRoutes() {
   return (
     <Routes>
-      <Route path='' element={<Login_Admin/>} />
+      <Route path='' element={<AdminLogin/>} />
       <Route element>
        
       </Route>

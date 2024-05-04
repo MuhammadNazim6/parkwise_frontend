@@ -2,20 +2,18 @@ import * as React from 'react';
 import { useState, useEffect, useRef } from 'react';
 import { FaGoogle } from 'react-icons/fa';
 import { useNavigate, Link } from 'react-router-dom';
-import { useRegisterMutation, useUserVerificationMutation, useUserSignGoogleMutation } from '../../slices/userApiSlice';
+import { useRegisterMutation, useUserVerificationMutation, useUserSignGoogleMutation } from '../../redux/slices/userApiSlice';
 import { useSelector, useDispatch } from 'react-redux';
 import { Loader } from '../Common/BootstrapElems'
 import { FaEyeSlash, FaEye } from "react-icons/fa";
-import { setCredentials, setEmailInfo } from '../../slices/authSlice';
+import { setCredentials, setEmailInfo } from '../../redux/slices/authSlice';
 import { toast } from '../../script/toast'
-import { GoogleLogin, GoogleLogout } from 'react-google-login';
-import { gapi } from 'gapi-script';
+import axios from 'axios';
+import { GoogleLogin, useGoogleLogin } from '@react-oauth/google';
 
 
 export default function SignupForm(props) {
-  
-  const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
-  const apiKey = import.meta.env.VITE_GOOGLE_API_KEY;
+
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [mobile, setMobile] = useState("");
@@ -40,6 +38,8 @@ export default function SignupForm(props) {
 
 
   const { userInfo } = useSelector((state) => state.auth)
+  const { uLoggedIn } = useSelector((state) => state.auth);
+
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
@@ -48,53 +48,59 @@ export default function SignupForm(props) {
     setShowCPassword(!showCPassword);
   }
 
-  // GOOGLE AUTH
-  const onSuccess = async (res) => {
-    console.log('Login successs, ', res.profileObj);
-    const googleUserData = {
-      name: res.profileObj.name,
-      email: res.profileObj.email,
-      mobile: 0,
-      password: res.profileObj.googleId,
-      google: true
-    }
 
-    try {
-      const signed = await sign(googleUserData)
+  const Glogin = useGoogleLogin({
+    onSuccess: async (response) => {
+      try {
+        const res = await axios.get(
+          `https://www.googleapis.com/oauth2/v3/userinfo?access_token=${response.access_token}`
+        );
+  
+        console.log(res.data);
+  
+        const googleUserData = {
+              name: res.data.name,
+              email: res.data.email,
+              mobile: 0,
+              password: res.data.sub,
+              google: true
+            }
+
+            const signed = await sign(googleUserData)
+            console.log(signed);
+            
       if (signed.data.success) {
         console.log(googleUserData);
         dispatch(setCredentials({ ...googleUserData }))
-        navigate('/')
+        navigate('/user/home')
       } else {
         alert('Try another login method')
       }
-    } catch (error) {
-      console.log('CATCH: Some error occured while signing');
-      setCommonError('Some error occured while signing')
-    }
-  }
 
+      } catch (error) {
+        console.log(error);
+      }
+    },
+  
+  });
+
+
+  
   const onFailure = (res) => {
     console.log('Login failed, ', res);
   }
- 
 
-  useEffect(() => {
-    function start() {
-      gapi.client.init({
-        clientId: clientId,
-        scope: ""
-      })
-    }
-    gapi.load('client:auth2', start)
-  })
 
 
   useEffect(() => {
-    if (userInfo) {
-      navigate('/')
+    if (uLoggedIn) {
+      navigate('/user/home')
     }
-  }, [navigate, userInfo])
+  }, [navigate, uLoggedIn])
+
+  const handleLoginClick = () => {
+    navigate('/', { replace: true });
+  };
 
   const submitHandler = async (e) => {
 
@@ -180,6 +186,7 @@ export default function SignupForm(props) {
         setLoading(false)
       }
     } catch (error) {
+      setLoading(false)
       console.error('Registration failed:', error);
     }
   }
@@ -257,26 +264,27 @@ export default function SignupForm(props) {
           {loading ? <Loader /> : <button className='active:scale-[.98] active:duration-75 transition-all hover:scale-[1.01] ease-in-out rounded-xl bg-secondary-blue text-white text-lg font-bold w-11/12 h-11' onClick={submitHandler}>Sign up</button>}
         </div>
         <div className='mt-4 gap-y-4 flex justify-center items-center'>
-          {/* <button className='flex justify-center items-center p-3 gap-2 active:scale-[.98] active:duration-75 transition-all hover:scale-[1.01] ease-in-out py-3 border-2 border-blue-300 rounded-xl h-11 w-11/12'><FaGoogle /> Sign up with Google</button> */}
-          <div id='signInButton'>
-            <GoogleLogin
-              clientId={clientId}
-              buttonText="Signup with Google"
-              onSuccess={onSuccess}
-              onFailure={onFailure}
-              cookiePolicy={'single_host_origin'}
-              isSIgnedIn={true}
-            />
+        
+          <div onClick={() => Glogin()}>
+            <a
+              href="#"
+              className="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
+            >
+              <span className="mr-2">Sign in with Google</span>
+
+              <svg className="w-5 h-5" xmlns="http://www.w3.org/2000/svg" width="0.98em" height="1em" viewBox="0 0 256 262"><path fill="#4285f4" d="M255.878 133.451c0-10.734-.871-18.567-2.756-26.69H130.55v48.448h71.947c-1.45 12.04-9.283 30.172-26.69 42.356l-.244 1.622l38.755 30.023l2.685.268c24.659-22.774 38.875-56.282 38.875-96.027" /><path fill="#34a853" d="M130.55 261.1c35.248 0 64.839-11.605 86.453-31.622l-41.196-31.913c-11.024 7.688-25.82 13.055-45.257 13.055c-34.523 0-63.824-22.773-74.269-54.25l-1.531.13l-40.298 31.187l-.527 1.465C35.393 231.798 79.49 261.1 130.55 261.1" /><path fill="#fbbc05" d="M56.281 156.37c-2.756-8.123-4.351-16.827-4.351-25.82c0-8.994 1.595-17.697 4.206-25.82l-.073-1.73L15.26 71.312l-1.335.635C5.077 89.644 0 109.517 0 130.55s5.077 40.905 13.925 58.602z" /><path fill="#eb4335" d="M130.55 50.479c24.514 0 41.05 10.589 50.479 19.438l36.844-35.974C195.245 12.91 165.798 0 130.55 0C79.49 0 35.393 29.301 13.925 71.947l42.211 32.783c10.59-31.477 39.891-54.251 74.414-54.251" /></svg>
+            </a>
           </div>
+
         </div>
         <div className="mt-3 flex justify-center items-center">
           <p className='font-sm text-base text-gray-600'>Already have an account? </p>
-          <Link to='/login'><button className='text-secondary-blue text-base font-sm ml-2 hover:scale-[1.02]' onClick={props.toggleFn}>Sign in</button></Link>
+          <Link to='/login'><button className='text-secondary-blue text-base font-sm ml-2 hover:scale-[1.02]' onClick={handleLoginClick}>Sign in</button></Link>
         </div>
       </div>
 
       <div className="flex">
-        
+
       </div>
     </div>
   )

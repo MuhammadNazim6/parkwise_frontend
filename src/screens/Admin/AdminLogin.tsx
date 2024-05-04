@@ -8,7 +8,7 @@ interface MyComponentProps {
   toggleFn: () => void;
   togglePasswordFn: () => void;
 }
-function LoginProvider() {
+function AdminLogin() {
 
   return (
     <div className='flex w-full h-screen lg:bg-primary-admin'>
@@ -30,4 +30,4 @@ function LoginProvider() {
   )
 }
 
-export default LoginProvider
+export default AdminLogin

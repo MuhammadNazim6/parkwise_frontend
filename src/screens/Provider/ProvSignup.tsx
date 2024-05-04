@@ -2,7 +2,7 @@ import React from "react";
 import SignupForm from "../../components/Provider/SignupForm";
 import LogoImg from "../../assets/Images/parkwise-high-resolution-logo-white-transparent.png";
 
-function SignupProvider() {
+function ProviderSignup() {
   return (
     <div className="flex w-full h-screen lg:bg-primary-provider">
       <div className="hidden relative lg:flex h-full w-1/2 items-center justify-center">
@@ -28,4 +28,4 @@ function SignupProvider() {
   );
 }
 
-export default SignupProvider;
+export default ProviderSignup;
