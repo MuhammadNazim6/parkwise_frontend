@@ -68,13 +68,13 @@ export default function LoginForm(props) {
         }
 
         const signed = await sign(googleUserData)
-            if (signed.data.success) {
-              console.log(googleUserData);
-              dispatch(setCredentials({ ...googleUserData }))
-              navigate('/')
-            } else {
-              alert('Try another login method')
-            }
+        if (signed.data.success) {
+          console.log(googleUserData);
+          dispatch(setCredentials({ ...googleUserData }))
+          navigate('/')
+        } else {
+          alert('Try another login method')
+        }
 
       } catch (error) {
         console.log(error);
@@ -121,17 +121,26 @@ export default function LoginForm(props) {
         };
         if (role === 'user') {
           const res = await login(formData).unwrap();
-          dispatch(setCredentials({ ...res }));
-          navigate("/user/home");
+          console.log();
+          if (res.success) {
+            dispatch(setCredentials({ ...res }));
+            navigate("/user/home");
+          }else{
+            setCommonError('Incorrect username or password')
+          }
+
         } else {
           const res = await providerLogin(formData).unwrap();
-          dispatch(setProviderCredentials({ ...res }));
-          navigate("/provider");
+          if(res.success){
+            dispatch(setProviderCredentials({ ...res }));
+            navigate("/provider");
+          }
         }
 
       }
     } catch (err) {
-      setCommonError('Incorrect username or password')
+      console.log('Error catched while logging in ');
+      
     }
   };
 
@@ -196,7 +205,7 @@ export default function LoginForm(props) {
               </button>
             </div>
 
-            {commonError && <p className="text-red-400 pl-2">{commonError}</p>}
+            {commonError && <p className="text-red-400 pl-2 text-xl font-medium">{commonError}</p>}
 
           </div>
 

@@ -45,7 +45,7 @@ export const providerApiSlice = apiSlice.injectEndpoints({
 
     providerVerification: builder.mutation<Provider, RegisterPayload>({
       query: (data) => ({
-        url: `${PROVIDER_URL}/email-verify`,
+        url: `${PROVIDER_URL}/send-otp`,//email-verify
         method: 'POST',
         body: data,
       }),

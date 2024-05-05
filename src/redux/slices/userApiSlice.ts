@@ -45,7 +45,7 @@ export const userApiSlice = apiSlice.injectEndpoints({
 
     userVerification: builder.mutation({
       query: (data) => ({
-        url: `${USER_URL}/email-verify`,
+        url: `${USER_URL}/send-otp`,//email-verify
         method: "POST",
         body: data,
       }),

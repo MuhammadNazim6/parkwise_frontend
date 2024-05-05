@@ -85,7 +85,6 @@ export default function SignupForm(props) {
   });
 
 
-  
   const onFailure = (res) => {
     console.log('Login failed, ', res);
   }
@@ -257,7 +256,7 @@ export default function SignupForm(props) {
           </div>
         </div>
         <div className="h-6">
-          {commonError && <p className='text-center text-red-500 '>{commonError}</p>}
+          {commonError && <p className='text-center text-red-500 text-lg font-medium'>{commonError}</p>}
         </div>
 
         <div className='mt-2 gap-y-4 flex justify-center items-center h-10'>
