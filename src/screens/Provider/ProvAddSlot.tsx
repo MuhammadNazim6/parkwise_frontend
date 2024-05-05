@@ -1,37 +1,50 @@
-import React from 'react'
-import ProvNavbar from '@/components/Provider/ProvNavbar'
-import Sidebar from '@/components/Provider/Sidebar'
+import React, { useState } from 'react'
 import { render } from "react-dom";
-import { Formik, Field } from "formik";
+import { Formik, Field, FieldArray } from "formik";
 import * as Yup from "yup";
+import { Button } from '@/components/ui/button';
+import ProGetAddressLatLong from '@/components/Provider/ProGetAddressLatLong';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip"
 
 function ProvAddSlot() {
 
-  
+  const [showWaterServicePrice, setShowWaterServicePrice] = useState(false);
+  const [showEVChargeFacilityPrice, setShowEVChargeFacilityPrice] = useState(false);
+  const [showAirPressureCheckPrice, setShowAirPressureCheckPrice] = useState(false);
+
+
   return (
     <>
-      <ProvNavbar />
-      <Sidebar />
-
       <div className="p-4 sm:ml-64">
         <div className="p-4 border-2 border-gray-200 border-dashed rounded-lg dark:border-gray-700">
           <div className="app">
 
+            <h1 className='text-2xl m-8 mt-3'>Add your parking lot details and verify</h1>
 
             <Formik
               initialValues={{
                 Pname: "",
                 Pnumber: "",
                 waterService: false,
+                waterServicePrice: '',
                 evChargeFacility: false,
+                evChargeFacilityPrice: '',
                 airPressureCheck: false,
+                airPressureCheckPrice: '',
                 oneHourParkingAmount: '',
                 street: '',
                 city: '',
                 state: '',
                 landmark: '',
                 country: '',
-                pinNumber: ''
+                pinNumber: '',
+                parkingRule: '',
+
 
               }}
               onSubmit={async (values) => {
@@ -48,7 +61,8 @@ function ProvAddSlot() {
                   .required('Count is required'),
                 oneHourParkingAmount: Yup.number()
                   .min(40, "Should be equal or greater than Rs.40")
-                  .max(200, "Cannot be greater than Rs.200"),
+                  .max(200, "Cannot be greater than Rs.200")
+                  .required('Amount is required'),
                 street: Yup.string()
                   .required("Street is required"),
                 city: Yup.string()
@@ -58,8 +72,34 @@ function ProvAddSlot() {
                 landmark: Yup.string(),
                 country: Yup.string()
                   .required("Country is required"),
-                pinNumber: Yup.number()
-                  .required("Pin number is required")
+                pinNumber: Yup.string()
+                  .required('Pin number is required')
+                  .matches(/^\d{6}$/, 'Pin number must be 6 digits'),
+                parkingRule: Yup.string()
+                  .required("Parking rule is required"),
+                waterServicePrice: Yup.string().test('waterServicePrice', 'Water service price is required', function (value) {
+                  const waterServiceEnabled = this.parent.waterService;
+                  if (waterServiceEnabled) {
+                    return !!value;
+                  }
+                  return true;
+                }),
+                evChargeFacilityPrice: Yup.string().test('evChargeFacilityPrice', 'EV charge facility price is required', function (value) {
+                  const evChargeFacilityEnabled = this.parent.evChargeFacility;
+                  if (evChargeFacilityEnabled) {
+                    return !!value;
+                  }
+                  return true;
+                }),
+                airPressureCheckPrice: Yup.string().test('airPressureCheckPrice', 'Air pressure check price is required', function (value) {
+                  const airPressureCheckEnabled = this.parent.airPressureCheck;
+                  if (airPressureCheckEnabled) {
+                    return !!value;
+                  }
+                  return true;
+                }),
+
+
               })}
             >
               {(props) => {
@@ -75,6 +115,7 @@ function ProvAddSlot() {
                   handleReset,
                 } = props;
                 return (
+
                   <form onSubmit={handleSubmit} className="bg-gray-100 p-6 rounded-lg shadow-md">
                     {/* Parking lot name */}
                     <label htmlFor="Pname" className="block font-bold mb-2">
@@ -97,7 +138,7 @@ function ProvAddSlot() {
                     )}
 
                     {/* Number of parking slots */}
-                    <label htmlFor="Pnumber" className="block font-bold my-2">
+                    <label htmlFor="Pnumber" className="block font-bold mb-2 mt-5 ">
                       Number of parking slots
                     </label>
                     <input
@@ -115,49 +156,108 @@ function ProvAddSlot() {
                     {errors.Pnumber && touched.Pnumber && (
                       <div className="text-red-500 text-sm mt-1">{errors.Pnumber}</div>
                     )}
-
                     {/* Choose the services provided */}
                     <div className="flex justify-evenly mt-7">
-                      <label className=''>
+                      <label className='cursor-pointer text-sm md:text-base'>
                         <Field
                           type="checkbox"
                           name="waterService"
                           checked={values.waterService}
-                          onChange={handleChange}
                           className='w-6 h-6 text-primary-provider border-2 border-black rounded cursor-pointer focus:outline-none mr-3'
-
+                          onChange={e => {
+                            handleChange(e);
+                            setShowWaterServicePrice(e.target.checked);
+                          }}
                         />
                         Water Service
                       </label>
-                      <br />
-                      <label>
+                      <label className='cursor-pointer text-sm md:text-base'>
                         <Field
                           type="checkbox"
                           name="evChargeFacility"
                           checked={values.evChargeFacility}
-                          onChange={handleChange}
                           className='w-6 h-6 text-primary-provider border-2 border-black rounded cursor-pointer focus:outline-none mr-3'
+                          onChange={e => {
+                            handleChange(e);
+                            setShowEVChargeFacilityPrice(e.target.checked);
+                          }}
                         />
-                        EV Charge Facility
+                        EV Charge
                       </label>
-                      <br />
-                      <label>
+                      <label className='cursor-pointer text-sm md:text-base'>
                         <Field
                           type="checkbox"
                           name="airPressureCheck"
-                          checked={values.airPressureCheck}
-                          onChange={handleChange}
                           className='w-6 h-6 text-primary-provider border-2 border-black rounded cursor-pointer focus:outline-none mr-3'
+                          checked={values.airPressureCheck}
+                          onChange={e => {
+                            handleChange(e);
+                            setShowAirPressureCheckPrice(e.target.checked);
+                          }}
                         />
-                        Air Pressure Checking and Filling
+                        Air Filling
                       </label>
                     </div>
+                    {/* Additional fields for service prices */}
+                    {showWaterServicePrice && (
+                      <div className="mt-4">
+                        <label htmlFor="waterServicePrice" className="block font-bold my-2">
+                          Water Service Price
+                        </label>
+                        <Field
+                          type="text"
+                          id="waterServicePrice"
+                          name="waterServicePrice"
+                          className="mt-1 p-2 block w-full border border-gray-300 rounded-md focus:outline-none focus:ring-primary-provider focus:border-primary-provider"
+                        />
+                        {errors.waterServicePrice && touched.waterServicePrice && (
+                          <div className="text-red-500 text-sm mt-1">{errors.waterServicePrice}</div>
+                        )}                      </div>
+                    )}
+                    {showEVChargeFacilityPrice && (
+                      <div className="mt-4">
+                        <label htmlFor="evChargeFacilityPrice" className="block font-bold my-2">
+                          EV Charge Facility Price
+                        </label>
+                        <Field
+                          type="text"
+                          id="evChargeFacilityPrice"
+                          name="evChargeFacilityPrice"
+                          className="mt-1 p-2 block w-full border border-gray-300 rounded-md focus:outline-none focus:ring-primary-provider focus:border-primary-provider"
+                        />
+                        {errors.evChargeFacilityPrice && touched.evChargeFacilityPrice && (
+                          <div className="text-red-500 text-sm mt-1">{errors.evChargeFacilityPrice}</div>
+                        )}                        </div>
+                    )}
+                    {showAirPressureCheckPrice && (
+                      <div className="mt-4">
+                        <label htmlFor="airPressureCheckPrice" className="block font-bold my-2">
+                          Air Pressure Checking and Filling Price
+                        </label>
+                        <Field
+                          type="text"
+                          id="airPressureCheckPrice"
+                          name="airPressureCheckPrice"
+                          className="mt-1 p-2 block w-full border border-gray-300 rounded-md focus:outline-none focus:ring-primary-provider focus:border-primary-provider"
+                        />
+                        {errors.airPressureCheckPrice && touched.airPressureCheckPrice && (
+                          <div className="text-red-500 text-sm mt-1">{errors.airPressureCheckPrice}</div>
+                        )}                        </div>
+                    )}
 
                     {/* Hourly charge for parkionig spot */}
                     <div className='mt-6'>
-                      <label htmlFor="oneHourParkingAmount" className="block font-bold my-2">
-                        Amount of One Hour Parking
-                      </label>
+
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger><label htmlFor="oneHourParkingAmount" className="block font-bold my-2">
+                            Amount for parking per hour                      </label></TooltipTrigger>
+                          <TooltipContent>
+                            <p>In rupees</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+
                       <Field
                         type="number"
                         id="oneHourParkingAmount"
@@ -173,106 +273,139 @@ function ProvAddSlot() {
 
                     {/* Address */}
 
-                    {/* Street */}
+                    <div className="flex justify-between">
+                      {/* Street */}
+                      <div className="mt-6 w-1/2 mr-5">
+                        <label htmlFor="street" className="block font-bold my-2">
+                          Street
+                        </label>
+                        <Field
+                          type="text"
+                          id="street"
+                          name="street"
+                          className={`mt-1 p-2 block w-full border border-gray-300 rounded-md focus:outline-none focus:ring-primary-provider focus:border-primary-provider ${errors.street && touched.street ? 'border-red-500' : ''
+                            }`}
+                        />
+                        {errors.street && touched.street && (
+                          <div className="text-red-500 text-sm mt-1">{errors.street}</div>
+                        )}
+                      </div>
+
+                      {/* City */}
+                      <div className="mt-6 w-1/2">
+                        <label htmlFor="city" className="block font-bold my-2">
+                          City
+                        </label>
+                        <Field
+                          type="text"
+                          id="city"
+                          name="city"
+                          className={`mt-1 p-2 block w-full border border-gray-300 rounded-md focus:outline-none focus:ring-primary-provider focus:border-primary-provider ${errors.city && touched.city ? 'border-red-500' : ''
+                            }`}
+                        />
+                        {errors.city && touched.city && (
+                          <div className="text-red-500 text-sm mt-1">{errors.city}</div>
+                        )}          </div>
+
+                    </div>
+
+                    <div className="flex justify-between">
+                      {/* State */}
+                      <div className="mt-6 w-1/2 mr-5">
+                        <label htmlFor="state" className="block font-bold my-2">
+                          State
+                        </label>
+                        <Field
+                          type="text"
+                          id="state"
+                          name="state"
+                          className={`mt-1 p-2 block w-full border border-gray-300 rounded-md focus:outline-none focus:ring-primary-provider focus:border-primary-provider ${errors.state && touched.state ? 'border-red-500' : ''
+                            }`}
+                        />
+                        {errors.state && touched.state && (
+                          <div className="text-red-500 text-sm mt-1">{errors.state}</div>
+                        )}                    </div>
+
+                      {/* Landmark */}
+                      <div className="mt-6 w-1/2">
+                        <label htmlFor="landmark" className="block font-bold my-2">
+                          Landmark
+                        </label>
+                        <Field
+                          type="text"
+                          id="landmark"
+                          name="landmark"
+                          className="mt-1 p-2 block w-full border border-gray-300 rounded-md focus:outline-none focus:ring-primary-provider focus:border-primary-provider"
+                        />
+                        {errors.landmark && touched.landmark && (
+                          <div className="text-red-500 text-sm mt-1">{errors.landmark}</div>
+                        )}                    </div>
+
+                    </div>
+
+                    <div className="flex justify-between">
+                      {/* Country */}
+                      <div className="mt-6 w-1/2 mr-5">
+                        <label htmlFor="country" className="block font-bold my-2">
+                          Country
+                        </label>
+                        <Field
+                          type="text"
+                          id="country"
+                          name="country"
+                          className={`mt-1 p-2 block w-full border border-gray-300 rounded-md focus:outline-none focus:ring-primary-provider focus:border-primary-provider ${errors.country && touched.country ? 'border-red-500' : ''
+                            }`}
+                        />
+                        {errors.country && touched.country && (
+                          <div className="text-red-500 text-sm mt-1">{errors.country}</div>
+                        )}                     </div>
+
+                      {/* Pin Number */}
+                      <div className="mt-6 w-1/2">
+                        <label htmlFor="pinNumber" className="block font-bold my-2">
+                          Pin Number
+                        </label>
+                        <Field
+                          type="text"
+                          id="pinNumber"
+                          name="pinNumber"
+                          className={`mt-1 p-2 block w-full border border-gray-300 rounded-md focus:outline-none focus:ring-primary-provider focus:border-primary-provider ${errors.pinNumber && touched.pinNumber ? 'border-red-500' : ''
+                            }`}
+                        />
+                        {errors.pinNumber && touched.pinNumber && (
+                          <div className="text-red-500 text-sm mt-1">{errors.pinNumber}</div>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* parkingRule */}
                     <div className="mt-6">
-                      <label htmlFor="street" className="block font-bold my-2">
-                        Street
-                      </label>
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger> <label htmlFor="parkingRule" className="block font-bold my-2">
+                            Parking rule
+                          </label></TooltipTrigger>
+                          <TooltipContent>
+                            Add a parking rule which has to be noted
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+
                       <Field
                         type="text"
-                        id="street"
-                        name="street"
+                        id="parkingRule"
+                        name="parkingRule"
                         className={`mt-1 p-2 block w-full border border-gray-300 rounded-md focus:outline-none focus:ring-primary-provider focus:border-primary-provider ${errors.street && touched.street ? 'border-red-500' : ''
                           }`}
                       />
-                      {errors.street && touched.street && (
-                        <div className="text-red-500 text-sm mt-1">{errors.street}</div>
+                      {errors.parkingRule && touched.parkingRule && (
+                        <div className="text-red-500 text-sm mt-1">{errors.parkingRule}</div>
                       )}
                     </div>
 
-                    {/* City */}
-                    <div className="mt-6">
-                      <label htmlFor="city" className="block font-bold my-2">
-                        City
-                      </label>
-                      <Field
-                        type="text"
-                        id="city"
-                        name="city"
-                        className={`mt-1 p-2 block w-full border border-gray-300 rounded-md focus:outline-none focus:ring-primary-provider focus:border-primary-provider ${errors.city && touched.city ? 'border-red-500' : ''
-                          }`}
-                      />
-                      {errors.city && touched.city && (
-                        <div className="text-red-500 text-sm mt-1">{errors.city}</div>
-                      )}          </div>
-
-                    {/* State */}
-                    <div className="mt-6">
-                      <label htmlFor="state" className="block font-bold my-2">
-                        State
-                      </label>
-                      <Field
-                        type="text"
-                        id="state"
-                        name="state"
-                        className={`mt-1 p-2 block w-full border border-gray-300 rounded-md focus:outline-none focus:ring-primary-provider focus:border-primary-provider ${errors.state && touched.state ? 'border-red-500' : ''
-                          }`}
-                      />
-                      {errors.state && touched.state && (
-                        <div className="text-red-500 text-sm mt-1">{errors.state}</div>
-                      )}                    </div>
-
-                    {/* Landmark */}
-                    <div className="mt-6">
-                      <label htmlFor="landmark" className="block font-bold my-2">
-                        Landmark
-                      </label>
-                      <Field
-                        type="text"
-                        id="landmark"
-                        name="landmark"
-                        className="mt-1 p-2 block w-full border border-gray-300 rounded-md focus:outline-none focus:ring-primary-provider focus:border-primary-provider"
-                      />
-                      {errors.landmark && touched.landmark && (
-                        <div className="text-red-500 text-sm mt-1">{errors.landmark}</div>
-                      )}                    </div>
-
-
-                    {/* Country */}
-                    <div className="mt-6">
-                      <label htmlFor="country" className="block font-bold my-2">
-                        Country
-                      </label>
-                      <Field
-                        type="text"
-                        id="country"
-                        name="country"
-                        className={`mt-1 p-2 block w-full border border-gray-300 rounded-md focus:outline-none focus:ring-primary-provider focus:border-primary-provider ${errors.country && touched.country ? 'border-red-500' : ''
-                          }`}
-                      />
-                      {errors.country && touched.country && (
-                        <div className="text-red-500 text-sm mt-1">{errors.country}</div>
-                      )}                     </div>
-
-                    {/* Pin Number */}
-                    <div className="mt-6">
-                      <label htmlFor="pinNumber" className="block font-bold my-2">
-                        Pin Number
-                      </label>
-                      <Field
-                        type="text"
-                        id="pinNumber"
-                        name="pinNumber"
-                        className={`mt-1 p-2 block w-full border border-gray-300 rounded-md focus:outline-none focus:ring-primary-provider focus:border-primary-provider ${errors.pinNumber && touched.pinNumber ? 'border-red-500' : ''
-                          }`}
-                      />
-                      {errors.pinNumber && touched.pinNumber && (
-                        <div className="text-red-500 text-sm mt-1">{errors.pinNumber}</div>
-                      )}                     </div>
-
                     <button
                       type="button"
-                      className="bg-white text-blue-500 border border-blue-500 px-4 py-2 rounded-md mr-2 hover:bg-blue-500 hover:text-white my-6"
+                      className="bg-white text-blue-500 border border-blue-500 px-4 py-2 rounded-md mr-2 hover:bg-blue-500 hover:text-white my-6 cursor-pointer"
                       onClick={handleReset}
                       disabled={!dirty || isSubmitting}
                     >
@@ -280,7 +413,7 @@ function ProvAddSlot() {
                     </button>
                     <button
                       type="submit"
-                      className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
+                      className="bg-primary-provider text-white px-4 py-2 rounded-md hover:bg-blue-600"
                       disabled={isSubmitting}
                     >
                       Submit
@@ -293,7 +426,7 @@ function ProvAddSlot() {
           </div>
 
 
-          <div className="flex items-center justify-center h-48 mb-4 rounded bg-gray-50 dark:bg-gray-800">
+          {/* <div className="flex items-center justify-center h-48 mb-4 rounded bg-gray-50 dark:bg-gray-800">
             <p className="text-2xl text-gray-400 dark:text-gray-500">
               <svg className="w-3.5 h-3.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 18">
                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 1v16M1 9h16" />
@@ -366,9 +499,12 @@ function ProvAddSlot() {
                 </svg>
               </p>
             </div>
-          </div>
+          </div> */}
+
         </div>
       </div>
+
+      {/* <ProGetAddressLatLong/> */}
 
     </>
   )

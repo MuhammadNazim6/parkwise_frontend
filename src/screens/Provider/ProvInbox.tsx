@@ -1,13 +1,9 @@
 import React from 'react'
-import ProvNavbar from '@/components/Provider/ProvNavbar'
-import Sidebar from '@/components/Provider/Sidebar'
 
 function ProvInbox() {
   return (
     <>
-      <ProvNavbar />
-      <Sidebar />
-      <h1>INBOX</h1>
+        <h1 className='text-4xl bg-red-900'>Lorem ipsum dolor sit amet consectetur adipisicing elit. Expedita iste temporibus nostrum aut, sint enim unde itaque a suscipit quas sed veniam esse dignissimos soluta, eos ab facere blanditiis magni.</h1>
     </>
   )
 }

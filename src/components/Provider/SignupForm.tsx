@@ -45,7 +45,7 @@ export default function SignupForm(props) {
 
   useEffect(() => {
     if (providerInfo) {
-      navigate('/')
+      navigate('/provider')
     }
   }, [navigate, providerInfo])
 

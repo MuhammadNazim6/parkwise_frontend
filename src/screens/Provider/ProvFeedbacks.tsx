@@ -1,13 +1,10 @@
 import React from 'react'
-import ProvNavbar from '@/components/Provider/ProvNavbar'
-import Sidebar from '@/components/Provider/Sidebar'
+
 
 function ProvFeedbacks() {
   return (
     <>
-      <ProvNavbar />
-      <Sidebar />
-      <h1>ProvFeedbacks</h1>
+        <h1 className='text-4xl bg-black'>Lorem ipsum dolor sit amet consectetur adipisicing elit. Expedita iste temporibus nostrum aut, sint enim unde itaque a suscipit quas sed veniam esse dignissimos soluta, eos ab facere blanditiis magni.</h1>
     </>
   )
 }
