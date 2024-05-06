@@ -5,7 +5,7 @@ import UserSignup from '../screens/Users/UserSignup';
 import UserLandingPage from '../screens/Users/UserLandingPage';
 import UserEmailVerify from '../screens/Users/UserEmailVerify';
 import UserHome from '../screens/Users/UserHome';
-import UserForgotPassword from '../screens/Users/UserForgotPassword';
+import CommonForgotPassword from '../screens/Common/CommonForgotPassword';
 import UserProtect from '@/components/User/protected/UserProtect';
 
 function UserRoutes() {
@@ -14,7 +14,7 @@ function UserRoutes() {
       <Route path='/' element={<UserLandingPage />} />
       <Route path='/login' element={<CommonLogin />} />
       <Route path='user/signup' element={<UserSignup />} />
-      <Route path='user/forgotpassword' element={<UserForgotPassword />} />
+      <Route path='user/forgotpassword' element={<CommonForgotPassword />} />
       <Route path='user/email-verify' element={<UserEmailVerify />} />
 
 

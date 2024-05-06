@@ -121,17 +121,16 @@ export default function LoginForm(props) {
         };
         if (role === 'user') {
           const res = await login(formData).unwrap();
-          console.log();
           if (res.success) {
             dispatch(setCredentials({ ...res }));
             navigate("/user/home");
-          }else{
+          } else {
             setCommonError('Incorrect username or password')
           }
 
         } else {
           const res = await providerLogin(formData).unwrap();
-          if(res.success){
+          if (res.success) {
             dispatch(setProviderCredentials({ ...res }));
             navigate("/provider");
           }
@@ -140,7 +139,7 @@ export default function LoginForm(props) {
       }
     } catch (err) {
       console.log('Error catched while logging in ');
-      
+
     }
   };
 
@@ -168,7 +167,7 @@ export default function LoginForm(props) {
               Select Role:
             </label>
             <select
-              className="w-full border-2 border-gray-300 rounded-xl pl-3 mt-1 bg-transparent h-12"
+              className="w-full border-2 border-gray-300 rounded-xl pl-3 mt-1 bg-transparent h-12 cursor-pointer"
               value={role}
               onChange={(e) => setRole(e.target.value)}
             >
@@ -181,12 +180,6 @@ export default function LoginForm(props) {
             <label className="text-lg font-medium tracking-wide">
               Password
             </label>
-            {/* <button
-              type="button"
-              onClick={togglePasswordVisibility}
-              className="absolute top-1/2 right-0 transform -translate-y-1/2 px-2 border-l flex items-center"
-            >
-            </button> */}
             <div className="relative">
               <input
                 className="w-full border-2 border-gray-300 rounded-xl p-4 mt-1 bg-transparent h-12"

@@ -70,6 +70,15 @@ export const userApiSlice = apiSlice.injectEndpoints({
       onQueryStarted: onQueryStartedErrorToast
     }),
 
+    commForgotPassword: builder.mutation({
+      query: (data) => ({
+        url: `${USER_URL}/forgotPassword`,
+        method: "POST",
+        body: data,
+      }),
+      onQueryStarted: onQueryStartedErrorToast
+    }),
+
   }),
 });
 
@@ -79,5 +88,6 @@ export const {
   useLogoutMutation,
   useUserVerificationMutation,
   useUserCheckOtpMutation,
-  useUserSignGoogleMutation
+  useUserSignGoogleMutation,
+  useCommForgotPasswordMutation
 } = userApiSlice;

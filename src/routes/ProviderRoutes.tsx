@@ -22,7 +22,6 @@ function ProviderRouter() {
         <Route path='feedbacks' element={<ProvFeedbacks />} />
       </Route>
       <Route path='signup' element={<ProvSignup />} />
-      <Route path='forgotpassword' element={<ProvForgotPassword />} />
       <Route path='email-verify' element={<ProvEmailVerify />} />
 
     </Routes>
