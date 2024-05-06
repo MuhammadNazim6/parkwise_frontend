@@ -79,6 +79,15 @@ export const userApiSlice = apiSlice.injectEndpoints({
       onQueryStarted: onQueryStartedErrorToast
     }),
 
+    comChangePassword: builder.mutation({
+      query: (data) => ({
+        url: `${USER_URL}/changePassword`,
+        method: "POST",
+        body: data,
+      }),
+      onQueryStarted: onQueryStartedErrorToast
+    }),
+
   }),
 });
 
@@ -89,5 +98,6 @@ export const {
   useUserVerificationMutation,
   useUserCheckOtpMutation,
   useUserSignGoogleMutation,
-  useCommForgotPasswordMutation
+  useCommForgotPasswordMutation,
+  useComChangePasswordMutation
 } = userApiSlice;

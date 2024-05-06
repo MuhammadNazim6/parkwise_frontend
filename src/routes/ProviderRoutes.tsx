@@ -15,7 +15,7 @@ function ProviderRouter() {
   return (
     <Routes>
       <Route path='/' element={<ProvSidebar />}>
-      <Route path='/' element={<ProvDashboard />}/>
+        <Route path='/' element={<ProvDashboard />} />
         <Route path='add-slots' element={<ProvAddSlot />} />
         <Route path='parking-lot' element={<ProvParkingLot />} />
         <Route path='inbox' element={<ProvInbox />} />

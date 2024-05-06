@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { LoaderWhite } from '../../components/Common/BootstrapElems';
 import { useCommForgotPasswordMutation, useUserCheckOtpMutation } from '@/redux/slices/userApiSlice';
 import {
@@ -22,6 +22,7 @@ function ForgotPassForm(props) {
   const [userEnteredOtp, setUserEnteredOtp] = useState('')
   const [waiToSendOtp, setWaitToSendOtp] = useState(false)
   const [sendOtpCLicked, setSendOtpCLicked] = useState(false)
+  const navigate = useNavigate();
 
 
   const verifyOtp = async () => {
@@ -33,6 +34,12 @@ function ForgotPassForm(props) {
     if (checkedOtp.success) {
       // OTP CORRECT
       alert('OTP CORRECT')
+      navigate('/login/changePassword', {
+        state: {
+          email,
+        }
+      });
+
     } else {
       // INCORRECT OTP
       alert('OTP ININININICORRECT')
@@ -43,7 +50,7 @@ function ForgotPassForm(props) {
   return (
     <div className='bg-white p-10 rounded-lg border-2 border-gray-200 h-2/3 w-5/6 md:w-2/3'>
       <h1 className='text-4xl font-semibold'>Forgot password?</h1>
-      {!sendOtpCLicked ? (<p className='font-medium text-lg text-gray-500 tracking-wide'>Dont worry we can help.</p>) : (<p className='font-medium tracking-wide mt-5 text-xl'>Enter otp</p>) }
+      {!sendOtpCLicked ? (<p className='font-medium text-lg text-gray-500 tracking-wide'>Dont worry we can help.</p>) : (<p className='font-medium tracking-wide mt-5 text-xl'>Enter otp</p>)}
       <div className='mt-10'>
         <Formik
           initialValues={{ email: '' }}

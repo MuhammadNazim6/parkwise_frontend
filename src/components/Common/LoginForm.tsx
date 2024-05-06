@@ -144,6 +144,7 @@ export default function LoginForm(props) {
   };
 
   return (
+    // <div className=' w-full h-screen lg:bg-primary-blue'>
     <div className="bg-white p-2 md:p-10 lg:border-0 w-5/6">
       <h1 className="md:text-4xl text-2xl font-semibold md:block ">Welcome back</h1>
       <p className="font-medium text-lg text-gray-500 md:mt-4 tracking-wide">
@@ -204,7 +205,7 @@ export default function LoginForm(props) {
 
           <div className="mt-8 flex justify-between items-center">
             <div className=""></div>
-            <Link to="/user/forgotPassword">
+            <Link to="/login/forgotPassword">
               {" "}
               <button
                 type="button"
@@ -255,5 +256,6 @@ export default function LoginForm(props) {
         </div>
       </div>
     </div>
+    // </div>
   );
 }
