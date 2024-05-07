@@ -4,6 +4,8 @@ import * as Yup from 'yup';
 import { FaEyeSlash, FaEye } from "react-icons/fa";
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useComChangePasswordMutation } from '@/redux/slices/userApiSlice';
+import { Loader } from '@/components/Common/BootstrapElems';
+import toast from 'react-hot-toast';
 
 
 
@@ -25,7 +27,7 @@ function ChangePasswordForm() {
   const location = useLocation();
   const navigate = useNavigate();
   const { email } = location.state;
-  const [changePassword] = useComChangePasswordMutation();
+  const [changePassword, { isLoading }] = useComChangePasswordMutation();
 
   const [showPassword, setShowPassword] = useState(true);
   const [showConfPassword, setShowConfPassword] = useState(true);
@@ -42,10 +44,8 @@ function ChangePasswordForm() {
     }
     const changedPasswordRes = await changePassword(formData).unwrap()
     if (changedPasswordRes.success) {
-      alert('navigating to login page')
-      // if (changedPasswordRes.role === 'user') {
-        navigate('/login')
-      // }
+      toast('Password changed successfully, try login')
+      navigate('/login')
     }
   }
 
@@ -111,13 +111,13 @@ function ChangePasswordForm() {
                 </div>
               </div>
               <div className="bg--600 h-1/4 flex justify-center items-start">
-                <button
+              {isLoading ? <Loader/> :(<button
                   type="submit"
                   disabled={isSubmitting}
-                  className="bg-secondary-blue hover:bg-blue-500 text-white font-bold py-2 px-4 focus:outline-none focus:shadow-outline w-2/3 md:w-1/3 rounded-lg"
+                  className="bg-primary-provider hover:bg-secondary-provider text-white font-bold py-2 px-4 focus:outline-none focus:shadow-outline w-2/3 md:w-1/3 rounded-lg"
                 >
                   Submit
-                </button>
+                </button>)}
 
               </div>
 

@@ -12,11 +12,13 @@ import { FaEyeSlash, FaEye } from "react-icons/fa";
 import { Loader } from '../Common/BootstrapElems'
 import { GoogleLogin, useGoogleLogin } from '@react-oauth/google';
 import axios from 'axios'
+import { useToast } from "@/components/ui/use-toast"
 
 
 
 export default function LoginForm(props) {
 
+  const { toast } = useToast()
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -121,10 +123,17 @@ export default function LoginForm(props) {
         };
         if (role === 'user') {
           const res = await login(formData).unwrap();
+          console.log(res);
+          
           if (res.success) {
             dispatch(setCredentials({ ...res }));
             navigate("/user/home");
           } else {
+            // toast({
+            //   variant: "destructive",
+            //   title: "Incorrect username or password",
+            //   description: "Incorrect username or password",
+            // })
             setCommonError('Incorrect username or password')
           }
 
@@ -133,6 +142,13 @@ export default function LoginForm(props) {
           if (res.success) {
             dispatch(setProviderCredentials({ ...res }));
             navigate("/provider");
+          }else{
+            // toast({
+            //   variant: "destructive",
+            //   title: "Incorrect username or password",
+            //   description: "Incorrect username or password",
+            // })
+            setCommonError('Incorrect username or password')
           }
         }
 

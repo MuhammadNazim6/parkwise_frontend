@@ -43,8 +43,7 @@ function UserHome() {
 
   return (
     <>
-      <UserNavbar />
-      <div className="md:flex  md:justify-between h-screen">
+      <div className="md:flex  md:justify-between h-screen bg-blue-50">
         <div className="md:w-1/2 text-center h-1/2 m-4">
           {/* <div className="">
             <input type="text" className='bg-orange-600 w-2/3 h-10 p-2 mt-7 text-lg rounded-l-lg' placeholder='Search for available parking lots...' />
@@ -72,7 +71,7 @@ function UserHome() {
           <p className='text-lg '>Metro parking</p>
           <p className='text-sm md:text-sm line-clamp-1 text-gray-700'>Secura mall, opp TK building hbsadlfkbjhasdlfkjbsa jljhjk</p>
           <div className="flex items-center">
-            <IoMdBatteryCharging class="text-green-700" />
+            <IoMdBatteryCharging className="text-green-700" />
             <p className="text-gray-700">Ev</p>
           </div>
         </div>

@@ -7,7 +7,7 @@ function CommonLeftSideLayout() {
   return (
     <div className='flex w-full h-screen lg:bg-primary-blue'>
      <AuthPageLeftContent/>
-      <div className="w-full flex items-center justify-center lg:w-1/2 bg-white m-2 mr-0 rounded-l-3xl overflow-hidden">
+      <div className="w-full flex items-center justify-center lg:w-1/2 md:bg-white m-2 mr-0 rounded-l-3xl overflow-hidden">
         <Outlet />
       </div>
     </div>

@@ -1,6 +1,5 @@
 import { apiSlice } from "./apiSlice";
 import { onQueryStartedErrorToast } from "../ErrorHandling/ErrorHandling";
-import { toast } from 'react-toastify'; 
 
 const USER_URL = "/api/user";
 interface User {
@@ -88,6 +87,7 @@ export const userApiSlice = apiSlice.injectEndpoints({
       onQueryStarted: onQueryStartedErrorToast
     }),
 
+
   }),
 });
 
@@ -99,5 +99,5 @@ export const {
   useUserCheckOtpMutation,
   useUserSignGoogleMutation,
   useCommForgotPasswordMutation,
-  useComChangePasswordMutation
+  useComChangePasswordMutation,
 } = userApiSlice;

@@ -1,6 +1,7 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import CommonLogin from '../screens/Common/CommonLogin';
+import UserLayout from '@/screens/Users/UserLayout';
 import UserSignup from '../screens/Users/UserSignup';
 import UserLandingPage from '../screens/Users/UserLandingPage';
 import UserEmailVerify from '../screens/Users/UserEmailVerify';
@@ -24,7 +25,9 @@ function UserRoutes() {
 
 
       <Route element={<UserProtect />}>
-        <Route path='user/home' element={<UserHome />} />
+      <Route path='user' element={<UserLayout />} >
+        <Route path='home' element={<UserHome />} />
+      </Route>
       </Route>
 
     </Routes>
