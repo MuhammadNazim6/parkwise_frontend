@@ -8,7 +8,15 @@ const COMMON_URL = '/api/common';
 export const commonApiSLice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
 
-    comResendOtp: builder.mutation({
+    commonLogin: builder.mutation({
+      query: (data) => ({
+        url: `${COMMON_URL}/login`,
+        method: "POST",
+        body: data,
+      }),
+      onQueryStarted: onQueryStartedErrorToast
+    }),
+    commonResendOtp: builder.mutation({
       query: (data) => ({
         url: `${COMMON_URL}/resend-otp`,
         method: "POST",
@@ -19,4 +27,4 @@ export const commonApiSLice = apiSlice.injectEndpoints({
   })
 })
 
-export const { useComResendOtpMutation } = commonApiSLice
+export const { useCommonResendOtpMutation, useCommonLoginMutation } = commonApiSLice

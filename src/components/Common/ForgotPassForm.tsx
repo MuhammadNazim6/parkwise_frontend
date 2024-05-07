@@ -4,7 +4,7 @@ import * as Yup from 'yup';
 import { Link, useNavigate } from 'react-router-dom';
 import { Loader } from '../../components/Common/BootstrapElems';
 import { useCommForgotPasswordMutation, useUserCheckOtpMutation } from '@/redux/slices/userApiSlice';
-import { useComResendOtpMutation } from '@/redux/slices/commonSlice';
+import { useCommonResendOtpMutation } from '@/redux/slices/commonSlice';
 
 import {
   InputOTP,
@@ -25,7 +25,7 @@ function ForgotPassForm(props) {
   const [waiToSendOtp, setWaitToSendOtp] = useState(false)
   const [otpTimer,setOtpTimer] = useState(60)
   const [sendOtpCLicked, setSendOtpCLicked] = useState(false)
-  const [resendOtp] = useComResendOtpMutation()
+  const [resendOtp] = useCommonResendOtpMutation()
   const [commonError, setCommonError] = useState('')
   const [otpResendText, setOtpResendText] = useState('')
   

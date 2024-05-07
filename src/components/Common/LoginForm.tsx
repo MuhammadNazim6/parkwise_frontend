@@ -2,8 +2,7 @@ import * as React from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useState, useEffect } from "react";
-import { useLoginMutation } from "../../redux/slices/userApiSlice";
-import { useProviderLoginMutation } from "../../redux/slices/providerSlice";
+import { useCommonLoginMutation } from "@/redux/slices/commonSlice";
 import { useUserSignGoogleMutation } from "../../redux/slices/userApiSlice";
 import { setCredentials } from "../../redux/slices/authSlice";
 import { setProviderCredentials } from "../../redux/slices/authSlice";
@@ -11,17 +10,13 @@ import { FaEyeSlash, FaEye } from "react-icons/fa";
 import { Loader } from '../Common/BootstrapElems'
 import { useGoogleLogin } from '@react-oauth/google';
 import axios from 'axios'
-import { useToast } from "@/components/ui/use-toast"
 
 
 
 export default function LoginForm(props) {
 
-  const { toast } = useToast()
-
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [role, setRole] = useState('user');
   const [emailError, setEmailError] = useState('')
   const [commonError, setCommonError] = useState('')
   const [showPassword, setShowPassword] = useState(true);
@@ -33,9 +28,9 @@ export default function LoginForm(props) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const [login, { isLoading: loginLoading }] = useLoginMutation();
+
+  const [commonLogin, { isLoading }] = useCommonLoginMutation();
   const [sign] = useUserSignGoogleMutation()
-  const [providerLogin, { isLoading: providerLoginLoading }] = useProviderLoginMutation();
 
   const { userInfo } = useSelector((state) => state.auth);
   const { uLoggedIn } = useSelector((state) => state.auth);
@@ -120,37 +115,33 @@ export default function LoginForm(props) {
           email,
           password,
         };
-        if (role === 'user') {
-          const res = await login(formData).unwrap();
-          console.log(res);
-          
-          if (res.success) {
+
+        // Common login for user,provider and admin
+        const res = await commonLogin(formData).unwrap()
+        console.log(res);
+        if (res.success) {
+          if (res.data.role === 'user') {
             dispatch(setCredentials({ ...res }));
             navigate("/user/home");
-          } else {
-            // toast({
-            //   variant: "destructive",
-            //   title: "Incorrect username or password",
-            //   description: "Incorrect username or password",
-            // })
-            setCommonError('Incorrect username or password')
-          }
-
-        } else {
-          const res = await providerLogin(formData).unwrap();
-          if (res.success) {
+          } else if (res.data.role === 'provider') {
             dispatch(setProviderCredentials({ ...res }));
             navigate("/provider");
+          }else if (res.data.role === 'admin') {
+            // dispatch(setProviderCredentials({ ...res }));
+            // navigate("/provider");
+
+            // WHEN ADMIN LOGINS
           }else{
-            // toast({
-            //   variant: "destructive",
-            //   title: "Incorrect username or password",
-            //   description: "Incorrect username or password",
-            // })
             setCommonError('Incorrect username or password')
           }
+        } else {
+          setCommonError('Incorrect username or password')
+          // toast({
+          //   variant: "destructive",
+          //   title: "Incorrect username or password",
+          //   description: "Incorrect username or password",
+          // })
         }
-
       }
     } catch (err) {
       console.log('Error catched while logging in ');
@@ -159,7 +150,6 @@ export default function LoginForm(props) {
   };
 
   return (
-    // <div className=' w-full h-screen lg:bg-primary-blue'>
     <div className="bg-white p-2 md:p-10 lg:border-0 w-5/6">
       <h1 className="md:text-4xl text-2xl font-semibold md:block ">Welcome back</h1>
       <p className="font-medium text-lg text-gray-500 md:mt-4 tracking-wide">
@@ -179,17 +169,7 @@ export default function LoginForm(props) {
             {emailError && <p className="text-red-400 pl-2">{emailError}</p>}
           </div>
           <div className="mt-2 h-24">
-            <label className="text-lg font-medium tracking-wide">
-              Select Role:
-            </label>
-            <select
-              className="w-full border-2 border-gray-300 rounded-xl pl-3 mt-1 bg-transparent h-12 cursor-pointer"
-              value={role}
-              onChange={(e) => setRole(e.target.value)}
-            >
-              <option value="user">User</option>
-              <option value="provider">Provider</option>
-            </select>
+  
 
           </div>
           <div className="mt-2 h-24">
@@ -232,7 +212,7 @@ export default function LoginForm(props) {
             </Link>
           </div>
           <div className="mt-4 gap-y-4 flex justify-center items-center">
-            {loginLoading || providerLoginLoading ? (
+            {isLoading  ? (
               <Loader />
             ) : (
               <button
@@ -271,6 +251,5 @@ export default function LoginForm(props) {
         </div>
       </div>
     </div>
-    // </div>
   );
 }
