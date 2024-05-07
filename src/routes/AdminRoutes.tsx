@@ -7,7 +7,7 @@ function AdminRoutes() {
     <Routes>
       <Route path='' element={<AdminLogin/>} />
       <Route element>
-       
+  
       </Route>
     </Routes>
   )

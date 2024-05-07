@@ -1,5 +1,4 @@
 import * as React from "react";
-import { FaGoogle } from "react-icons/fa";
 import { useNavigate, Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useState, useEffect } from "react";
@@ -10,7 +9,7 @@ import { setCredentials } from "../../redux/slices/authSlice";
 import { setProviderCredentials } from "../../redux/slices/authSlice";
 import { FaEyeSlash, FaEye } from "react-icons/fa";
 import { Loader } from '../Common/BootstrapElems'
-import { GoogleLogin, useGoogleLogin } from '@react-oauth/google';
+import { useGoogleLogin } from '@react-oauth/google';
 import axios from 'axios'
 import { useToast } from "@/components/ui/use-toast"
 

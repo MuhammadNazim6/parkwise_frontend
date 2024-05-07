@@ -1,23 +1,52 @@
 import React, { useState } from 'react'
-import { render } from "react-dom";
 import { Formik, Field, FieldArray } from "formik";
 import * as Yup from "yup";
-import { Button } from '@/components/ui/button';
-import ProGetAddressLatLong from '@/components/Provider/ProGetAddressLatLong';
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip"
+import { Loader } from '../../components/Common/BootstrapElems'
+import axios from 'axios';
 
 function ProvAddSlot() {
+
+  const GeoApiKey = import.meta.env.VITE_GEOAPIFY_API_KEY;
 
   const [showWaterServicePrice, setShowWaterServicePrice] = useState(false);
   const [showEVChargeFacilityPrice, setShowEVChargeFacilityPrice] = useState(false);
   const [showAirPressureCheckPrice, setShowAirPressureCheckPrice] = useState(false);
 
+  // Search location
+  // const [query, setQuery] = useState('');
+  const [searchResult, setSearchResult] = useState([]);
+  const [isLoading, setLoading] = useState(false);
 
+
+  const handleSearch = async (values) => {
+    try {
+      setLoading(true)
+      console.log(values);
+
+      if (values.buildingOrAreaName && values.street && values.pinNumber && values.city && values.state && values.country) {
+        const name = encodeURIComponent(values.buildingOrAreaName);
+        const street = encodeURIComponent(values.street);
+        const postcode = encodeURIComponent(values.pinNumber);
+        const city = encodeURIComponent(values.city);
+        const state = encodeURIComponent(values.state);
+        const country = encodeURIComponent(values.country);
+        const response = await axios.get(`https://api.geoapify.com/v1/geocode/search?name=${name}&street=${street}&postcode=${postcode}&city=${city}&state=${state}&country=${country}&lang=en&limit=5&type=city&format=json&apiKey=${GeoApiKey}`)
+        console.log(response.data);
+        setSearchResult(response.data.results)
+
+      }
+    } catch (error) {
+      console.error('Error fetching search results:', error);
+    } finally {
+      setLoading(false)
+    }
+  }
   return (
     <>
       <div className="p-4 sm:ml-64">
@@ -37,6 +66,7 @@ function ProvAddSlot() {
                 airPressureCheck: false,
                 airPressureCheckPrice: '',
                 oneHourParkingAmount: '',
+                buildingOrAreaName: '',
                 street: '',
                 city: '',
                 state: '',
@@ -44,7 +74,7 @@ function ProvAddSlot() {
                 country: '',
                 pinNumber: '',
                 parkingRule: '',
-
+                // location: ''
 
               }}
               onSubmit={async (values) => {
@@ -63,6 +93,8 @@ function ProvAddSlot() {
                   .min(40, "Should be equal or greater than Rs.40")
                   .max(200, "Cannot be greater than Rs.200")
                   .required('Amount is required'),
+                buildingOrAreaName: Yup.string()
+                  .required("Building or area name is required"),
                 street: Yup.string()
                   .required("Street is required"),
                 city: Yup.string()
@@ -246,7 +278,7 @@ function ProvAddSlot() {
                     )}
 
                     {/* Hourly charge for parkionig spot */}
-                    <div className='mt-6'>
+                    <div className='mt-6 w-1/2'>
 
                       <TooltipProvider>
                         <Tooltip>
@@ -272,6 +304,23 @@ function ProvAddSlot() {
                     </div>
 
                     {/* Address */}
+                    <div className="mt-6 w-1/2 mr-5">
+                      <label htmlFor="buildingOrAreaName" className="block font-bold my-2">
+                        Building name or area name
+                      </label>
+                      <Field
+                        type="text"
+                        id="buildingOrAreaName"
+                        name="buildingOrAreaName"
+                        // onChange={(e) => setName(e.target.value)}
+                        // value={name}
+                        className={`mt-1 p-2 block w-full border border-gray-300 rounded-md focus:outline-none focus:ring-primary-provider focus:border-primary-provider ${errors.buildingOrAreaName && touched.buildingOrAreaName ? 'border-red-500' : ''
+                          }`}
+                      />
+                      {errors.street && touched.buildingOrAreaName && (
+                        <div className="text-red-500 text-sm mt-1">{errors.buildingOrAreaName}</div>
+                      )}
+                    </div>
 
                     <div className="flex justify-between">
                       {/* Street */}
@@ -283,6 +332,8 @@ function ProvAddSlot() {
                           type="text"
                           id="street"
                           name="street"
+                          // onChange={(e) => setStreet(e.target.value)}
+                          // value={street}
                           className={`mt-1 p-2 block w-full border border-gray-300 rounded-md focus:outline-none focus:ring-primary-provider focus:border-primary-provider ${errors.street && touched.street ? 'border-red-500' : ''
                             }`}
                         />
@@ -300,6 +351,8 @@ function ProvAddSlot() {
                           type="text"
                           id="city"
                           name="city"
+                          // onChange={(e) => setCity(e.target.value)}
+                          // value={city}
                           className={`mt-1 p-2 block w-full border border-gray-300 rounded-md focus:outline-none focus:ring-primary-provider focus:border-primary-provider ${errors.city && touched.city ? 'border-red-500' : ''
                             }`}
                         />
@@ -319,6 +372,8 @@ function ProvAddSlot() {
                           type="text"
                           id="state"
                           name="state"
+                          // onChange={(e) => setState(e.target.value)}
+                          // value={state}
                           className={`mt-1 p-2 block w-full border border-gray-300 rounded-md focus:outline-none focus:ring-primary-provider focus:border-primary-provider ${errors.state && touched.state ? 'border-red-500' : ''
                             }`}
                         />
@@ -353,6 +408,8 @@ function ProvAddSlot() {
                           type="text"
                           id="country"
                           name="country"
+                          // onChange={(e) => setCountry(e.target.value)}
+                          // value={country}
                           className={`mt-1 p-2 block w-full border border-gray-300 rounded-md focus:outline-none focus:ring-primary-provider focus:border-primary-provider ${errors.country && touched.country ? 'border-red-500' : ''
                             }`}
                         />
@@ -369,6 +426,8 @@ function ProvAddSlot() {
                           type="text"
                           id="pinNumber"
                           name="pinNumber"
+                          // onChange={(e) => setPostcode(e.target.value)}
+                          // value={postcode}
                           className={`mt-1 p-2 block w-full border border-gray-300 rounded-md focus:outline-none focus:ring-primary-provider focus:border-primary-provider ${errors.pinNumber && touched.pinNumber ? 'border-red-500' : ''
                             }`}
                         />
@@ -395,13 +454,30 @@ function ProvAddSlot() {
                         type="text"
                         id="parkingRule"
                         name="parkingRule"
-                        className={`mt-1 p-2 block w-full border border-gray-300 rounded-md focus:outline-none focus:ring-primary-provider focus:border-primary-provider ${errors.street && touched.street ? 'border-red-500' : ''
+                        className={`mt-1 p-2 block w-full border border-gray-300 rounded-md focus:outline-none focus:ring-primary-provider focus:border-primary-provider ${errors.parkingRule && touched.parkingRule ? 'border-red-500' : ''
                           }`}
                       />
                       {errors.parkingRule && touched.parkingRule && (
                         <div className="text-red-500 text-sm mt-1">{errors.parkingRule}</div>
                       )}
                     </div>
+
+                    <div className="mt-6">
+                      {searchResult.length ? (<Field as="select" name="location" id="location">
+                        <option value="">Select a location</option>
+                        {searchResult.map((searchResult,index) => (
+                          <option key={index} value={searchResult.county}>
+                            {searchResult.county}
+                          </option>
+                        ))}
+                      </Field>) : (
+                        <div className="flex justify-center items-center m-16">
+                          <p className='text-xl font-normal text-red-600'>Enter a valid address to get location</p>
+                          {isLoading ? <div className="p-3 ml-3"> <Loader /></div> : <p onClick={() => handleSearch(values)} className='p-3 ml-3 bg-secondary-provider rounded-xl cursor-pointer hover:bg-primary-provider text-white'>Verify address</p>}
+                        </div>
+                      )}
+                    </div>
+
 
                     <button
                       type="button"
@@ -425,86 +501,9 @@ function ProvAddSlot() {
 
           </div>
 
-
-          {/* <div className="flex items-center justify-center h-48 mb-4 rounded bg-gray-50 dark:bg-gray-800">
-            <p className="text-2xl text-gray-400 dark:text-gray-500">
-              <svg className="w-3.5 h-3.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 18">
-                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 1v16M1 9h16" />
-              </svg>
-            </p>
-          </div>
-          <div className="grid grid-cols-2 gap-4 mb-4">
-            <div className="flex items-center justify-center rounded bg-gray-50 h-28 dark:bg-gray-800">
-              <p className="text-2xl text-gray-400 dark:text-gray-500">
-                <svg className="w-3.5 h-3.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 18">
-                  <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 1v16M1 9h16" />
-                </svg>
-              </p>
-            </div>
-            <div className="flex items-center justify-center rounded bg-gray-50 h-28 dark:bg-gray-800">
-              <p className="text-2xl text-gray-400 dark:text-gray-500">
-                <svg className="w-3.5 h-3.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 18">
-                  <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 1v16M1 9h16" />
-                </svg>
-              </p>
-            </div>
-            <div className="flex items-center justify-center rounded bg-gray-50 h-28 dark:bg-gray-800">
-              <p className="text-2xl text-gray-400 dark:text-gray-500">
-                <svg className="w-3.5 h-3.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 18">
-                  <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 1v16M1 9h16" />
-                </svg>
-              </p>
-            </div>
-            <div className="flex items-center justify-center rounded bg-gray-50 h-28 dark:bg-gray-800">
-              <p className="text-2xl text-gray-400 dark:text-gray-500">
-                <svg className="w-3.5 h-3.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 18">
-                  <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 1v16M1 9h16" />
-                </svg>
-              </p>
-            </div>
-          </div>
-          <div className="flex items-center justify-center h-48 mb-4 rounded bg-gray-50 dark:bg-gray-800">
-            <p className="text-2xl text-gray-400 dark:text-gray-500">
-              <svg className="w-3.5 h-3.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 18">
-                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 1v16M1 9h16" />
-              </svg>
-            </p>
-          </div>
-          <div className="grid grid-cols-2 gap-4">
-            <div className="flex items-center justify-center rounded bg-gray-50 h-28 dark:bg-gray-800">
-              <p className="text-2xl text-gray-400 dark:text-gray-500">
-                <svg className="w-3.5 h-3.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 18">
-                  <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 1v16M1 9h16" />
-                </svg>
-              </p>
-            </div>
-            <div className="flex items-center justify-center rounded bg-gray-50 h-28 dark:bg-gray-800">
-              <p className="text-2xl text-gray-400 dark:text-gray-500">
-                <svg className="w-3.5 h-3.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 18">
-                  <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 1v16M1 9h16" />
-                </svg>
-              </p>
-            </div>
-            <div className="flex items-center justify-center rounded bg-gray-50 h-28 dark:bg-gray-800">
-              <p className="text-2xl text-gray-400 dark:text-gray-500">
-                <svg className="w-3.5 h-3.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 18">
-                  <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 1v16M1 9h16" />
-                </svg>
-              </p>
-            </div>
-            <div className="flex items-center justify-center rounded bg-gray-50 h-28 dark:bg-gray-800">
-              <p className="text-2xl text-gray-400 dark:text-gray-500">
-                <svg className="w-3.5 h-3.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 18">
-                  <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 1v16M1 9h16" />
-                </svg>
-              </p>
-            </div>
-          </div> */}
-
         </div>
       </div>
 
-      {/* <ProGetAddressLatLong/> */}
 
     </>
   )

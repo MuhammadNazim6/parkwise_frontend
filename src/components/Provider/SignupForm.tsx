@@ -214,9 +214,6 @@ export default function SignupForm(props) {
         <div className='mt-2 gap-y-4 flex justify-center items-center h-10'>
           {loading ? <Loader /> : <button className='active:scale-[.98] active:duration-75 transition-all hover:scale-[1.01] ease-in-out rounded-xl bg-primary-provider text-white text-lg font-bold w-11/12 h-11' onClick={submitHandler}>Sign up</button>}
         </div>
-        <div className='mt-4 gap-y-4 flex justify-center items-center'>
-          <button className='flex justify-center items-center p-3 gap-2 active:scale-[.98] active:duration-75 transition-all hover:scale-[1.01] ease-in-out py-3 border-2 border-blue-300 rounded-xl h-11 w-11/12'><FaGoogle/> Sign up with Google</button>
-        </div>
         <div className="mt-3 flex justify-center items-center">
           <p className='font-sm text-base text-gray-600'>Already have an account? </p>
           <Link to='/login'><button className='text-secondary-blue text-base font-sm ml-2 hover:scale-[1.02]' onClick={props.toggleFn}>Sign in</button></Link>

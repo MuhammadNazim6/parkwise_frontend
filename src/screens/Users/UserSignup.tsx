@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import LoginForm from '../../components/Common/LoginForm';
 import SignupForm from '../../components/User/SignupForm';
-import LogoImg from "../../assets/Images/parkwise-high-resolution-logo-transparent.png";
+import LogoImg from "../../assets/Images/WhatsApp_Image_2024-05-07_at_20.13.27_bb0ad381-removebg-preview.png";
 import { useNavigate } from 'react-router-dom';
 
 
@@ -17,14 +17,9 @@ function UserSignup() {
 
   return (
     <div className='flex w-full h-screen lg:bg-primary-blue'>
-      <div className="hidden relative lg:flex h-full w-1/2 items-center justify-center">
-        <div className="flex flex-col">
-          <div className="p-32">
-            <h1 className='text-4xl text-center leading-normal'>"Embark on a journey of convenience and ease. Sign up today!"</h1>
-          </div>
-          <div className="m-10 ml-28">
-            <img src={LogoImg} className='w-full md:w-96 max-w-full md:max-w-96 ml-0 md:ml-16' />
-          </div>
+      <div className="hidden lg:flex h-full w-1/2 items-center  justify-center">
+        <div className="w-1/2">
+          <img src={LogoImg} className='' />
         </div>
       </div>
       <div className="w-full flex items-center justify-center lg:w-1/2 bg-white m-2 mr-0 rounded-l-3xl overflow-hidden">
