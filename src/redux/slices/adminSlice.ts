@@ -15,7 +15,9 @@ export const adminApiSlice = apiSlice.injectEndpoints({
       query: (data) => ({
         url: `${ADMIN_URL}/login`,
         method: 'POST',
-        body: data
+        data: data,
+        params: {}, 
+        headers: {}
       })
     }),
   })

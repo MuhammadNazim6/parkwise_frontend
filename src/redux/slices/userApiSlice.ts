@@ -16,19 +16,14 @@ interface RegisterPayload {
 
 export const userApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
-    login: builder.mutation({
-      query: (data) => ({
-        url: `${USER_URL}/login`,
-        method: "POST",
-        body: data,
-      }),
-      onQueryStarted: onQueryStartedErrorToast
-    }),
-
+    
     logout: builder.mutation({
       query: () => ({
         url: `${USER_URL}/logout`,
         method: "POST",
+        data: {},
+        params: {}, 
+        headers: {}
       }),
       onQueryStarted: onQueryStartedErrorToast
     }),
@@ -37,7 +32,9 @@ export const userApiSlice = apiSlice.injectEndpoints({
       query: (data) => ({
         url: `${USER_URL}/signup`,
         method: "POST",
-        body: data,
+        data: data,
+        params: {}, 
+        headers: {}
       }),
       onQueryStarted: onQueryStartedErrorToast
     }),
@@ -46,7 +43,9 @@ export const userApiSlice = apiSlice.injectEndpoints({
       query: (data) => ({
         url: `${USER_URL}/send-otp`,//email-verify
         method: "POST",
-        body: data,
+        data: data,
+        params: {}, 
+        headers: {}
       }),
       onQueryStarted: onQueryStartedErrorToast
     }),
@@ -55,7 +54,9 @@ export const userApiSlice = apiSlice.injectEndpoints({
       query: (data) => ({
         url: `${USER_URL}/check-otp`,
         method: "POST",
-        body: data,
+        data: data,
+        params: {}, 
+        headers: {}
       }),
       onQueryStarted: onQueryStartedErrorToast
     }),
@@ -64,7 +65,9 @@ export const userApiSlice = apiSlice.injectEndpoints({
       query: (data) => ({
         url: `${USER_URL}/signGoogle`,
         method: "POST",
-        body: data,
+        data: data,
+        params: {}, 
+        headers: {}
       }),
       onQueryStarted: onQueryStartedErrorToast
     }),
@@ -73,7 +76,9 @@ export const userApiSlice = apiSlice.injectEndpoints({
       query: (data) => ({
         url: `${USER_URL}/forgotPassword`,
         method: "POST",
-        body: data,
+        data: data,
+        params: {}, 
+        headers: {}
       }),
       onQueryStarted: onQueryStartedErrorToast
     }),
@@ -82,7 +87,9 @@ export const userApiSlice = apiSlice.injectEndpoints({
       query: (data) => ({
         url: `${USER_URL}/changePassword`,
         method: "POST",
-        body: data,
+        data: data,
+        params: {}, 
+        headers: {}
       }),
       onQueryStarted: onQueryStartedErrorToast
     }),
@@ -93,7 +100,6 @@ export const userApiSlice = apiSlice.injectEndpoints({
 
 export const {
   useRegisterMutation,
-  useLoginMutation,
   useLogoutMutation,
   useUserVerificationMutation,
   useUserCheckOtpMutation,

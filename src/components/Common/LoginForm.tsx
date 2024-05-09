@@ -63,10 +63,10 @@ export default function LoginForm(props) {
           google: true
         }
 
-        const signed = await sign(googleUserData)
-        if (signed.data.success) {
-          console.log(googleUserData);
-          dispatch(setCredentials({ ...googleUserData }))
+        const signed = await sign(googleUserData).unwrap()
+        if (signed.success) {
+          dispatch(setCredentials({ ...googleUserData, password: '' }))
+          localStorage.setItem('token', signed.token)
           navigate('/')
         } else {
           alert('Try another login method')
@@ -121,17 +121,20 @@ export default function LoginForm(props) {
         console.log(res);
         if (res.success) {
           if (res.data.role === 'user') {
-            dispatch(setCredentials({ ...res }));
+            dispatch(setCredentials({ ...res.data }));
+            localStorage.setItem('token', res.token)
             navigate("/user/home");
           } else if (res.data.role === 'provider') {
-            dispatch(setProviderCredentials({ ...res }));
+            dispatch(setProviderCredentials({ ...res.data }));
+            localStorage.setItem('token', res.token)
             navigate("/provider");
-          }else if (res.data.role === 'admin') {
+          } else if (res.data.role === 'admin') {
             // dispatch(setProviderCredentials({ ...res }));
+            // ocalStorage.setItem('token', res.token)
             // navigate("/provider");
 
             // WHEN ADMIN LOGINS
-          }else{
+          } else {
             setCommonError('Incorrect username or password')
           }
         } else {
@@ -169,7 +172,7 @@ export default function LoginForm(props) {
             {emailError && <p className="text-red-400 pl-2">{emailError}</p>}
           </div>
           <div className="mt-2 h-24">
-  
+
 
           </div>
           <div className="mt-2 h-24">
@@ -212,7 +215,7 @@ export default function LoginForm(props) {
             </Link>
           </div>
           <div className="mt-4 gap-y-4 flex justify-center items-center">
-            {isLoading  ? (
+            {isLoading ? (
               <Loader />
             ) : (
               <button

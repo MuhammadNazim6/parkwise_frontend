@@ -17,19 +17,14 @@ interface RegisterPayload {
 export const providerApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
 
-    providerLogin: builder.mutation<Provider, RegisterPayload>({
-      query: (data) => ({
-        url: `${PROVIDER_URL}/login`,
-        method: 'POST',
-        body: data
-      }),
-      onQueryStarted: onQueryStartedErrorToast
-    }),
 
     providerLogout: builder.mutation({
       query: () => ({
         url: `${PROVIDER_URL}/logout`,
         method: 'POST',
+        data: {},
+        params: {}, 
+        headers: {}
       }),
       onQueryStarted: onQueryStartedErrorToast
     }),
@@ -38,7 +33,9 @@ export const providerApiSlice = apiSlice.injectEndpoints({
       query: (data) => ({
         url: `${PROVIDER_URL}/signup`,
         method: 'POST',
-        body: data,
+        data: data,
+        params: {}, 
+        headers: {}
       }),
       onQueryStarted: onQueryStartedErrorToast
     }),
@@ -47,7 +44,9 @@ export const providerApiSlice = apiSlice.injectEndpoints({
       query: (data) => ({
         url: `${PROVIDER_URL}/send-otp`,//email-verify
         method: 'POST',
-        body: data,
+        data: data,
+        params: {}, 
+        headers: {}
       }),
       onQueryStarted: onQueryStartedErrorToast
     }),
@@ -56,7 +55,9 @@ export const providerApiSlice = apiSlice.injectEndpoints({
       query: (data) => ({
         url: `${PROVIDER_URL}/check-otp`,
         method: 'POST',
-        body: data,
+        data: data,
+        params: {}, 
+        headers: {}
       }),
       onQueryStarted: onQueryStartedErrorToast
     }),
@@ -64,7 +65,7 @@ export const providerApiSlice = apiSlice.injectEndpoints({
   })
 })
 
-export const { useProviderLoginMutation,
+export const { 
   useProviderLogoutMutation,
   useProviderRegisterMutation,
   useProviderVerificationMutation,

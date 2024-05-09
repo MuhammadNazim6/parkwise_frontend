@@ -69,7 +69,8 @@ function UserEmailVerify(props) {
     if (checkOtp?.data?.success) {
       const res = await register(emailInfo).unwrap();
       if (res.success) {
-        dispatch(setCredentials({ ...res }))
+        dispatch(setCredentials({ ...res.data }))
+        localStorage.setItem('token',res.token)
         dispatch(deleteEmailInfo())
         navigate('/')
       }

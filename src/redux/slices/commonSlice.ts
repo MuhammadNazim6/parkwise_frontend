@@ -12,7 +12,9 @@ export const commonApiSLice = apiSlice.injectEndpoints({
       query: (data) => ({
         url: `${COMMON_URL}/login`,
         method: "POST",
-        body: data,
+        data: data,
+        params: {}, 
+        headers: {}
       }),
       onQueryStarted: onQueryStartedErrorToast
     }),
@@ -20,7 +22,10 @@ export const commonApiSLice = apiSlice.injectEndpoints({
       query: (data) => ({
         url: `${COMMON_URL}/resend-otp`,
         method: "POST",
-        body: data,
+        data: data,
+        params: {}, 
+        headers: {}
+        
       }),
       onQueryStarted: onQueryStartedErrorToast
     }),

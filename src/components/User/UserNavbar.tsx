@@ -1,10 +1,9 @@
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { googleLogout } from '@react-oauth/google';
 import LogoImg from "../../assets/Images/parkwise-high-resolution-logo-transparent.png";
 import LogoImgBlack from "../../assets/Images/parkwise-high-resolution-logo-black-transparent.png";
-import { AiOutlineClose,  AiOutlineMenu } from 'react-icons/ai';
+import { AiOutlineClose, AiOutlineMenu } from 'react-icons/ai';
 import { useLogoutMutation } from '../../redux/slices/userApiSlice';
 import { userLogout } from '../../redux/slices/authSlice';
 import {
@@ -22,12 +21,8 @@ import { Button } from "@/components/ui/button"
 
 
 function Navbar() {
-  
-  const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
-  const onLogoutSuccess = (res) => {
-    console.log('Logged out successfiully');
-  }
-  
+
+
   const [nav, setNav] = useState(true)
   const handleNav = () => {
     setNav(!nav)
@@ -38,10 +33,12 @@ function Navbar() {
   const navigate = useNavigate()
   const handleLogout = async () => {
     const res = await logout();
-    dispatch(userLogout())
-    setNav(!nav)
-    navigate('/')
-    
+    if (res) {
+      dispatch(userLogout())
+      setNav(!nav)
+      navigate('/')
+    }
+
   }
   return (
     <div className='flex justify-between items-center h-24 max-w-[1240px] mx-auto px-4  text-black'>
@@ -60,14 +57,8 @@ function Navbar() {
         </Link>
         {userInfo ? (
           <AlertDialog>
-            <AlertDialogTrigger>   <li className='text-lg w-28' >Logout 
-            <div id="signOutButton" className='hidden'>
-          <googleLogout
-            clientId={clientId}
-            buttonText={"Logout"}
-            onLogoutSuccess={onLogoutSuccess}
-          />
-        </div>
+            <AlertDialogTrigger>   <li className='text-lg w-28' >Logout
+
             </li>
             </AlertDialogTrigger>
             <AlertDialogContent>

@@ -40,7 +40,8 @@ export default function LoginForm(props) {
           password,
         };
         const res = await login(formData).unwrap();
-        dispatch(setAdminCredentials({ ...res }));
+        dispatch(setAdminCredentials({ ...res.data }));
+        localStorage.setItem('token',res.token)
         toast("success", res.message);
         navigate("/");
       }

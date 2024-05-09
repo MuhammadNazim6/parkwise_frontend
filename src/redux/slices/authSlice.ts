@@ -59,6 +59,7 @@ const authSlice = createSlice({
       state.userInfo = null;
       localStorage.removeItem('uLoggedIn')
       localStorage.removeItem('userInfo')
+      localStorage.removeItem('token')
     },
     setProviderCredentials: (state, action) => {
       state.pLoggedIn = true;
@@ -72,12 +73,14 @@ const authSlice = createSlice({
       localStorage.removeItem('pLoggedIn');
       state.providerInfo = null;
       localStorage.removeItem("providerInfo");
+      localStorage.removeItem('token')
     },
     setAdminCredentials: (state, action) => {
       state.aLoggedIn = true;
       state.adminInfo = action.payload;
       localStorage.setItem('aLoggedIn', 'true');
       localStorage.setItem("adminInfo", JSON.stringify(action.payload));
+      localStorage.removeItem('token')
     },
 
     adminLogout: (state) => {
@@ -85,6 +88,7 @@ const authSlice = createSlice({
       localStorage.removeItem('aLoggedIn');
       state.adminInfo = null;
       localStorage.removeItem("adminInfo");
+      localStorage.removeItem('token')
     },
     setEmailInfo: (state, action) => {
       state.emailInfo = action.payload;
