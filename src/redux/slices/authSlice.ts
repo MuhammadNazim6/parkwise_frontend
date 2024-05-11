@@ -1,34 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-// export interface UserInfo {
-//   email: string;
-//   name: string;
-//   mobile?: number;
-//   profile_img?: string;
-// }
-
-// export interface AdminInfo {
-//   email: string;
-//   name: string;
-// }
-
-// export interface ProviderInfo {
-//   email: string;
-//   name: string;
-//   profile?: string;
-//   parkingName?: string;
-//   mobile: number;
-// }
-
-
-// interface InitialState {
-//   userInfo: UserInfo | null;
-//   registerInfo: UserInfo | null;
-//   ProviderInfo: ProviderInfo | null;
-//   adminInfo: AdminInfo | null;
-//   EmailInfo: string | null;
-// }
-
 const userInfoFromLocalStorage = localStorage.getItem('userInfo');
 const providerInfoFromLocalStorage = localStorage.getItem('providerInfo');
 const adminInfoFromLocalStorage = localStorage.getItem('adminInfo');

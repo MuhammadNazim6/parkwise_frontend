@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useRegisterMutation, useUserCheckOtpMutation, useUserVerificationMutation } from '../../redux/slices/userApiSlice';
 import { setCredentials, deleteEmailInfo } from '../../redux/slices/authSlice';
 import { useNavigate } from 'react-router-dom';
+import { RootState } from '@/redux/store';
 
 function UserEmailVerify(props) {
   const dispatch = useDispatch()
@@ -51,7 +52,7 @@ function UserEmailVerify(props) {
 
   };
 
-  const { emailInfo } = useSelector((state) => state.auth)
+  const { emailInfo } = useSelector((state:RootState) => state.auth)
 
   const checkOtp = async (e) => {
     e.preventDefault();
@@ -64,9 +65,10 @@ function UserEmailVerify(props) {
     }
 
     const data = { email: emailInfo.email, enteredOtp: enteredOtp.join('') }
-    const checkOtp = await check(data)
+    const checkOtp = await check(data).unwrap()
+console.log('checkOtp ',checkOtp);
 
-    if (checkOtp?.data?.success) {
+    if (checkOtp.success) {
       const res = await register(emailInfo).unwrap();
       if (res.success) {
         dispatch(setCredentials({ ...res.data }))
@@ -108,13 +110,13 @@ function UserEmailVerify(props) {
       <div className="hidden relative lg:flex h-full w-1/2 items-center justify-center">
         <div className="flex flex-col">
           <div className="p-32">
-            <h1 className='text-2xl text-center text-black leading-normal'>Please enter the OTP sent to your email ending with ***********{emailInfo.email.slice(+emailInfo.email.length - 15)} and verify that its you</h1>
+            <h1 className='text-2xl text-center text-black leading-normal'>Please enter the OTP sent to your email {emailInfo.email} and verify that its you</h1>
           </div>
         </div>
       </div>
       <div className="w-full bg-white mr-0 rounded-l-3xl overflow-hidden">
         <div className="flex justify-center items-end p-8 text-center h-1/3 lg:hidden">
-          <label htmlFor="">Please enter the OTP sent to your email ending with '****{emailInfo.email.slice(+emailInfo.email.length - 15)} and verify that its you</label>
+          <label htmlFor="">Please enter the OTP sent to your email {emailInfo.email} and verify that its you</label>
         </div>
         <div className="flex justify-center lg:items-end lg:pb-9 items-start mt-3 h-1/3 lg:h-2/4 ">
           {[...Array(6)].map((_, index) => (
@@ -138,7 +140,7 @@ function UserEmailVerify(props) {
                 <h1 className='text-green-600 text-xl font-medium'>{otpResendText}</h1>
               
               </div>
-             {waiToSendOtp? <p className='text-lg  w-80'>Try again after {otpTimer} seconds</p> : <p className='text-lg w-80'><span>didn't recieve otp ?? </span><span onClick={resendOtpFn} className='text-blue-500 hover:text-blue-800 active:scale-[.98] active:duration-75 transition-all cursor-pointer'> resend OTP</span></p>}
+             {waiToSendOtp? <div className="flex justify-center"><p className='text-lg  w-80'>Try again after {otpTimer} seconds</p></div> : <div className='flex justify-center'><p className='text-lg w-80'><span>didn't recieve otp ?? </span><span onClick={resendOtpFn} className='text-blue-500 hover:text-blue-800 active:scale-[.98] active:duration-75 transition-all cursor-pointer'> resend OTP</span></p></div>}
               <button type='submit' className='text-white mt-5 bg-secondary-blue p-3 w-3/6 lg:w-5/6 text-base font-medium ml-2 hover:scale-[1.02] rounded-lg active:scale-[.98] active:duration-75 transition-all'>Verify</button>
             </div>
           </form>

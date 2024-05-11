@@ -24,6 +24,9 @@ axiosInstance.interceptors.request.use((config) => {
 axiosInstance.interceptors.response.use((response) => {
   console.log('Inside response response response');
   return response;
+
+
+  
 }, async (error) => {
   // for refresh token
   console.log('Inside RESPONSE ERROR SECTION');

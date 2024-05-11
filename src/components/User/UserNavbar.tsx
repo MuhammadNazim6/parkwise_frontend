@@ -17,7 +17,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
-import { Button } from "@/components/ui/button"
+import { RootState } from '@/redux/store';
 
 
 function Navbar() {
@@ -27,12 +27,12 @@ function Navbar() {
   const handleNav = () => {
     setNav(!nav)
   }
-  const { userInfo } = useSelector((state) => state.auth)
+  const { userInfo } = useSelector((state:RootState) => state.auth)
   const [logout, { isLoading }] = useLogoutMutation()
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const handleLogout = async () => {
-    const res = await logout();
+    const res = await logout(null);
     if (res) {
       dispatch(userLogout())
       setNav(!nav)
@@ -57,9 +57,7 @@ function Navbar() {
         </Link>
         {userInfo ? (
           <AlertDialog>
-            <AlertDialogTrigger>   <li className='text-lg w-28' >Logout
-
-            </li>
+            <AlertDialogTrigger>   <li className='text-lg w-28' >Logout </li>
             </AlertDialogTrigger>
             <AlertDialogContent>
               <AlertDialogHeader>
@@ -99,10 +97,8 @@ function Navbar() {
               <AlertDialogTrigger>Logout</AlertDialogTrigger>
               <AlertDialogContent>
                 <AlertDialogHeader>
-                  <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                  <AlertDialogTitle>Are you sure to logout?</AlertDialogTitle>
                   <AlertDialogDescription>
-                    This action cannot be undone. This will permanently delete your account
-                    and remove your data from our servers.
                   </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>

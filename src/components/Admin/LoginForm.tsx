@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 import { useAdminLoginMutation } from "../../redux/slices/adminSlice";
 import { setAdminCredentials } from "../../redux/slices/authSlice";
 import { toast } from "../../script/toast";
+import { RootState } from "@/redux/store";
 
 export default function LoginForm(props) {
   const [email, setEmail] = useState("");
@@ -14,7 +15,7 @@ export default function LoginForm(props) {
   const dispatch = useDispatch();
 
   const [login, { isLoading }] = useAdminLoginMutation();
-  const { adminInfo } = useSelector((state) => state.auth);
+  const { adminInfo } = useSelector((state:RootState) => state.auth);
 
   useEffect(() => {
     if (adminInfo) {

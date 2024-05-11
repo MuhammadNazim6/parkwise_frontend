@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useProviderRegisterMutation, useProviderCheckOtpMutation, useProviderVerificationMutation } from '../../redux/slices/providerSlice';
 import { setProviderCredentials, deleteEmailInfo } from '../../redux/slices/authSlice';
 import { useNavigate } from 'react-router-dom';
+import { RootState } from '@/redux/store';
 
 function UserEmailVerify(props) {
   const dispatch = useDispatch()
@@ -49,7 +50,7 @@ function UserEmailVerify(props) {
 
   };
 
-  const { emailInfo } = useSelector((state) => state.auth)
+  const { emailInfo } = useSelector((state: RootState) => state.auth)
 
   const checkOtp = async (e) => {
     e.preventDefault();
@@ -106,13 +107,13 @@ function UserEmailVerify(props) {
       <div className="hidden relative lg:flex h-full w-1/2 items-center justify-center">
         <div className="flex flex-col">
           <div className="p-32">
-            <h1 className='text-2xl text-center text-white leading-normal'>Please enter the OTP sent to your email ending with ***********{emailInfo.email.slice(+emailInfo.email.length - 15)} and verify that its you</h1>
+            <h1 className='text-2xl text-center text-white leading-normal'>Please enter the OTP sent to your email {emailInfo.email} and verify that its you</h1>
           </div>
         </div>
       </div>
       <div className="w-full bg-white mr-0 rounded-l-3xl overflow-hidden">
         <div className="flex justify-center items-end p-8 text-center h-1/3 lg:hidden">
-          <label htmlFor="">Please enter the OTP sent to your email ending with '****{emailInfo.email.slice(+emailInfo.email.length - 15)} and verify that its you</label>
+          <label htmlFor="">Please enter the OTP sent to your email {emailInfo.email} and verify that its you</label>
         </div>
         <div className="flex justify-center lg:items-end lg:pb-9 items-start mt-3 h-1/3 lg:h-2/4 ">
           {[...Array(6)].map((_, index) => (

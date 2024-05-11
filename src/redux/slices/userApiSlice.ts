@@ -2,23 +2,12 @@ import { apiSlice } from "./apiSlice";
 import { onQueryStartedErrorToast } from "../ErrorHandling/ErrorHandling";
 
 const USER_URL = "/api/user";
-interface User {
-  id: number;
-  name: string;
-  email: string;
-}
-
-interface RegisterPayload {
-  name: string;
-  email: string;
-  password: string;
-}
 
 export const userApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
-    
+
     logout: builder.mutation({
-      query: () => ({
+      query: ()=> ({
         url: `${USER_URL}/logout`,
         method: "POST",
         data: {},
@@ -28,7 +17,7 @@ export const userApiSlice = apiSlice.injectEndpoints({
       onQueryStarted: onQueryStartedErrorToast
     }),
 
-    register: builder.mutation<User, RegisterPayload>({
+    register: builder.mutation({
       query: (data) => ({
         url: `${USER_URL}/signup`,
         method: "POST",

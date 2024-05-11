@@ -2,50 +2,38 @@ import { apiSlice } from "./apiSlice";
 import { onQueryStartedErrorToast } from "../ErrorHandling/ErrorHandling";
 
 const PROVIDER_URL = '/api/provider';
-interface Provider {
-  id: number;
-  name: string;
-  email: string;
-}
-
-interface RegisterPayload {
-  name: string;
-  email: string;
-  password: string;
-}
 
 export const providerApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
-
 
     providerLogout: builder.mutation({
       query: () => ({
         url: `${PROVIDER_URL}/logout`,
         method: 'POST',
         data: {},
-        params: {}, 
+        params: {},
         headers: {}
       }),
       onQueryStarted: onQueryStartedErrorToast
     }),
 
-    providerRegister: builder.mutation<Provider, RegisterPayload>({
+    providerRegister: builder.mutation({
       query: (data) => ({
         url: `${PROVIDER_URL}/signup`,
         method: 'POST',
         data: data,
-        params: {}, 
+        params: {},
         headers: {}
       }),
       onQueryStarted: onQueryStartedErrorToast
     }),
 
-    providerVerification: builder.mutation<Provider, RegisterPayload>({
+    providerVerification: builder.mutation({
       query: (data) => ({
         url: `${PROVIDER_URL}/send-otp`,//email-verify
         method: 'POST',
         data: data,
-        params: {}, 
+        params: {},
         headers: {}
       }),
       onQueryStarted: onQueryStartedErrorToast
@@ -56,20 +44,30 @@ export const providerApiSlice = apiSlice.injectEndpoints({
         url: `${PROVIDER_URL}/check-otp`,
         method: 'POST',
         data: data,
-        params: {}, 
+        params: {},
         headers: {}
       }),
       onQueryStarted: onQueryStartedErrorToast
     }),
 
+    sendParkingLotForApproval: builder.mutation({
+      query: (data) => ({
+        url: `${PROVIDER_URL}/sendLotForApproval`,
+        method: 'POST',
+        data: data,
+        params: {},
+        headers: {}
+      }),
+    }),
   })
 })
 
-export const { 
+export const {
   useProviderLogoutMutation,
   useProviderRegisterMutation,
   useProviderVerificationMutation,
-  useProviderCheckOtpMutation
+  useProviderCheckOtpMutation,
+  useSendParkingLotForApprovalMutation
 
 } = providerApiSlice
 

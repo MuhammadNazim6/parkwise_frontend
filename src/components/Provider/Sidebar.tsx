@@ -5,11 +5,17 @@ import { FaParking } from "react-icons/fa";
 import { IoMdChatboxes } from "react-icons/io";
 import { MdFeedback } from "react-icons/md";
 import ProSidebarLink from './ProSidebarLink';
-import { Link } from 'react-router-dom';
+import { Link, useLocation, NavLink } from 'react-router-dom';
 import { IoIosArrowBack } from "react-icons/io";
 
 
+
 function Sidebar() {
+
+  const location = useLocation()
+  const isActiveLink = (path) => {
+    return location.pathname === path
+  }
 
   const [isOpen, setIsOpen] = useState(false);
   const toggleSidebar = () => {
@@ -50,17 +56,24 @@ function Sidebar() {
       </button>
 
       <aside id="default-sidebar" className={`fixed top-0 left-0 z-40 w-64 h-screen transition-transform ${isOpen ? '' : '-translate-x-full sm:translate-x-0'}`} aria-label="Sidebar">
-        <div className="h-full px-3 py-4 overflow-y-auto bg-gray-50 dark:bg-gray-800">
+        <div className="h-full px-3 py-4 overflow-y-auto bg-primary-provider dark:bg-gray-800">
           <div className="flex justify-end h-12">
-            <button className='md:hidden' onClick={toggleSidebar}><IoIosArrowBack className='text-3xl' /></button>
+            <button className='md:hidden' onClick={toggleSidebar}><IoIosArrowBack className='text-3xl text-white' /></button>
           </div>
           <ul className="space-y-2 font-medium">
-            <Link to='/provider'><ProSidebarLink title='Dashboard' Icon={<MdDashboard className='text-2xl' />} /></Link>
-            <Link to='/provider/add-slots'><ProSidebarLink title='Add slots' Icon={<MdAddBox className='text-2xl' />} /></Link>
-            <Link to='/provider/parking-lot'><ProSidebarLink title='Parking lot' Icon={<FaParking className='text-2xl' />} /></Link>
-            <Link to='/provider/inbox'><ProSidebarLink title='Inbox' Icon={<IoMdChatboxes className='text-2xl' />} /></Link>
-            <Link to='/provider/feedbacks'><ProSidebarLink title='Feedbacks' Icon={<MdFeedback className='text-2xl' />} /></Link>
+            <ProSidebarLink link='/provider' title='Dashboard' Icon={<MdDashboard className='text-2xl text-white' /> }/>
+           <ProSidebarLink link='/provider/add-slots' title='Add slots' Icon={<MdAddBox className='text-2xl text-white' /> }/>
+           <ProSidebarLink link='/provider/parking-lot' title='Parking lot' Icon={<FaParking className='text-2xl text-white' /> }/>
+            <ProSidebarLink link='/provider/inbox' title='Inbox' Icon={<IoMdChatboxes className='text-2xl text-white' /> }/>
+           <ProSidebarLink link='/provider/feedbacks' title='Feedbacks' Icon={<MdFeedback className='text-2xl text-white' /> }/>
           </ul>
+          {/* <ul className="space-y-2 font-medium">
+            <NavLink to='/provider'><ProSidebarLink title='Dashboard' Icon={<MdDashboard className='text-2xl text-white' />} /></NavLink>
+            <NavLink to='/provider/add-slots'><ProSidebarLink title='Add slots' Icon={<MdAddBox className='text-2xl text-white' />} /></NavLink>
+            <NavLink to='/provider/parking-lot'><ProSidebarLink title='Parking lot' Icon={<FaParking className='text-2xl text-white' />} /></NavLink>
+            <NavLink to='/provider/inbox'><ProSidebarLink title='Inbox' Icon={<IoMdChatboxes className='text-2xl text-white' />} /></NavLink>
+            <NavLink to='/provider/feedbacks'><ProSidebarLink title='Feedbacks' Icon={<MdFeedback className='text-2xl text-white' />} /></NavLink>
+          </ul> */}
         </div>
       </aside>
 

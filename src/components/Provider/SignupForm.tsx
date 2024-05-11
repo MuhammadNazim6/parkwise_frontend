@@ -6,8 +6,8 @@ import { useProviderRegisterMutation, useProviderVerificationMutation } from '..
 import { useSelector, useDispatch } from 'react-redux';
 import { Loader } from '../Common/BootstrapElems'
 import { FaEyeSlash, FaEye } from "react-icons/fa";
-import { setProviderCredentials, setEmailInfo } from '../../redux/slices/authSlice';
-import { toast } from '../../script/toast'
+import { setEmailInfo } from '../../redux/slices/authSlice';
+import { RootState } from '@/redux/store';
 
 
 export default function SignupForm(props) {
@@ -41,7 +41,7 @@ export default function SignupForm(props) {
   const [loading, setLoading] = useState(false);
 
 
-  const { providerInfo } = useSelector((state) => state.auth)
+  const { providerInfo } = useSelector((state:RootState) => state.auth)
 
   useEffect(() => {
     if (providerInfo) {
@@ -123,15 +123,15 @@ export default function SignupForm(props) {
     try {
       setLoading(true)
 
-      const otpRes = await verify(formData)
-      console.log(otpRes.data.success);
+      const otpRes = await verify(formData).unwrap()
+      console.log(otpRes.success);
 
-      if (otpRes.data.success) {
+      if (otpRes.success) {
         dispatch(setEmailInfo(formData))
         setLoading(false);
         navigate('/provider/email-verify')
       } else {
-        setCommonError(otpRes.data.message);
+        setCommonError(otpRes.message);
         setLoading(false)
       }
 

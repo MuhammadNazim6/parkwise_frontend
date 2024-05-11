@@ -10,6 +10,7 @@ import { FaEyeSlash, FaEye } from "react-icons/fa";
 import { Loader } from '../Common/BootstrapElems'
 import { useGoogleLogin } from '@react-oauth/google';
 import axios from 'axios'
+import { RootState } from "@/redux/store";
 
 
 
@@ -32,9 +33,9 @@ export default function LoginForm(props) {
   const [commonLogin, { isLoading }] = useCommonLoginMutation();
   const [sign] = useUserSignGoogleMutation()
 
-  const { userInfo } = useSelector((state) => state.auth);
-  const { uLoggedIn } = useSelector((state) => state.auth);
-  const { pLoggedIn } = useSelector((state) => state.auth);
+  const { userInfo } = useSelector((state:RootState) => state.auth);
+  const { uLoggedIn } = useSelector((state:RootState) => state.auth);
+  const { pLoggedIn } = useSelector((state:RootState) => state.auth);
 
   useEffect(() => {
     if (uLoggedIn) {
@@ -171,10 +172,7 @@ export default function LoginForm(props) {
             />
             {emailError && <p className="text-red-400 pl-2">{emailError}</p>}
           </div>
-          <div className="mt-2 h-24">
-
-
-          </div>
+        
           <div className="mt-2 h-24">
             <label className="text-lg font-medium tracking-wide">
               Password
