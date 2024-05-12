@@ -4,9 +4,11 @@ import ProGetAddressLatLong from '@/components/Provider/ProGetAddressLatLong';
 import * as Yup from "yup";
 import { FcInfo } from "react-icons/fc";
 import { useToast } from "@/components/ui/use-toast"
-// import { Button } from "@/components/ui/button"
-// import { Input } from "@/components/ui/input"
-// import { Label } from "@/components/ui/label"
+import { useSelector } from 'react-redux';
+import { RootState } from '@/redux/store';
+import { useSendParkingLotForApprovalMutation } from '@/redux/slices/providerSlice';
+
+
 import {
   Popover,
   PopoverContent,
@@ -22,9 +24,6 @@ import { Loader } from '../../components/Common/BootstrapElems'
 import axios from 'axios';
 
 function ProvAddSlot() {
-  const { toast } = useToast()
-  const GeoApiKey = import.meta.env.VITE_GEOAPIFY_API_KEY;
-
   const [showWaterServicePrice, setShowWaterServicePrice] = useState(false);
   const [showEVChargeFacilityPrice, setShowEVChargeFacilityPrice] = useState(false);
   const [showAirPressureCheckPrice, setShowAirPressureCheckPrice] = useState(false);
@@ -32,10 +31,16 @@ function ProvAddSlot() {
   const [isVerified, setIsVerified] = useState(true)
   // Clciked from the child
   const [clickedCoordinates, setClickedCoordinates] = useState(null);
-
   // Search location
   const [searchResult, setSearchResult] = useState([]);
   const [isLoading, setLoading] = useState(false);
+
+  const [addSlot] = useSendParkingLotForApprovalMutation();
+  const { toast } = useToast()
+  const GeoApiKey = import.meta.env.VITE_GEOAPIFY_API_KEY;
+  const { providerInfo } = useSelector((state: RootState) => state.auth);
+
+
 
   const handleCoordinatesClick = (coordinates) => {
     setClickedCoordinates(coordinates);
@@ -124,8 +129,11 @@ function ProvAddSlot() {
                 landmark: '',
                 country: '',
                 pinNumber: '',
-                location: {},
-                isApproved:false
+                latitude: '',
+                longitude: '',
+                isApproved: false,
+                startEndTime: '',
+                email: ''
 
               }}
               onSubmit={async (values) => {
@@ -157,12 +165,23 @@ function ProvAddSlot() {
                   })
                   return
                 }
+                // injecting lat,long,email
+                values.latitude = clickedCoordinates.Lat
+                values.longitude = clickedCoordinates.Lng
+                values.email = providerInfo.email
+                const sendForApproval = await addSlot(values).unwrap();
+                if (sendForApproval.success) {
+                  toast({
+                    title: "Your slot have been sent for verification",
+                    description: "",
+                  })
+                } else {
+                  toast({
+                    title: sendForApproval.message,
+                    description: "",
+                  })
+                }
 
-                toast({
-                  title: "SUCCESS",
-                  description: "lorem",
-                })
-                values.location = { lng: clickedCoordinates.Lng, lat: clickedCoordinates.Lat }
                 console.log(values);
 
                 // alert(JSON.stringify(values, null, 2));
@@ -215,6 +234,7 @@ function ProvAddSlot() {
                   }
                   return true;
                 }),
+                startEndTime: Yup.string().required('Select an availability time')
               })}
             >
               {(props) => {
@@ -378,29 +398,44 @@ function ProvAddSlot() {
                     )}
 
                     {/* Hourly charge for parkionig spot */}
-                    <div className='mt-6 md:w-1/2'>
+                    <div className="flex">
+                      <div className='mt-6 md:w-1/2'>
 
-                      <TooltipProvider>
-                        <Tooltip>
-                          <TooltipTrigger><label htmlFor="oneHourParkingAmount" className="block font-bold my-2 text-sm">
-                            Amount for parking per hour                      </label></TooltipTrigger>
-                          <TooltipContent>
-                            <p>In rupees</p>
-                          </TooltipContent>
-                        </Tooltip>
-                      </TooltipProvider>
+                        <TooltipProvider>
+                          <Tooltip>
+                            <TooltipTrigger><label htmlFor="oneHourParkingAmount" className="block font-bold my-2 text-sm">
+                              Amount for parking per hour                      </label></TooltipTrigger>
+                            <TooltipContent>
+                              <p>In rupees</p>
+                            </TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
 
-                      <Field
-                        type="number"
-                        id="oneHourParkingAmount"
-                        name="oneHourParkingAmount"
-                        value={values.oneHourParkingAmount}
-                        onChange={handleChange}
-                        className="h-8 mt-1 p-2 block w-full border border-gray-300 rounded-md focus:outline-none focus:ring-primary-provider focus:border-primary-provider"
-                      />
-                      {errors.oneHourParkingAmount && touched.oneHourParkingAmount && (
-                        <div className="text-red-500 text-sm mt-1">{errors.oneHourParkingAmount}</div>
-                      )}
+                        <Field
+                          type="number"
+                          id="oneHourParkingAmount"
+                          name="oneHourParkingAmount"
+                          value={values.oneHourParkingAmount}
+                          onChange={handleChange}
+                          className="h-8 mt-1 p-2 block w-full border border-gray-300 rounded-md focus:outline-none focus:ring-primary-provider focus:border-primary-provider"
+                        />
+                        {errors.oneHourParkingAmount && touched.oneHourParkingAmount && (
+                          <div className="text-red-500 text-sm mt-1">{errors.oneHourParkingAmount}</div>
+                        )}
+                      </div>
+                      <div className="mt-6 md:w-1/2 ml-5">
+                        <label htmlFor="airPressureCheckPrice" className="block font-bold my-2 text-sm">
+                          Choose time range
+                        </label>
+                        <Field as="select" name="startEndTime" className='h-9 mt-1 p-2 w-full border border-gray-300 rounded-md focus:outline-none focus:ring-primary-provider focus:border-primary-provider'>
+                          <option value="">Select time</option>
+                          <option value="HALF">06:00 to 20:00</option>
+                          <option value="FULL">24/7 </option>
+                        </Field>
+                        {errors.startEndTime && touched.startEndTime && (
+                          <div className="text-red-500 text-sm mt-1">{errors.startEndTime}</div>
+                        )}
+                      </div>
                     </div>
 
                     {/* Address */}
@@ -447,7 +482,7 @@ function ProvAddSlot() {
                           type="text"
                           id="city"
                           name="city"
-                          className={`h-8 mt-1 p-2 block w-full border border-gray-300 rounded-md focus:outline-none focus:ring-primary-provider focus:border-primary-provider h-8 ${errors.city && touched.city ? 'border-red-500' : ''
+                          className={`mt-1 p-2 block w-full border border-gray-300 rounded-md focus:outline-none focus:ring-primary-provider focus:border-primary-provider h-8 ${errors.city && touched.city ? 'border-red-500' : ''
                             }`}
                         />
                         {errors.city && touched.city && (
@@ -541,37 +576,30 @@ function ProvAddSlot() {
                         </PopoverContent>
                       </Popover>
                       {/* Verify address button */}
-                      <button type='button' onClick={() => handleSearch(values)} className='p-2 bg-white rounded-sm cursor-pointer hover:bg-gray-100 ease-in-out text-black text-sm'>Verify address</button>
+                      {isLoading ? <div className="p-3 ml-3"> <Loader /></div> :
+                        <button type='button' onClick={() => handleSearch(values)} className='p-2 bg-white rounded-sm cursor-pointer hover:bg-gray-100 ease-in-out text-black text-sm'>Verify address</button>
+                      }
                     </div>
 
-                    {/* <div className="mt-6 flex justify-center items-center">
-                      <div className="flex justify-center items-center m-10">
-                        {isLoading ? <div className="p-3 ml-3"> <Loader /></div> :
-                          <button type='button' onClick={() => handleSearch(values)} className='p-3 bg-black rounded-sm cursor-pointer hover:bg-primary-provider ease-in-out text-white text-sm'>Verify address</button>
-                        }
+                    <div className="h-32">
+                      <div className="justify-center flex mt-5">
+                        <button
+                          type="button"
+                          className="bg-white text-black border border-black px-4 py-2 rounded-sm m-2 hover:bg-black hover:text-white my-6 cursor-pointer"
+                          onClick={handleReset}
+                          disabled={!dirty || isSubmitting}
+                        >
+                          Reset
+                        </button>
+                        {isVerified ? (<button
+                          type="submit"
+                          className="bg-black text-white px-4 m-6 rounded-sm hover:bg-primary-provider"
+                          disabled={isSubmitting}
+                        >
+                          Submit
+                        </button>) : null}
                       </div>
-                    </div> */}
-
-
-                   <div className="h-32">
-                   <div className="justify-center flex mt-5">
-                      <button
-                        type="button"
-                        className="bg-white text-black border border-black px-4 py-2 rounded-sm m-2 hover:bg-black hover:text-white my-6 cursor-pointer"
-                        onClick={handleReset}
-                        disabled={!dirty || isSubmitting}
-                      >
-                        Reset
-                      </button>
-                      {isVerified ? (<button
-                        type="submit"
-                        className="bg-black text-white px-4 m-6 rounded-sm hover:bg-primary-provider"
-                        disabled={isSubmitting}
-                      >
-                        Submit
-                      </button>) : null}
                     </div>
-                   </div>
                   </form>
                 );
               }}
