@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useState, useEffect } from "react";
 import { useCommonLoginMutation } from "@/redux/slices/commonSlice";
 import { useUserSignGoogleMutation } from "../../redux/slices/userApiSlice";
-import { setCredentials } from "../../redux/slices/authSlice";
+import { setAdminCredentials, setCredentials } from "../../redux/slices/authSlice";
 import { setProviderCredentials } from "../../redux/slices/authSlice";
 import { FaEyeSlash, FaEye } from "react-icons/fa";
 import { Loader } from '../Common/BootstrapElems'
@@ -36,12 +36,15 @@ export default function LoginForm(props) {
   const { userInfo } = useSelector((state:RootState) => state.auth);
   const { uLoggedIn } = useSelector((state:RootState) => state.auth);
   const { pLoggedIn } = useSelector((state:RootState) => state.auth);
+  const { aLoggedIn } = useSelector((state:RootState) => state.auth);
 
   useEffect(() => {
     if (uLoggedIn) {
       navigate("/");
     } else if (pLoggedIn) {
       navigate('/provider')
+    }else if(aLoggedIn){
+      navigate('/admin')
     }
   }, [navigate, uLoggedIn, pLoggedIn]);
 
@@ -130,9 +133,9 @@ export default function LoginForm(props) {
             localStorage.setItem('token', res.token)
             navigate("/provider");
           } else if (res.data.role === 'admin') {
-            // dispatch(setProviderCredentials({ ...res }));
-            // ocalStorage.setItem('token', res.token)
-            // navigate("/provider");
+            dispatch(setAdminCredentials({ ...res.data }));
+            localStorage.setItem('token', res.token)
+            navigate("/admin");
 
             // WHEN ADMIN LOGINS
           } else {
