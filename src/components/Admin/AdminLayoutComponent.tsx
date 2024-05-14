@@ -24,7 +24,7 @@ function AdminLayoutComponent() {
   };
 
   return (
-     <div className="drawer">
+     <div className="drawer sticky top-0 z-10">
       <input id="my-drawer-3" type="checkbox" className="drawer-toggle" checked={isSidebarOpen} />
       <div className="drawer-content flex flex-col">
         {/* Navbar */}

@@ -1,9 +1,22 @@
-@import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&display=swap');
-  @tailwind base;
+/* @import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&display=swap'); */
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&display=swap');
+@tailwind base;
   @tailwind components;
   @tailwind utilities;
 
-  .alata-regular {
+  body {
+    overflow-x: hidden;  
+}
+
+.space-grotesk {
+  font-family: "Space Grotesk", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+}
+
+
+  /* .alata-regular {
     font-family: "Alata", sans-serif;
     font-weight: 400;
     font-style: normal;
@@ -17,7 +30,7 @@
     font-variation-settings:
       "wdth" 100,
       "YTLC" 500;
-  }
+  } */
   
   
   .map-container {
