@@ -26,7 +26,7 @@ const ProvNavbar = () => {
   const dispatch = useDispatch()
 
   const handleLogout = async () => {
-    const res = await logout(null);
+    const res = await logout();
     dispatch(providerLogout())
     navigate('/')
   }

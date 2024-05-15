@@ -3,7 +3,7 @@ import React from 'react'
 function AdminDashboard() {
   return (
 
-    <div className="bg-white h-96 text-6xl text-center">
+    <div className="bg-white text-6xl text-center h-screen">
       ADMIN DASHBOARD
     </div>
   )

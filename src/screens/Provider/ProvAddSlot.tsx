@@ -7,8 +7,6 @@ import { useToast } from "@/components/ui/use-toast"
 import { useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
 import { useSendParkingLotForApprovalMutation } from '@/redux/slices/providerSlice';
-
-
 import {
   Popover,
   PopoverContent,
@@ -46,7 +44,6 @@ function ProvAddSlot() {
   const handleCoordinatesClick = (coordinates) => {
     setClickedCoordinates(coordinates);
   };
-
 
   // For checking if both coordinates , selected and address coordinate are in a close range
   function calculateDistance(lat1, lon1, lat2, lon2) {
@@ -107,7 +104,6 @@ function ProvAddSlot() {
   }
   return (
     <>
-
       <div className="p-4 sm:ml-64">
         <div className="p-4 border-2 border-gray-200 border-dashed rounded-lg dark:border-gray-700 ">
           <div className="app">
@@ -126,7 +122,7 @@ function ProvAddSlot() {
 
             {/* Message saying the request have been rejected try again  */}
             {providerInfo.approvalStatus === "rejected" && (
-              <div className=''> 
+              <div className=''>
                 <div className="bg-red-400 shadow-lg rounded-md p-4 mt-4 cursor-pointer transition-transform hover:scale-[1.006] ease-in-out duration-300">
                   <div className="flex items-center justify-between">
                     <div className="font-semibold text-lg">Approval request rejected</div>

@@ -1,12 +1,17 @@
 import { apiSlice } from "./apiSlice";
 import { onQueryStartedErrorToast } from "../ErrorHandling/ErrorHandling";
 
+interface LogoutResponse {
+  status: number;
+  success: boolean;
+  message: string;
+}
 const PROVIDER_URL = '/api/provider';
 
 export const providerApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
 
-    providerLogout: builder.mutation({
+    providerLogout: builder.mutation<LogoutResponse, void>({
       query: () => ({
         url: `${PROVIDER_URL}/logout`,
         method: 'POST',
