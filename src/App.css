@@ -1,11 +1,10 @@
-/* @import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&display=swap'); */
 @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&display=swap');
 @tailwind base;
   @tailwind components;
   @tailwind utilities;
 
   body {
-    overflow-x: hidden;  
+    overflow-x: hidden; 
 }
 
 .space-grotesk {
@@ -15,23 +14,6 @@
   font-style: normal;
 }
 
-
-  /* .alata-regular {
-    font-family: "Alata", sans-serif;
-    font-weight: 400;
-    font-style: normal;
-  }
-
-  .nunito-sans-600 {
-    font-family: "Nunito Sans", sans-serif;
-    font-optical-sizing: auto;
-    font-weight: 300;
-    font-style: normal;
-    font-variation-settings:
-      "wdth" 100,
-      "YTLC" 500;
-  } */
-  
   
   .map-container {
     height: 400px;
@@ -50,7 +32,40 @@
     border-radius: 4px; 
   }
   
-
+  .SliderRoot {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+  .SliderRoot[data-orientation='vertical'] {
+    flex-direction: column;
+    width: 20px;
+    height: 100px;
+  }
+  
+  .SliderTrack {
+    position: relative;
+    flex-grow: 1;
+    background-color: grey;
+  }
+  .SliderTrack[data-orientation='vertical'] {
+    width: 3px;
+  }
+  
+  .SliderRange {
+    position: absolute;
+    background-color: black;
+  }
+  .SliderRange[data-orientation='vertical'] {
+    width: 100%;
+  }
+  
+  .SliderThumb {
+    display: block;
+    width: 20px;
+    height: 20px;
+    background-color: black;
+  }
   @layer base {
     :root {
       --background: 0 0% 100%;

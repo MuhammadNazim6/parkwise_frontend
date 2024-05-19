@@ -7,11 +7,11 @@ export const userApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
 
     logout: builder.mutation({
-      query: ()=> ({
+      query: () => ({
         url: `${USER_URL}/logout`,
         method: "POST",
         data: {},
-        params: {}, 
+        params: {},
         headers: {}
       }),
       onQueryStarted: onQueryStartedErrorToast
@@ -22,7 +22,7 @@ export const userApiSlice = apiSlice.injectEndpoints({
         url: `${USER_URL}/signup`,
         method: "POST",
         data: data,
-        params: {}, 
+        params: {},
         headers: {}
       }),
       onQueryStarted: onQueryStartedErrorToast
@@ -33,7 +33,7 @@ export const userApiSlice = apiSlice.injectEndpoints({
         url: `${USER_URL}/send-otp`,//email-verify
         method: "POST",
         data: data,
-        params: {}, 
+        params: {},
         headers: {}
       }),
       onQueryStarted: onQueryStartedErrorToast
@@ -44,7 +44,7 @@ export const userApiSlice = apiSlice.injectEndpoints({
         url: `${USER_URL}/check-otp`,
         method: "POST",
         data: data,
-        params: {}, 
+        params: {},
         headers: {}
       }),
       onQueryStarted: onQueryStartedErrorToast
@@ -55,7 +55,7 @@ export const userApiSlice = apiSlice.injectEndpoints({
         url: `${USER_URL}/signGoogle`,
         method: "POST",
         data: data,
-        params: {}, 
+        params: {},
         headers: {}
       }),
       onQueryStarted: onQueryStartedErrorToast
@@ -66,7 +66,7 @@ export const userApiSlice = apiSlice.injectEndpoints({
         url: `${USER_URL}/forgotPassword`,
         method: "POST",
         data: data,
-        params: {}, 
+        params: {},
         headers: {}
       }),
       onQueryStarted: onQueryStartedErrorToast
@@ -77,7 +77,18 @@ export const userApiSlice = apiSlice.injectEndpoints({
         url: `${USER_URL}/changePassword`,
         method: "POST",
         data: data,
-        params: {}, 
+        params: {},
+        headers: {}
+      }),
+      onQueryStarted: onQueryStartedErrorToast
+    }),
+
+    getParkingLots: builder.mutation({
+      query: ({ coordinatesStr, services, price, limit, page }) => ({
+        url: `${USER_URL}/parking-lots?price=${price}&hasAirPressureCheck=${services.airPressure}&coordinates=${coordinatesStr}&hasEvCharging=${services.evCharging}&hasWaterService=${services.waterService}&limit=${limit}&page=${page}&_=${new Date().getTime()}`,
+        method: "GET",
+        data: {},
+        params: {},
         headers: {}
       }),
       onQueryStarted: onQueryStartedErrorToast
@@ -95,4 +106,5 @@ export const {
   useUserSignGoogleMutation,
   useCommForgotPasswordMutation,
   useComChangePasswordMutation,
+  useGetParkingLotsMutation
 } = userApiSlice;

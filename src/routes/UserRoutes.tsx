@@ -10,6 +10,7 @@ import CommonForgotPassword from '../screens/Common/CommonForgotPassword';
 import UserProtect from '@/components/User/protected/UserProtect';
 import CommonLeftSideLayout from '@/screens/Common/CommonLeftSideLayout';
 import CommonChangePassword from '@/screens/Common/CommonChangePassword';
+import UserParkingLotDetails from '@/screens/Users/UserParkingLotDetails';
 
 function UserRoutes() {
   return (
@@ -23,11 +24,14 @@ function UserRoutes() {
       <Route path='user/signup' element={<UserSignup />} />
       <Route path='user/email-verify' element={<UserEmailVerify />} />
 
-
-      <Route element={<UserProtect />}>
       <Route path='user' element={<UserLayout />} >
         <Route path='home' element={<UserHome />} />
+        <Route path='home/lotDetails' element={<UserParkingLotDetails />} />
       </Route>
+
+      
+{/* protected start */}
+      <Route element={<UserProtect />}>
       </Route>
 
     </Routes>
