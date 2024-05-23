@@ -33,17 +33,17 @@ export default function LoginForm(props) {
   const [commonLogin, { isLoading }] = useCommonLoginMutation();
   const [sign] = useUserSignGoogleMutation()
 
-  const { userInfo } = useSelector((state:RootState) => state.auth);
-  const { uLoggedIn } = useSelector((state:RootState) => state.auth);
-  const { pLoggedIn } = useSelector((state:RootState) => state.auth);
-  const { aLoggedIn } = useSelector((state:RootState) => state.auth);
+  const { userInfo } = useSelector((state: RootState) => state.auth);
+  const { uLoggedIn } = useSelector((state: RootState) => state.auth);
+  const { pLoggedIn } = useSelector((state: RootState) => state.auth);
+  const { aLoggedIn } = useSelector((state: RootState) => state.auth);
 
   useEffect(() => {
     if (uLoggedIn) {
       navigate("/");
     } else if (pLoggedIn) {
       navigate('/provider')
-    }else if(aLoggedIn){
+    } else if (aLoggedIn) {
       navigate('/admin')
     }
   }, [navigate, uLoggedIn, pLoggedIn]);
@@ -71,7 +71,7 @@ export default function LoginForm(props) {
         if (signed.success) {
           dispatch(setCredentials({ ...googleUserData, password: '' }))
           localStorage.setItem('token', signed.token)
-          navigate('/')
+          navigate('/', { replace: true })
         } else {
           alert('Try another login method')
         }
@@ -127,15 +127,15 @@ export default function LoginForm(props) {
           if (res.data.role === 'user') {
             dispatch(setCredentials({ ...res.data }));
             localStorage.setItem('token', res.token)
-            navigate("/user/home");
+            navigate("/user/find", { replace: true });
           } else if (res.data.role === 'provider') {
             dispatch(setProviderCredentials({ ...res.data }));
             localStorage.setItem('token', res.token)
-            navigate("/provider");
+            navigate("/provider", { replace: true });
           } else if (res.data.role === 'admin') {
             dispatch(setAdminCredentials({ ...res.data }));
             localStorage.setItem('token', res.token)
-            navigate("/admin");
+            navigate("/admin", { replace: true });
 
             // WHEN ADMIN LOGINS
           } else {
@@ -175,7 +175,7 @@ export default function LoginForm(props) {
             />
             {emailError && <p className="text-red-400 pl-2">{emailError}</p>}
           </div>
-        
+
           <div className="mt-2 h-24">
             <label className="text-lg font-medium tracking-wide">
               Password

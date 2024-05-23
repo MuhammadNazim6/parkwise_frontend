@@ -5,7 +5,7 @@ import UserLayout from '@/screens/Users/UserLayout';
 import UserSignup from '../screens/Users/UserSignup';
 import UserLandingPage from '../screens/Users/UserLandingPage';
 import UserEmailVerify from '../screens/Users/UserEmailVerify';
-import UserHome from '../screens/Users/UserHome';
+import UserFindLots from '../screens/Users/UserFindLots';
 import CommonForgotPassword from '../screens/Common/CommonForgotPassword';
 import UserProtect from '@/components/User/protected/UserProtect';
 import CommonLeftSideLayout from '@/screens/Common/CommonLeftSideLayout';
@@ -25,8 +25,8 @@ function UserRoutes() {
       <Route path='user/email-verify' element={<UserEmailVerify />} />
 
       <Route path='user' element={<UserLayout />} >
-        <Route path='home' element={<UserHome />} />
-        <Route path='home/lotDetails' element={<UserParkingLotDetails />} />
+        <Route path='find' element={<UserFindLots />} />
+        <Route path='find/lotDetails/:id' element={<UserParkingLotDetails />} />
       </Route>
 
       

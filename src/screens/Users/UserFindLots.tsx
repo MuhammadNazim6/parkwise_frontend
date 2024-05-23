@@ -1,12 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { IoMdBatteryCharging, IoIosSearch } from "react-icons/io";
+import { IoMdBatteryCharging } from "react-icons/io";
 import HeroImage from "../../assets/Images/68477b6e-7741-423d-86b1-bf94fde5f12b_1344x896.jpg";
-import { CalendarIcon } from "@radix-ui/react-icons"
-import { format } from "date-fns"
-import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
-import { Calendar } from "@/components/ui/calendar"
-import { Popover, PopoverContent, PopoverTrigger, } from "@/components/ui/popover"
 import { Slider } from "@/components/ui/slider"
 import { Checkbox } from "@/components/ui/checkbox"
 import { useGetParkingLotsMutation } from "@/redux/slices/userApiSlice";
@@ -14,11 +8,10 @@ import UserSearchAddress from "@/components/User/UserSearchAddress";
 import { Loader } from '../../components/Common/BootstrapElems'
 import { MdLocalCarWash } from "react-icons/md";
 import { GiCartwheel } from "react-icons/gi";
+import { SkeletonCard } from "@/components/Common/ListSkeleton";
+import { Link } from "react-router-dom";
 
-function UserHome() {
-
-  // const [search, setSearch] = useState('')     
-  // const [date, setDate] = React.useState<Date | undefined>(new Date());  
+function UserFindLots() {
   const [coordinates, setCoordinates] = useState([null]);
   const [price, setPrice] = useState(240)
   const [services, setServices] = useState({
@@ -61,8 +54,6 @@ function UserHome() {
 
   const fetchParkingLots = async () => {
     setLoading(true)
-    console.log('In fetchParkingLots as coordinates changed');
-    console.log(coordinates);
     const coordinatesStr = JSON.stringify(coordinates)
     const response = await getParkingLots({ coordinatesStr, services, price, limit, page }).unwrap()
     setParkingLots((prev) => [...response.data]);
@@ -94,57 +85,12 @@ function UserHome() {
             {/* <h1 className="mb-5 md:text-5xl text-2xl font-bold">Hello there</h1> */}
             <div className="relative flex">
               <UserSearchAddress setCoordinates={setCoordinates} />
-              {/* <div className="flex items-center justify-between w-full "> */}
-              {/* Address */}
-              {/* <input
-                  type="text"
-                  value={search}
-                  onChange={(e) => setSearch(e.target.value)}
-                  className="shadow-4xl md:w-full w-4/6 px-4 py-3 bg-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-none"
-                  placeholder="Search by city, neighborhood..."
-                /> */}
 
-              {/* Date */}
-              {/* <Popover>
-                  <PopoverTrigger asChild>
-                    <Button
-                      variant={"outline"}
-                      className={cn(
-                        "md:w-[320px] w-2/6 justify-start text-left font-normal h-12 rounded-none overflow-hidden",
-                        !date && "text-muted-foreground"
-                      )}
-                    >
-                      <CalendarIcon className="mr-2 h-4 w-4" />
-                      {date ? format(date, "PPP") : <span>Pick a date</span>}
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0" align="start">
-                    <Calendar
-                      mode="single"
-                      selected={date}
-                      onSelect={setDate}
-                      disabled={(date) => {
-                        let today = new Date();
-                        let upToDate = new Date(today);
-                        upToDate.setDate(today.getDate() + 2);
-                        let yesterday = new Date(today);
-                        yesterday.setDate(today.getDate() - 1);
-                        return date <= yesterday || date > upToDate
-                      }}
-                    />
-                  </PopoverContent>
-                </Popover> */}
-              {/* Time */}
-              {/* </div> */}
-              {/* <button className="md:px-10 md:py-3 md:w-2/12 w-1/6 bg-secondary-blue text-white font-semibold rounded-none flex justify-center space-x-1 items-center">
-                <IoIosSearch className="md:hden text-2xl" /> <span className="md:block hidden">Search</span>
-              </button> */}
             </div>
           </div>
         </div>
       </div>
 
-      {/* <div className="md:flex md:justify-between h-screen shadow-2xl bg-black"> */}
       <div className="md:block hidden w-1/6 fixed border-xl text-sm pt-4 ">
         <div className="flex justify-start px-8 py-3 text-lg text-gray-500 font-medium tracking-widest shadow-2xl rounded-t-2xl bg-blue-100">
           Filters
@@ -192,9 +138,9 @@ function UserHome() {
           <ul className="p-4">
             {/* Parking lot list */}
             {parkingLots.map((lot) => (
-              <div
+              <Link to={`/user/find/lotDetails/${lot._id}`}
                 key={lot._id}
-                className="bg-blue-100 md:hover:bg-blue-50 m-5 rounded-b-xl flex md:flex-row justify-between hover:scale-[1.004] transition-all ease-in-out cursor-pointer p-4 h-28"
+                className="bg-blue-100 md:hover:bg-blue-50 m-5 rounded-b-xl flex md:flex-row justify-between hover:scale-[1.001] transition-all ease-in-out cursor-pointer p-4 h-28"
               >
                 <div className="flex flex-col justify-between w-3/4 px-5">
                   <div>
@@ -218,16 +164,21 @@ function UserHome() {
                     </div>)}
                   </div>
                 </div>
-                <div className="flex justify-center m-5 rounded-b-lg items-center w-1/4 bg-slate-300 shadow-lg">
+                <div className="flex justify-center m-5 rounded-b-lg items-center w-1/4 bg-slate-200 shadow-lg">
                   Fare:
                   <p className="p-2">{`${lot.pricePerHour} / hour`}</p>
                 </div>
-              </div>
+              </Link>
             ))}
           </ul>
-          {loading ? (<div className="text-center w-full mt-24 text-xl md:text-3xl text-gray-700 flex justify-center items-center">
-            <span className="mr-3">Loading</span> <Loader />
-          </div>) : null}
+          {loading ? (
+            <div className="text-center w-full mt-24 text-xl md:text-3xl text-gray-700 flex justify-center items-center">
+              <SkeletonCard />
+              <SkeletonCard />
+              <SkeletonCard />
+              <span className="mr-3">Loading</span> <Loader />
+            </div>
+          ) : (null)}
         </div>
       ) : (
         <div className="text-center w-full mt-24 text-xl md:text-3xl text-gray-700 bg-white min-h-screen">
@@ -239,4 +190,4 @@ function UserHome() {
   );
 }
 
-export default UserHome;
+export default UserFindLots;

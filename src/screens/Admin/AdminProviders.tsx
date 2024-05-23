@@ -14,6 +14,8 @@ function AdminProviders() {
     const fetchProviders = async () => {
       try {
         const providersData = await getProviders().unwrap();
+        console.log(providersData);
+        
         setProviders(providersData.data);
       } catch (error) {
         console.error('Error fetching requests:', error);
@@ -35,7 +37,7 @@ function AdminProviders() {
   }
 
   return (
-    <div className="flex items-center justify-center bg-gray-100 h-screen pt-4">
+    <div className="flex items-center justify-center bg-gray-100 min-h-screen py-10">
       <div className="h-full sm:w-2/3 w-full">
         <p className='sm:text-2xl md:text-3xl text-lg text-center md:m-4 text-black font-bold p-3'>Providers list</p>
         {providers.length > 0 ?

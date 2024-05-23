@@ -71,7 +71,7 @@ function UserEmailVerify(props) {
         dispatch(setProviderCredentials({ ...res.data }))
         localStorage.setItem('token', res.token)
         dispatch(deleteEmailInfo())
-        navigate('/provider')
+        navigate('/provider', { replace: true })
       }
     } else {
       setOtpResendText('')

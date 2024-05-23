@@ -45,7 +45,7 @@ function ChangePasswordForm() {
     const changedPasswordRes = await changePassword(formData).unwrap()
     if (changedPasswordRes.success) {
       toast('Password changed successfully, try login')
-      navigate('/login')
+      navigate('/login', { replace: true })
     }
   }
 
@@ -111,7 +111,7 @@ function ChangePasswordForm() {
                 </div>
               </div>
               <div className="bg--600 h-1/4 flex justify-center items-start">
-              {isLoading ? <Loader/> :(<button
+                {isLoading ? <Loader /> : (<button
                   type="submit"
                   disabled={isSubmitting}
                   className="bg-primary-provider hover:bg-secondary-provider text-white font-bold py-2 px-4 focus:outline-none focus:shadow-outline w-2/3 md:w-1/3 rounded-lg"

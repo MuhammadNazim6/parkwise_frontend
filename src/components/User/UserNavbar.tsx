@@ -47,7 +47,7 @@ function Navbar() {
         <Link to='/'>
           <li className='p-4 cursor-pointer text-md w-28 '>Home</li>
         </Link>
-        <Link to='/user/home'>
+        <Link to='/user/find'>
           <li className='p-4 cursor-pointer text-md w-32'>Find spots</li>
         </Link>
         <Link to='/about'>

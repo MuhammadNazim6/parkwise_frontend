@@ -94,6 +94,28 @@ export const userApiSlice = apiSlice.injectEndpoints({
       onQueryStarted: onQueryStartedErrorToast
     }),
 
+    getLotDetails: builder.mutation({
+      query: (id) => ({
+        url: `${USER_URL}/lot-details/${id}`,
+        method: "GET",
+        data: {},
+        params: {},
+        headers: {}
+      }),
+      onQueryStarted: onQueryStartedErrorToast
+    }),
+
+    getBookedSlots: builder.mutation({
+      query: ({ date, id }) => ({
+        url: `${USER_URL}/getBookedSlots`,
+        method: "POST",
+        data: { date, lotId: id },
+        params: {},
+        headers: {}
+      }),
+      onQueryStarted: onQueryStartedErrorToast
+    }),
+
 
   }),
 });
@@ -106,5 +128,7 @@ export const {
   useUserSignGoogleMutation,
   useCommForgotPasswordMutation,
   useComChangePasswordMutation,
-  useGetParkingLotsMutation
+  useGetParkingLotsMutation,
+  useGetLotDetailsMutation,
+  useGetBookedSlotsMutation
 } = userApiSlice;

@@ -20,6 +20,8 @@ import {
 } from "@/components/ui/tooltip"
 import { Loader } from '../../components/Common/BootstrapElems'
 import axios from 'axios';
+import { setProviderCredentials } from '@/redux/slices/authSlice';
+import { useDispatch } from 'react-redux';
 
 function ProvAddSlot() {
   const [showWaterServicePrice, setShowWaterServicePrice] = useState(false);
@@ -30,16 +32,13 @@ function ProvAddSlot() {
   // Clciked from the child
   const [clickedCoordinates, setClickedCoordinates] = useState(null);
   // Search location
-  const [searchResult, setSearchResult] = useState([]);
   const [isLoading, setLoading] = useState(false);
 
   const [addSlot] = useSendParkingLotForApprovalMutation();
   const { toast } = useToast()
   const GeoApiKey = import.meta.env.VITE_GEOAPIFY_API_KEY;
   const { providerInfo } = useSelector((state: RootState) => state.auth);
-
-  console.log(providerInfo.approvalStatus);
-
+  const dispatch = useDispatch()
 
   const handleCoordinatesClick = (coordinates) => {
     setClickedCoordinates(coordinates);
@@ -106,11 +105,11 @@ function ProvAddSlot() {
     <>
       <div className="p-4 sm:ml-64">
         <div className="p-4 border-2 border-gray-200 border-dashed rounded-lg dark:border-gray-700 ">
-          <div className="app">
+          <div className="app min-h-screen">
 
             {/* Message saying the request has been sent and wait for approval */}
             {providerInfo.approvalStatus === 'pending' && (
-              <div className='h-screen'>
+              <div className='flex justify-center items-center'>
                 <div className="bg-blue-400 shadow-lg rounded-md p-4 mt-4 cursor-pointer transition-transform hover:scale-[1.006] ease-in-out duration-300">
                   <div className="flex items-center justify-between">
                     <div className="font-bold text-lg ">Approval request pending</div>
@@ -122,7 +121,7 @@ function ProvAddSlot() {
 
             {/* Message saying the request have been rejected try again  */}
             {providerInfo.approvalStatus === "rejected" && (
-              <div className=''>
+              <div className='flex justify-center items-center'>
                 <div className="bg-red-400 shadow-lg rounded-md p-4 mt-4 cursor-pointer transition-transform hover:scale-[1.006] ease-in-out duration-300">
                   <div className="flex items-center justify-between">
                     <div className="font-semibold text-lg">Approval request rejected</div>
@@ -133,7 +132,7 @@ function ProvAddSlot() {
             )}
 
             {providerInfo.approvalStatus === "true" && (
-              <div className='h-screen'>
+              <div className='flex place-content-center'>
                 <div className="bg-green-400 shadow-lg rounded-md p-4 mt-4 cursor-pointer transition-transform hover:scale-[1.006] ease-in-out duration-300">
                   <div className="flex items-center justify-between">
                     <div className="font-semibold text-lg">Approval request accepted</div>
@@ -190,7 +189,6 @@ function ProvAddSlot() {
                       return
                     }
 
-                    console.log(clickedCoordinates);
                     const distance = calculateDistance(provAddedAddressLocation.lat, provAddedAddressLocation.lng, clickedCoordinates.Lat, clickedCoordinates.Lng)
                     if (distance > 3) {
                       toast({
@@ -206,10 +204,12 @@ function ProvAddSlot() {
                     values.email = providerInfo.email
                     const sendForApproval = await addSlot(values).unwrap();
                     if (sendForApproval.success) {
+                      dispatch(setProviderCredentials({ ...providerInfo, approvalStatus: 'pending' }))
                       toast({
                         title: "Your slot have been sent for verification",
                         description: "",
                       })
+
                     } else {
                       toast({
                         title: sendForApproval.message,
@@ -219,7 +219,6 @@ function ProvAddSlot() {
 
                     console.log(values);
 
-                    // alert(JSON.stringify(values, null, 2));
                   }}
 
                   validationSchema={Yup.object().shape({
@@ -643,7 +642,7 @@ function ProvAddSlot() {
             )}
           </div>
         </div>
-      </div>
+      </div >
 
     </>
   )

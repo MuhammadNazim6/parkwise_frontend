@@ -15,7 +15,7 @@ export default function LoginForm(props) {
   const dispatch = useDispatch();
 
   const [login, { isLoading }] = useAdminLoginMutation();
-  const { adminInfo } = useSelector((state:RootState) => state.auth);
+  const { adminInfo } = useSelector((state: RootState) => state.auth);
 
   useEffect(() => {
     if (adminInfo) {
@@ -42,9 +42,9 @@ export default function LoginForm(props) {
         };
         const res = await login(formData).unwrap();
         dispatch(setAdminCredentials({ ...res.data }));
-        localStorage.setItem('token',res.token)
+        localStorage.setItem('token', res.token)
         toast("success", res.message);
-        navigate("/");
+        navigate("/", { replace: true });
       }
     } catch (err) {
       toast("error", "Incorrect username or password");

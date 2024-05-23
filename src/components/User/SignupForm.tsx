@@ -10,6 +10,7 @@ import { setCredentials, setEmailInfo } from '../../redux/slices/authSlice';
 import { toast } from '../../script/toast'
 import axios from 'axios';
 import { GoogleLogin, useGoogleLogin } from '@react-oauth/google';
+import { RootState } from '@/redux/store';
 
 
 export default function SignupForm(props) {
@@ -37,8 +38,8 @@ export default function SignupForm(props) {
   const [loading, setLoading] = useState(false);
 
 
-  const { userInfo } = useSelector((state) => state.auth)
-  const { uLoggedIn } = useSelector((state) => state.auth);
+  const { userInfo } = useSelector((state: RootState) => state.auth)
+  const { uLoggedIn } = useSelector((state: RootState) => state.auth);
 
 
   const togglePasswordVisibility = () => {
@@ -55,33 +56,32 @@ export default function SignupForm(props) {
         const res = await axios.get(
           `https://www.googleapis.com/oauth2/v3/userinfo?access_token=${response.access_token}`
         );
-  
-        console.log(res.data);
-  
-        const googleUserData = {
-              name: res.data.name,
-              email: res.data.email,
-              mobile: 0,
-              password: res.data.sub,
-              google: true
-            }
 
-            const signed = await sign(googleUserData)
-            console.log(signed);
-            
-      if (signed.data.success) {
-        console.log(googleUserData);
-        dispatch(setCredentials({ ...googleUserData }))
-        navigate('/user/home')
-      } else {
-        alert('Try another login method')
-      }
+        console.log(res.data);
+
+        const googleUserData = {
+          name: res.data.name,
+          email: res.data.email,
+          mobile: 0,
+          password: res.data.sub,
+          google: true
+        }
+
+        const signed = await sign(googleUserData).unwrap()
+
+        if (signed.success) {
+          console.log(googleUserData);
+          dispatch(setCredentials({ ...googleUserData }))
+          navigate('/user/find', { replace: true })
+        } else {
+          alert('Try another login method')
+        }
 
       } catch (error) {
         console.log(error);
       }
     },
-  
+
   });
 
 
@@ -93,7 +93,7 @@ export default function SignupForm(props) {
 
   useEffect(() => {
     if (uLoggedIn) {
-      navigate('/user/home')
+      navigate('/user/find')
     }
   }, [navigate, uLoggedIn])
 
@@ -174,14 +174,14 @@ export default function SignupForm(props) {
   const handleRegistration = async (formData: FormData) => {
     try {
       setLoading(true)
-      const otpRes = await verify(formData)
+      const otpRes = await verify(formData).unwrap()
 
-      if (otpRes.data.success) {
+      if (otpRes.success) {
         dispatch(setEmailInfo(formData))
         setLoading(false);
-        navigate('/user/email-verify')
+        navigate('/user/email-verify', { replace: true })
       } else {
-        setCommonError(otpRes.data.message);
+        setCommonError(otpRes.message);
         setLoading(false)
       }
     } catch (error) {
@@ -263,7 +263,7 @@ export default function SignupForm(props) {
           {loading ? <Loader /> : <button className='active:scale-[.98] active:duration-75 transition-all hover:scale-[1.01] ease-in-out rounded-xl bg-secondary-blue text-white text-lg font-bold w-11/12 h-11' onClick={submitHandler}>Sign up</button>}
         </div>
         <div className='mt-4 gap-y-4 flex justify-center items-center'>
-        
+
           <div onClick={() => Glogin()}>
             <a
               href="#"

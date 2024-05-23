@@ -15,15 +15,15 @@ function UserEmailVerify(props) {
   const [commonError, setCommonError] = useState('')
   const [otpResendText, setOtpResendText] = useState('')
   const [waiToSendOtp, setWaitToSendOtp] = useState(false)
-  const [otpTimer,setOtpTimer] = useState(60)
+  const [otpTimer, setOtpTimer] = useState(60)
   const [verify] = useUserVerificationMutation()
 
-  useEffect(()=>{
-    if(otpTimer === 0){
+  useEffect(() => {
+    if (otpTimer === 0) {
       setWaitToSendOtp(false);
-      setOtpTimer(60); 
+      setOtpTimer(60);
     }
-  },[otpTimer])
+  }, [otpTimer])
 
 
   const handleOTPInput = (index: number, event: React.KeyboardEvent<HTMLInputElement>) => {
@@ -52,7 +52,7 @@ function UserEmailVerify(props) {
 
   };
 
-  const { emailInfo } = useSelector((state:RootState) => state.auth)
+  const { emailInfo } = useSelector((state: RootState) => state.auth)
 
   const checkOtp = async (e) => {
     e.preventDefault();
@@ -66,15 +66,14 @@ function UserEmailVerify(props) {
 
     const data = { email: emailInfo.email, enteredOtp: enteredOtp.join('') }
     const checkOtp = await check(data).unwrap()
-console.log('checkOtp ',checkOtp);
 
     if (checkOtp.success) {
       const res = await register(emailInfo).unwrap();
       if (res.success) {
         dispatch(setCredentials({ ...res.data }))
-        localStorage.setItem('token',res.token)
+        localStorage.setItem('token', res.token)
         dispatch(deleteEmailInfo())
-        navigate('/')
+        navigate('/', { replace: true })
       }
     } else {
       setOtpResendText('')
@@ -84,15 +83,15 @@ console.log('checkOtp ',checkOtp);
 
   const resendOtpFn = async () => {
     setWaitToSendOtp(true)
-    const otpInterval = setInterval(()=>{
+    const otpInterval = setInterval(() => {
       setOtpTimer(prevTimer => prevTimer - 1)
-      if(otpTimer === 0){
+      if (otpTimer === 0) {
         setWaitToSendOtp(false)
       }
-    },1000)
-    setTimeout(()=>{
+    }, 1000)
+    setTimeout(() => {
       clearInterval(otpInterval)
-    },60000)
+    }, 60000)
     const otpRes = await verify(emailInfo).unwrap()
     console.log(otpRes);
 
@@ -138,9 +137,9 @@ console.log('checkOtp ',checkOtp);
               <div className="h-14">
                 <h1 className='text-red-600 text-xl font-medium'>{commonError}</h1>
                 <h1 className='text-green-600 text-xl font-medium'>{otpResendText}</h1>
-              
+
               </div>
-             {waiToSendOtp? <div className="flex justify-center"><p className='text-lg  w-80'>Try again after {otpTimer} seconds</p></div> : <div className='flex justify-center'><p className='text-lg w-80'><span>didn't recieve otp ?? </span><span onClick={resendOtpFn} className='text-blue-500 hover:text-blue-800 active:scale-[.98] active:duration-75 transition-all cursor-pointer'> resend OTP</span></p></div>}
+              {waiToSendOtp ? <div className="flex justify-center"><p className='text-lg  w-80'>Try again after {otpTimer} seconds</p></div> : <div className='flex justify-center'><p className='text-lg w-80'><span>didn't recieve otp ?? </span><span onClick={resendOtpFn} className='text-blue-500 hover:text-blue-800 active:scale-[.98] active:duration-75 transition-all cursor-pointer'> resend OTP</span></p></div>}
               <button type='submit' className='text-white mt-5 bg-secondary-blue p-3 w-3/6 lg:w-5/6 text-base font-medium ml-2 hover:scale-[1.02] rounded-lg active:scale-[.98] active:duration-75 transition-all'>Verify</button>
             </div>
           </form>

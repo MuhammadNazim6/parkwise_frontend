@@ -7,15 +7,12 @@ import { MdFeedback } from "react-icons/md";
 import ProSidebarLink from './ProSidebarLink';
 import { Link, useLocation, NavLink } from 'react-router-dom';
 import { IoIosArrowBack } from "react-icons/io";
+import { useSelector } from 'react-redux';
+import { RootState } from '@/redux/store';
 
 
 
 function Sidebar() {
-
-  const location = useLocation()
-  const isActiveLink = (path) => {
-    return location.pathname === path
-  }
 
   const [isOpen, setIsOpen] = useState(false);
   const toggleSidebar = () => {
@@ -40,11 +37,8 @@ function Sidebar() {
     };
   }, []);
 
-  const [inDashboard, setInDashboard] = useState()
-  const [inAddSlots, setInAddSlots] = useState()
-  const [inParkingLot, setInParkingLot] = useState()
-  const [inInbox, setInInbox] = useState()
-  const [inFeedbacks, setInFeedbacks] = useState()
+  const { providerInfo } = useSelector((state: RootState) => state.auth);
+
 
   return (
     <>
@@ -61,19 +55,14 @@ function Sidebar() {
             <button className='md:hidden' onClick={toggleSidebar}><IoIosArrowBack className='text-3xl text-white' /></button>
           </div>
           <ul className="space-y-2 font-medium">
-            <ProSidebarLink link='/provider' title='Dashboard' Icon={<MdDashboard className='text-2xl text-white' /> }/>
-           <ProSidebarLink link='/provider/add-slots' title='Add slots' Icon={<MdAddBox className='text-2xl text-white' /> }/>
-           <ProSidebarLink link='/provider/parking-lot' title='Parking lot' Icon={<FaParking className='text-2xl text-white' /> }/>
-            <ProSidebarLink link='/provider/inbox' title='Inbox' Icon={<IoMdChatboxes className='text-2xl text-white' /> }/>
-           <ProSidebarLink link='/provider/feedbacks' title='Feedbacks' Icon={<MdFeedback className='text-2xl text-white' /> }/>
+            <ProSidebarLink link='/provider' title='Dashboard' Icon={<MdDashboard className='text-2xl text-white' />} />
+            
+           { providerInfo.approvalStatus != 'true' ? (<ProSidebarLink link='/provider/add-slots' title='Add slots' Icon={<MdAddBox className='text-2xl text-white' />} />)
+            :(<ProSidebarLink link='/provider/parking-lot' title='Parking lot' Icon={<FaParking className='text-2xl text-white' />} />)}
+            <ProSidebarLink link='/provider/parking-lot' title='Parking lot' Icon={<FaParking className='text-2xl text-white' />} />
+            <ProSidebarLink link='/provider/inbox' title='Inbox' Icon={<IoMdChatboxes className='text-2xl text-white' />} />
+            <ProSidebarLink link='/provider/feedbacks' title='Feedbacks' Icon={<MdFeedback className='text-2xl text-white' />} />
           </ul>
-          {/* <ul className="space-y-2 font-medium">
-            <NavLink to='/provider'><ProSidebarLink title='Dashboard' Icon={<MdDashboard className='text-2xl text-white' />} /></NavLink>
-            <NavLink to='/provider/add-slots'><ProSidebarLink title='Add slots' Icon={<MdAddBox className='text-2xl text-white' />} /></NavLink>
-            <NavLink to='/provider/parking-lot'><ProSidebarLink title='Parking lot' Icon={<FaParking className='text-2xl text-white' />} /></NavLink>
-            <NavLink to='/provider/inbox'><ProSidebarLink title='Inbox' Icon={<IoMdChatboxes className='text-2xl text-white' />} /></NavLink>
-            <NavLink to='/provider/feedbacks'><ProSidebarLink title='Feedbacks' Icon={<MdFeedback className='text-2xl text-white' />} /></NavLink>
-          </ul> */}
         </div>
       </aside>
 
