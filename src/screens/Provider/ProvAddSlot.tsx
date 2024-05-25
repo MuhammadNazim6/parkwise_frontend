@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
-import { Formik, Field, FieldArray } from "formik";
+import React, { useEffect, useState } from 'react'
+import { Formik, Field, FieldArray, ErrorMessage } from "formik";
 import ProGetAddressLatLong from '@/components/Provider/ProGetAddressLatLong';
 import * as Yup from "yup";
 import { FcInfo } from "react-icons/fc";
@@ -22,6 +22,10 @@ import { Loader } from '../../components/Common/BootstrapElems'
 import axios from 'axios';
 import { setProviderCredentials } from '@/redux/slices/authSlice';
 import { useDispatch } from 'react-redux';
+import { MdOutlineRemoveRedEye } from "react-icons/md";
+import { TbReplace } from "react-icons/tb";
+import { RiImageEditLine } from "react-icons/ri";
+
 
 function ProvAddSlot() {
   const [showWaterServicePrice, setShowWaterServicePrice] = useState(false);
@@ -29,6 +33,9 @@ function ProvAddSlot() {
   const [showAirPressureCheckPrice, setShowAirPressureCheckPrice] = useState(false);
   const [provAddedAddressLocation, setProvAddedAddressLocation] = useState(null)
   const [isVerified, setIsVerified] = useState(true)
+  const [images, setImages] = useState(Array(4).fill(null))
+  const [imagePreviews, setImagePreviews] = useState(Array(4).fill(null))
+
   // Clciked from the child
   const [clickedCoordinates, setClickedCoordinates] = useState(null);
   // Search location
@@ -43,6 +50,16 @@ function ProvAddSlot() {
   const handleCoordinatesClick = (coordinates) => {
     setClickedCoordinates(coordinates);
   };
+
+  const handleFileChange = (index, file) => {
+    const newImages = [...images]
+    const newPreviews = [...imagePreviews];
+    newImages[index] = file;
+    newPreviews[index] = URL.createObjectURL(file);
+
+    setImages(newImages)
+    setImagePreviews(newPreviews);
+  }
 
   // For checking if both coordinates , selected and address coordinate are in a close range
   function calculateDistance(lat1, lon1, lat2, lon2) {
@@ -61,7 +78,6 @@ function ProvAddSlot() {
   function deg2rad(deg) {
     return deg * (Math.PI / 180);
   }
-
 
   const handleSearch = async (values) => {
     try {
@@ -142,7 +158,7 @@ function ProvAddSlot() {
               </div>
             )}
 
-            {(providerInfo.approvalStatus === 'false' || providerInfo.approvalStatus === 'rejected') && (
+            {(providerInfo.approvalStatus === 'pending' || providerInfo.approvalStatus === 'rejected') && (
               <>
                 <h1 className='text-md m-7 text-center font-medium text-gray-600 md:text-xl md:font-semibold mt-10'>Add your parking lot details and verify</h1>
 
@@ -167,11 +183,23 @@ function ProvAddSlot() {
                     latitude: '',
                     longitude: '',
                     startEndTime: '',
-                    email: ''
+                    email: '',
 
                   }}
                   onSubmit={async (values) => {
                     await new Promise((resolve) => setTimeout(resolve, 0));
+                    console.log('jijiji');
+
+                    const selectedImages = images.filter((image) => image !== null)
+                    if (selectedImages.length < 3) {
+                      toast({
+                        variant: "destructive",
+                        title: "Add atleast 3 images",
+                        description: "",
+                      })
+                      return
+
+                    }
                     if (!provAddedAddressLocation) {
                       toast({
                         variant: "destructive",
@@ -202,7 +230,23 @@ function ProvAddSlot() {
                     values.latitude = clickedCoordinates.Lat
                     values.longitude = clickedCoordinates.Lng
                     values.email = providerInfo.email
-                    const sendForApproval = await addSlot(values).unwrap();
+
+                    // CREATINF FORM DATA
+                    const formData = new FormData()
+                    for (const key in values) {
+                      if (values.hasOwnProperty(key) && key !== "images") {
+                        formData.append(key, values[key])
+                      }
+                    }
+                    selectedImages.forEach((image, index) => {
+                      console.log(`Appending image: ${image.name}, size: ${image.size}, type: ${image.type}`);
+                      formData.append(`images`, image);
+                    });
+                    // formData.append('images',selectedImages[0]);
+
+
+                    // const sendForApproval = await addSlot(values).unwrap();
+                    const sendForApproval = await addSlot(formData).unwrap();
                     if (sendForApproval.success) {
                       dispatch(setProviderCredentials({ ...providerInfo, approvalStatus: 'pending' }))
                       toast({
@@ -216,8 +260,6 @@ function ProvAddSlot() {
                         description: "",
                       })
                     }
-
-                    console.log(values);
 
                   }}
 
@@ -268,7 +310,7 @@ function ProvAddSlot() {
                       }
                       return true;
                     }),
-                    startEndTime: Yup.string().required('Select an availability time')
+                    startEndTime: Yup.string().required('Select an availability time'),
                   })}
                 >
                   {(props) => {
@@ -594,6 +636,67 @@ function ProvAddSlot() {
                           </div>
                         </div>
 
+                        <label htmlFor="" className="block my-2 text-md mt-10">
+                          Images
+                        </label>
+                        <div className="mt-5 flex flex-wrap justify-center gap-4">
+                          {Array.from({ length: 4 }).map((_, index) => {
+                            return (
+                              <div key={index} className='flex flex-col md:flex-row md:items-start md:gap-4'>
+                                <input
+                                  type='file'
+                                  name={`image${index}`}
+                                  accept='image/*'
+                                  className='w-full p-2 border border-gray-300 rounded-md cursor-pointer hover:bg-gray-100 transition duration-150 ease-in-out md:w-auto md:p-1 md:border-none md:rounded-lg md:hover:bg-transparent md:hover:text-blue-500'
+                                  onChange={(event) => {
+                                    const file = event.target.files[0];
+                                    handleFileChange(index, file);
+                                  }}
+                                />
+                                <ErrorMessage
+                                  name={`images[${index}]`}
+                                  component="div"
+                                  className='text-red-500 mt-2 md:mt-0' // Adjusted margin for better spacing
+                                />
+                              </div>
+                            );
+                          })}
+
+                          <ErrorMessage
+                            name="images"
+                            component="div"
+                            className="text-red-500 mt-2" // Adjusted margin for better spacing
+                          />
+                        </div>
+
+                        <div className="flex flex-wrap mt-9">
+                          {Array.from({ length: 4 }).map((_, index) => {
+                            return (
+                              <div key={index} className="flex flex-col md:flex-row place-content-center relative mx-2 mb-4">
+                                {imagePreviews[index] && (
+                                  <>
+                                    <img
+                                      src={imagePreviews[index]}
+                                      alt={`Preview ${index + 1}`}
+                                      className='w-full md:w-24 h-auto md:h-32 rounded-b-xl object-cover'
+                                      style={{ width: '100px', height: '100%' }} // Removed fixed dimensions for responsiveness
+                                    />
+                                    <div className="absolute inset-0 flex justify-center items-center opacity-0 hover:opacity-100 transition-opacity duration-300">
+                                      <button type='button' className="bg-black text-white px-2 py-1 mr-2 rounded"><MdOutlineRemoveRedEye /></button>
+                                      <button type='button' className="bg-blue-800 text-white px-2 py-1 rounded"><TbReplace /></button>
+                                      <button type='button' className="bg-gray-600 text-white px-2 py-1 ml-2 rounded"><RiImageEditLine /></button>
+                                    </div>
+                                  </>
+                                )}
+                              </div>
+                            )
+                          })}
+                        </div>
+
+
+
+
+
                         <div className="md:flex md:justify-center md:mt-12 w-full">
                           <ProGetAddressLatLong provLocation={provAddedAddressLocation} onCoordinatesClick={handleCoordinatesClick} />
                         </div>
@@ -636,8 +739,6 @@ function ProvAddSlot() {
                     );
                   }}
                 </Formik>
-
-
               </>
             )}
           </div>

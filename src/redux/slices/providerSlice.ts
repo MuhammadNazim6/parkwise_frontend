@@ -56,14 +56,25 @@ export const providerApiSlice = apiSlice.injectEndpoints({
     }),
 
     sendParkingLotForApproval: builder.mutation({
-      query: (data) => ({
+      query: (formData) => ({
         url: `${PROVIDER_URL}/sendLotForApproval`,
         method: 'POST',
-        data: data,
+        data: formData,
         params: {},
-        headers: {}
+        headers: {},
+        formData:true
       }),
     }),
+
+    getProviderDetails: builder.mutation({
+      query: (id) => ({
+        url: `${PROVIDER_URL}/providerDetails/${id}`,
+        method: 'GET',
+        data: {},
+        params: {},
+        headers: {},
+      }),
+    })
   })
 })
 
@@ -72,7 +83,8 @@ export const {
   useProviderRegisterMutation,
   useProviderVerificationMutation,
   useProviderCheckOtpMutation,
-  useSendParkingLotForApprovalMutation
+  useSendParkingLotForApprovalMutation,
+  useGetProviderDetailsMutation
 
 } = providerApiSlice
 
