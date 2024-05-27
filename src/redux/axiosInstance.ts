@@ -2,8 +2,8 @@ import axios from "axios";
 const axiosInstance = axios.create({
   baseURL: 'http://localhost:3000',
   // headers: {
-  //   // "Content-Type": 'application/json',
-  //   // "Content-Type": "multipart/form-data",
+  // //   // "Content-Type": 'application/json',
+  //   "Content-Type": "multipart/form-data",
   // }
 });
 
@@ -13,6 +13,11 @@ axiosInstance.interceptors.request.use((config) => {
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
+
+  // if (config.data instanceof FormData) {
+  //   config.headers['Content-Type'] = 'multipart/form-data';
+  // }
+
   return config;
 }, (error) => {
   return Promise.reject(error);

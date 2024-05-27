@@ -241,8 +241,8 @@ function ProvAddSlot() {
                     selectedImages.forEach((image, index) => {
                       console.log(`Appending image: ${image.name}, size: ${image.size}, type: ${image.type}`);
                       formData.append(`images`, image);
+                      console.log(image);
                     });
-                    // formData.append('images',selectedImages[0]);
 
 
                     // const sendForApproval = await addSlot(values).unwrap();
@@ -260,7 +260,6 @@ function ProvAddSlot() {
                         description: "",
                       })
                     }
-
                   }}
 
                   validationSchema={Yup.object().shape({
