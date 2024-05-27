@@ -6,7 +6,7 @@ import ProvEmailVerify from '../screens/Provider/ProvEmailVerify'
 import ProvSidebar from '@/screens/Provider/ProvSidebar';
 import ProvAddSlot from '@/screens/Provider/ProvAddSlot';
 import ProvParkingLot from '@/screens/Provider/ProvParkingLot';
-import ProvInbox from '@/screens/Provider/ProvInbox';
+import ProvProfile from '@/screens/Provider/ProvProfile';
 import ProvFeedbacks from '@/screens/Provider/ProvFeedbacks';
 import ProvDashboard from '@/screens/Provider/ProvDashboard';
 
@@ -18,7 +18,7 @@ function ProviderRouter() {
         <Route index element={<ProvDashboard />} />
         <Route path='add-slots' element={<ProvAddSlot />} />
         <Route path='parking-lot' element={<ProvParkingLot />} />
-        <Route path='inbox' element={<ProvInbox />} />
+        <Route path='profile' element={<ProvProfile />} />
         <Route path='feedbacks' element={<ProvFeedbacks />} />
       </Route>
       <Route path='signup' element={<ProvSignup />} />

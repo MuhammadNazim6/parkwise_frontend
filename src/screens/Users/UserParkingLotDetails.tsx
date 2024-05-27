@@ -107,8 +107,8 @@ function UserParkingLotDetails() {
     <div className='min-h-screen flex flex-col md:flex-row bg-blue-50 px-4 md:px-24 p-3'>
       <div className="w-full md:w-1/2 pt-10 md:flex">
         {lotDetails ? (
-          <div className="bg-primary-blue rounded-l-2xl shadow-2xl w-full h-full p-10">
-            <h1 className="mb-1 text-2xl md:text-4xl font-bold h-1/6">{lotDetails.address.buildingOrAreaName}</h1>
+          <div className="bg-gray-100 rounded-l-2xl shadow-2xl w-full h-full p-10">
+            {/* <h1 className="mb-1 text-2xl md:text-4xl font-bold h-1/6">{lotDetails.address.buildingOrAreaName}</h1> */}
             <div className="carousel">
 
               {carouselArr.map((x, index) => {
@@ -116,7 +116,7 @@ function UserParkingLotDetails() {
                 const nextIndex = (index === carouselArr.length - 1) ? 0 : index + 1;
                 return (
                   <div id={`slide${index}`} className="carousel-item relative w-full">
-                    <img src={heroImage} className="w-full h-64 object-cover" />
+                    <img src={lotDetails.images[index]} className="w-full h-64 object-cover" />
                     <div className="absolute flex justify-between transform -translate-y-1/2 left-5 right-5 top-1/2">
                       <a href={`#slide${prevIndex}`} className="btn btn-circle">❮</a>
                       <a href={`#slide${nextIndex}`} className="btn btn-circle">❯</a>
@@ -127,29 +127,39 @@ function UserParkingLotDetails() {
               }
 
             </div>
+            
+
             <div className="flex justify-around p-10 rounded-lg">
-              <div className="">
-                <p className="text-md">{lotDetails.address.buildingOrAreaName},</p>
-                <p className="text-md">{lotDetails.address.street},</p>
-                <p className="text-md">{lotDetails.address.landmark},</p>
-                <p className="text-md">{lotDetails.address.pinNumber},</p>
-                <p className="text-md">{lotDetails.address.city},</p>
-                <p className="text-md">{lotDetails.address.state},</p>
-                <p className="text-md">{lotDetails.address.country}</p>
+              <div className="flex flex-col space-y-2">
+                <p className="text-md text-gray-900 font-semibold">{lotDetails.address.buildingOrAreaName}</p>
+                <p className="text-md text-gray-900">{lotDetails.address.street}</p>
+                {lotDetails.address.landmark && (
+                  <p className="text-md text-gray-900">{lotDetails.address.landmark}</p>
+                )}
+                <p className="text-md text-gray-900">{lotDetails.address.pinNumber}</p>
+                <p className="text-md text-gray-900">{lotDetails.address.city}</p>
+                <p className="text-md text-gray-900">{lotDetails.address.state}</p>
+                <p className="text-md text-gray-900">{lotDetails.address.country}</p>
               </div>
-              <div className="space-y-5">
-                {lotDetails.evChargeFacilityPrice && (<div className="flex place-items-center space-x-1">
-                  <IoMdBatteryCharging className="text-gray-800" />
-                  <p className="text-gray-700">ev charging</p>
-                </div>)}
-                {lotDetails.waterServicePrice && (<div className="flex place-items-center space-x-1">
-                  <MdLocalCarWash className="text-gray-800" />
-                  <p className="text-gray-700">water service</p>
-                </div>)}
-                {lotDetails.airPressureCheckPrice && (<div className="flex place-items-center space-x-1">
-                  <GiCartwheel className="text-gray-800" />
-                  <p className="text-gray-700">air filling</p>
-                </div>)}
+              <div className="flex flex-col space-y-5">
+                {lotDetails.evChargeFacilityPrice && (
+                  <div className="flex items-center space-x-2 bg-blue-50 p-3 rounded-md shadow-sm hover:bg-blue-100 transition duration-300">
+                    <IoMdBatteryCharging className="text-blue-600 text-2xl" />
+                    <p className="text-gray-700 font-medium">EV Charging</p>
+                  </div>
+                )}
+                {lotDetails.waterServicePrice && (
+                  <div className="flex items-center space-x-2 bg-green-50 p-3 rounded-md shadow-sm hover:bg-green-100 transition duration-300">
+                    <MdLocalCarWash className="text-green-600 text-2xl" />
+                    <p className="text-gray-700 font-medium">Water Service</p>
+                  </div>
+                )}
+                {lotDetails.airPressureCheckPrice && (
+                  <div className="flex items-center space-x-2 bg-yellow-50 p-3 rounded-md shadow-sm hover:bg-yellow-100 transition duration-300">
+                    <GiCartwheel className="text-yellow-600 text-2xl" />
+                    <p className="text-gray-700 font-medium">Air Filling</p>
+                  </div>
+                )}
               </div>
             </div>
 

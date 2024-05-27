@@ -59,8 +59,8 @@ function Sidebar() {
             
            { providerInfo.approvalStatus != 'true' ? (<ProSidebarLink link='/provider/add-slots' title='Add slots' Icon={<MdAddBox className='text-2xl text-white' />} />)
             :(<ProSidebarLink link='/provider/parking-lot' title='Parking lot' Icon={<FaParking className='text-2xl text-white' />} />)}
-            <ProSidebarLink link='/provider/parking-lot' title='Parking lot' Icon={<FaParking className='text-2xl text-white' />} />
-            <ProSidebarLink link='/provider/inbox' title='Inbox' Icon={<IoMdChatboxes className='text-2xl text-white' />} />
+            {/* <ProSidebarLink link='/provider/parking-lot' title='Parking lot' Icon={<FaParking className='text-2xl text-white' />} /> */}
+            <ProSidebarLink link='/provider/profile' title='Profile' Icon={<IoMdChatboxes className='text-2xl text-white' />} />
             <ProSidebarLink link='/provider/feedbacks' title='Feedbacks' Icon={<MdFeedback className='text-2xl text-white' />} />
           </ul>
         </div>
