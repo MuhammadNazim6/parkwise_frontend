@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { useGetLotDetailsMutation, useGetBookedSlotsMutation } from '@/redux/slices/userApiSlice';
 import { Calendar } from "@/components/ui/calendar"
-import { IoIosSearch } from "react-icons/io";
 import { Popover, PopoverContent, PopoverTrigger, } from "@/components/ui/popover"
 import { CalendarIcon } from "@radix-ui/react-icons"
 import { Button } from "@/components/ui/button"
@@ -13,15 +12,11 @@ import { IoMdBatteryCharging } from "react-icons/io";
 import { GiCartwheel } from "react-icons/gi";
 import { MdLocalCarWash } from "react-icons/md";
 import { Loader } from '@/components/Common/BootstrapElems';
+import UserCarousel from '@/components/User/UserCarousel ';
+import { MdAccessTime } from "react-icons/md";
+import { FcMoneyTransfer } from "react-icons/fc";
+import { LiaRupeeSignSolid } from "react-icons/lia";
 
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "@/components/ui/carousel"
-import heroImage from '../../assets/Images/depositphotos_140718644-stock-illustration-isometric-vector-illustration-car-in.jpg'
 
 
 function UserParkingLotDetails() {
@@ -36,9 +31,10 @@ function UserParkingLotDetails() {
   const [loadingBooked, setLoadingBooked] = useState(false)
   const { toast } = useToast()
 
-  const carouselArr = [1, 2, 3, 4]
   const [getDetails] = useGetLotDetailsMutation()
   const [getBookedSlots] = useGetBookedSlotsMutation()
+
+
   useEffect(() => {
     const fetchAndUpdateDetails = async () => {
       try {
@@ -56,10 +52,12 @@ function UserParkingLotDetails() {
     fetchAndUpdateDetails();
   }, []);
 
+  const slots = Array.from({ length: 24 - startingSlotTime }, (_, index) => `${startingSlotTime + index}:00 `)
 
-  const slots = Array.from({ length: 24 - startingSlotTime }, (_, index) => `${startingSlotTime + index}:00 - ${startingSlotTime + index + 1}:00`);
 
   const handleTimeChange = (event) => {
+    console.log(event.target.value);
+
     setSelectedTime(event.target.value);
   };
 
@@ -74,15 +72,17 @@ function UserParkingLotDetails() {
   };
 
   const checkAvailabilty = async () => {
-    if (!date || !startingSlotTime) {
+    if (!date) {
       toast({
         variant: "destructive",
-        title: "Please select a date and starting time",
+        title: "Please select a date",
         description: "There was a problem with your request.",
       })
       return
     }
-
+    if (!startingSlotTime || startingSlotTime < lotDetails.startTime) {
+      setSelectedTime(lotDetails.startTime)
+    }
     setLoadingBooked(true)
     const bookedData = await getBookedSlots({ date, id }).unwrap()
     setLoadingBooked(false)
@@ -96,73 +96,58 @@ function UserParkingLotDetails() {
         booked.add(i)
       }
     })
+
     setBookedSlots(booked)
+
     setShowSlots(true)
   };
 
-  const minTime = '09:00';
-  const maxTime = '18:00';
 
   return (
-    <div className='min-h-screen flex flex-col md:flex-row bg-blue-50 px-4 md:px-24 p-3'>
-      <div className="w-full md:w-1/2 pt-10 md:flex">
+    <div className='min-h-screen flex flex-col md:flex-row bg-blue-50 px-4 md:px-24'>
+      <div className="w-full md:w-1/2 pt-10 md:flex h-full">
         {lotDetails ? (
-          <div className="bg-gray-100 rounded-l-2xl shadow-2xl w-full h-full p-10">
-            {/* <h1 className="mb-1 text-2xl md:text-4xl font-bold h-1/6">{lotDetails.address.buildingOrAreaName}</h1> */}
-            <div className="carousel">
-
-              {carouselArr.map((x, index) => {
-                const prevIndex = (index === 0) ? carouselArr.length - 1 : index - 1;
-                const nextIndex = (index === carouselArr.length - 1) ? 0 : index + 1;
-                return (
-                  <div id={`slide${index}`} className="carousel-item relative w-full">
-                    <img src={lotDetails.images[index]} className="w-full h-64 object-cover" />
-                    <div className="absolute flex justify-between transform -translate-y-1/2 left-5 right-5 top-1/2">
-                      <a href={`#slide${prevIndex}`} className="btn btn-circle">❮</a>
-                      <a href={`#slide${nextIndex}`} className="btn btn-circle">❯</a>
-                    </div>
-                  </div>
-                )
-              })
-              }
-
+          <div className="bg-white md:rounded-l-2xl shadow-2xl w-full">
+            <div className="carousel md:rounded-tl-2xl w-full">
+              <UserCarousel carouselArr={lotDetails.images} lotDetails={lotDetails} />
             </div>
-            
-
-            <div className="flex justify-around p-10 rounded-lg">
-              <div className="flex flex-col space-y-2">
-                <p className="text-md text-gray-900 font-semibold">{lotDetails.address.buildingOrAreaName}</p>
-                <p className="text-md text-gray-900">{lotDetails.address.street}</p>
+            <div className="flex m-6 justify-between pb-12 text-[13px]">
+              <div className="flex flex-col">
+                <p className="text-gray-900">{lotDetails.address.buildingOrAreaName}</p>
+                <p className="text-gray-900">{lotDetails.address.street}</p>
                 {lotDetails.address.landmark && (
-                  <p className="text-md text-gray-900">{lotDetails.address.landmark}</p>
+                  <p className="text-gray-900">{lotDetails.address.landmark}</p>
                 )}
-                <p className="text-md text-gray-900">{lotDetails.address.pinNumber}</p>
-                <p className="text-md text-gray-900">{lotDetails.address.city}</p>
-                <p className="text-md text-gray-900">{lotDetails.address.state}</p>
-                <p className="text-md text-gray-900">{lotDetails.address.country}</p>
+                <p className="text-gray-900">{lotDetails.address.pinNumber}</p>
+                <p className="text-gray-900">{lotDetails.address.city}</p>
+                <p className="text-gray-900">{lotDetails.address.state}</p>
               </div>
-              <div className="flex flex-col space-y-5">
+
+              <div className="flex flex-col space-y-2 text">
+                {/* <div className="flex items-center space-x-2 p-1 rounded-md shadow-sm hover:bg-blue-50 transition duration-300">
+                  <MdAccessTime />
+                  <p className="text-gray-700 font-medium text-sm">{lotDetails.startTime === '00:00' ? '24/7' : '06:00 - 20:00'}</p>
+                </div> */}
                 {lotDetails.evChargeFacilityPrice && (
-                  <div className="flex items-center space-x-2 bg-blue-50 p-3 rounded-md shadow-sm hover:bg-blue-100 transition duration-300">
-                    <IoMdBatteryCharging className="text-blue-600 text-2xl" />
+                  <div className="flex items-center space-x-2 bg-blue-50 p-1 rounded-md shadow-sm hover:bg-blue-100 transition duration-300">
+                    <IoMdBatteryCharging className="text-blue-600 " />
                     <p className="text-gray-700 font-medium">EV Charging</p>
                   </div>
                 )}
                 {lotDetails.waterServicePrice && (
-                  <div className="flex items-center space-x-2 bg-green-50 p-3 rounded-md shadow-sm hover:bg-green-100 transition duration-300">
-                    <MdLocalCarWash className="text-green-600 text-2xl" />
+                  <div className="flex items-center space-x-2 bg-green-50 p-1 rounded-md shadow-sm hover:bg-green-100 transition duration-300">
+                    <MdLocalCarWash className="text-green-600 " />
                     <p className="text-gray-700 font-medium">Water Service</p>
                   </div>
                 )}
                 {lotDetails.airPressureCheckPrice && (
-                  <div className="flex items-center space-x-2 bg-yellow-50 p-3 rounded-md shadow-sm hover:bg-yellow-100 transition duration-300">
-                    <GiCartwheel className="text-yellow-600 text-2xl" />
+                  <div className="flex items-center space-x-2 bg-yellow-50 p-1 rounded-md shadow-sm hover:bg-yellow-100 transition duration-300">
+                    <GiCartwheel className="text-yellow-600 " />
                     <p className="text-gray-700 font-medium">Air Filling</p>
                   </div>
                 )}
               </div>
             </div>
-
           </div>
         ) : null}
       </div>
@@ -210,8 +195,8 @@ function UserParkingLotDetails() {
               value={selectedTime}
               onChange={handleTimeChange}
               className='w-2/3 h-full border-0 cursor-pointer'
-              min={minTime}
-              max={maxTime}
+            // min='10:00'
+            // max={maxTime}
             />
           </div>
           <button className="bg-secondary-blue h-12 w-full md:w-3/12 text-white rounded-r-sm active:scale-102">
@@ -219,8 +204,8 @@ function UserParkingLotDetails() {
           </button>
         </div>
         {showSlots && (
-          <div className="mt-10 p-5">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div className="mt-10 p-5 bg-white shadow-2xl rounded-r-lg">
+            <div className="grid grid-cols-6 text-xs md:text-sm md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-4">
               {!loadingBooked ? (slots.map((slot, idx) => {
                 const hour = parseInt(slot.split(':')[0], 10);
                 const isBooked = bookedSlots.has(hour);
@@ -229,7 +214,7 @@ function UserParkingLotDetails() {
                     key={idx}
                     onClick={isBooked ? () => { console.log('BOOKED'); } : () => handleSlotClick(slot)}
                     className={`h-12 rounded-md cursor-pointer flex items-center justify-center text-black shadow-xl
-                  ${selectedSlots.has(slot) ? 'bg-secondary-blue active:scale-101 text-white' : isBooked ? 'bg-gray-400 cursor-not-allowed transition-transform ease-in-out active:animate-shake' : ' ring-1 ring-blue-400 active:scale-101'}`}
+                  ${selectedSlots.has(slot) ? 'bg-secondary-blue active:scale-101 text-white' : isBooked ? 'bg-gray-400 cursor-not-allowed transition-transform ease-in-out active:animate-shake' : ' ring- ring-blue-400 active:scale-101'}`}
                     aria-label={`Parking slot from ${slot}`}
                     role="button"
                     aria-disabled={isBooked}
@@ -246,29 +231,33 @@ function UserParkingLotDetails() {
               </div>
               }
             </div>
-            <div className="bg-white h-24 flex m-10 justify-evenly p-9 space-x-1 shadow-lg rounded-lg">
+            <div className="h-20 flex m-10 justify-evenly items-center space-x-1 rounded-lg">
               <div className="flex flex-col items-center ">
-                <div className="w-4/12 ring-1 ring-blue-400 text-blue-100 bg-blue-100 rounded-sm">.</div>
+                <div className="w-[18px] h-[18px] ring-1 ring-blue-400 text-blue-100 rounded-sm">.</div>
                 <div>Available</div>
               </div>
 
               <div className="flex flex-col items-center">
-                <div className="w-4/12  bg-gray-400 text-gray-400 rounded-sm">.</div>
-                <div>Booked</div>
+                <div className="w-[18px] h-[18px] bg-gray-400 text-gray-400 rounded-sm">.</div>
+                <div>Not available</div>
               </div>
 
               <div className="flex flex-col items-center">
-                <div className="w-4/12  bg-secondary-blue text-secondary-blue rounded-sm">.</div>
+                <div className="w-[18px] h-[18px] bg-secondary-blue text-secondary-blue rounded-sm">.</div>
                 <div>Selected</div>
               </div>
             </div>
-
-
           </div>
-
-
         )}
       </div>
+      {selectedSlots.size ? (<div className="fixed bottom-0 left-1/2 transform -translate-x-1/2 rounded-lg bg-white border p-2 m-2 w-1/2 shadow-lg">
+        <div className="flex justify-evenly">
+          <p className='p-3 flex items-center space-x-3 text-lg font-medium'> <LiaRupeeSignSolid />
+
+            <span>{lotDetails.pricePerHour * selectedSlots.size}.00</span></p>
+          <div className="btn p-3 border-1 border-secondary-blue bg-white text-black hover:bg-primary-blue">Book now</div>
+        </div>
+      </div>) : null}
     </div>
 
   )
