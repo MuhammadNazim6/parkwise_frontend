@@ -62,7 +62,7 @@ export const providerApiSlice = apiSlice.injectEndpoints({
         data: formData,
         params: {},
         headers: {},
-        formData:true
+        formData: true
       }),
     }),
 
@@ -74,7 +74,19 @@ export const providerApiSlice = apiSlice.injectEndpoints({
         params: {},
         headers: {},
       }),
-    })
+    }),
+
+    updateProvProfileDetails: builder.mutation({
+      query: (data) => ({
+        url: `${PROVIDER_URL}/updateProfile/${data._id}`,
+        method: 'PATCH',
+        data: data,
+        params: {},
+        headers: {},
+      }),
+    }),
+
+
   })
 })
 
@@ -84,7 +96,9 @@ export const {
   useProviderVerificationMutation,
   useProviderCheckOtpMutation,
   useSendParkingLotForApprovalMutation,
-  useGetProviderDetailsMutation
+  useGetProviderDetailsMutation,
+  useUpdateProvProfileDetailsMutation,
+
 
 } = providerApiSlice
 

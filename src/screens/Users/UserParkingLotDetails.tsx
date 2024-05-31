@@ -14,8 +14,8 @@ import { MdLocalCarWash } from "react-icons/md";
 import { Loader } from '@/components/Common/BootstrapElems';
 import UserCarousel from '@/components/User/UserCarousel ';
 import { MdAccessTime } from "react-icons/md";
-import { FcMoneyTransfer } from "react-icons/fc";
 import { LiaRupeeSignSolid } from "react-icons/lia";
+import UserBookingModal from '@/components/User/UserBookingModal';
 
 
 
@@ -29,8 +29,9 @@ function UserParkingLotDetails() {
   const startingSlotTime = parseInt(selectedTime.slice(0, 2))
   const [selectedSlots, setSelectedSlots] = useState(new Set());
   const [loadingBooked, setLoadingBooked] = useState(false)
-  const { toast } = useToast()
+  const [bookingModalOpen, setBookingModalOpen] = useState(false)
 
+  const { toast } = useToast()
   const [getDetails] = useGetLotDetailsMutation()
   const [getBookedSlots] = useGetBookedSlotsMutation()
 
@@ -96,18 +97,16 @@ function UserParkingLotDetails() {
         booked.add(i)
       }
     })
-
     setBookedSlots(booked)
-
     setShowSlots(true)
   };
 
 
   return (
-    <div className='min-h-screen flex flex-col md:flex-row bg-blue-50 px-4 md:px-24'>
+    <div className='min-h-screen flex flex-col md:flex-row bg-blue-50 px-4 md:px-40'>
       <div className="w-full md:w-1/2 pt-10 md:flex h-full">
         {lotDetails ? (
-          <div className="bg-white md:rounded-l-2xl shadow-2xl w-full">
+          <div className="bg-white md:rounded-l-2xl shadow-xl w-full">
             <div className="carousel md:rounded-tl-2xl w-full">
               <UserCarousel carouselArr={lotDetails.images} lotDetails={lotDetails} />
             </div>
@@ -124,10 +123,6 @@ function UserParkingLotDetails() {
               </div>
 
               <div className="flex flex-col space-y-2 text">
-                {/* <div className="flex items-center space-x-2 p-1 rounded-md shadow-sm hover:bg-blue-50 transition duration-300">
-                  <MdAccessTime />
-                  <p className="text-gray-700 font-medium text-sm">{lotDetails.startTime === '00:00' ? '24/7' : '06:00 - 20:00'}</p>
-                </div> */}
                 {lotDetails.evChargeFacilityPrice && (
                   <div className="flex items-center space-x-2 bg-blue-50 p-1 rounded-md shadow-sm hover:bg-blue-100 transition duration-300">
                     <IoMdBatteryCharging className="text-blue-600 " />
@@ -195,17 +190,15 @@ function UserParkingLotDetails() {
               value={selectedTime}
               onChange={handleTimeChange}
               className='w-2/3 h-full border-0 cursor-pointer'
-            // min='10:00'
-            // max={maxTime}
             />
           </div>
-          <button className="bg-secondary-blue h-12 w-full md:w-3/12 text-white rounded-r-sm active:scale-102">
-            <span className="" onClick={checkAvailabilty}>Check</span>
+          <button onClick={checkAvailabilty} className="bg-secondary-blue h-12 w-full md:w-3/12 text-white rounded-r-sm active:scale-102">
+            <span>Check</span>
           </button>
         </div>
         {showSlots && (
-          <div className="mt-10 p-5 bg-white shadow-2xl rounded-r-lg">
-            <div className="grid grid-cols-6 text-xs md:text-sm md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-4">
+          <div className="mt-10 p-6 bg-white shadow-xl rounded-r-lg">
+            <div className="grid grid-cols-6 text-[14px]  md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-4">
               {!loadingBooked ? (slots.map((slot, idx) => {
                 const hour = parseInt(slot.split(':')[0], 10);
                 const isBooked = bookedSlots.has(hour);
@@ -239,7 +232,7 @@ function UserParkingLotDetails() {
 
               <div className="flex flex-col items-center">
                 <div className="w-[18px] h-[18px] bg-gray-400 text-gray-400 rounded-sm">.</div>
-                <div>Not available</div>
+                <div>Booked</div>
               </div>
 
               <div className="flex flex-col items-center">
@@ -250,14 +243,17 @@ function UserParkingLotDetails() {
           </div>
         )}
       </div>
-      {selectedSlots.size ? (<div className="fixed bottom-0 left-1/2 transform -translate-x-1/2 rounded-lg bg-white border p-2 m-2 w-1/2 shadow-lg">
+      {selectedSlots.size ? (<div className="fixed bottom-0 left-1/2 transform -translate-x-1/2 rounded-lg bg-white ring-1 ring-blue-400 p-1 mb-2 w-1/2 shadow-lg">
         <div className="flex justify-evenly">
           <p className='p-3 flex items-center space-x-3 text-lg font-medium'> <LiaRupeeSignSolid />
-
             <span>{lotDetails.pricePerHour * selectedSlots.size}.00</span></p>
-          <div className="btn p-3 border-1 border-secondary-blue bg-white text-black hover:bg-primary-blue">Book now</div>
+          <button className="btn border-1 border-secondary-blue bg-white text-black hover:bg-primary-blue"
+            onClick={() => setBookingModalOpen(true)}>
+            Book now
+          </button>
         </div>
       </div>) : null}
+      {lotDetails && (<UserBookingModal isOpen={bookingModalOpen} setBookingModalOpen={setBookingModalOpen} lotDetails={lotDetails} selectedSlots={selectedSlots} />)}
     </div>
 
   )

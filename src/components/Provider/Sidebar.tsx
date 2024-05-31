@@ -52,13 +52,13 @@ function Sidebar() {
       <aside id="default-sidebar" className={`fixed top-0 left-0 z-40 w-64 h-screen transition-transform ${isOpen ? '' : '-translate-x-full sm:translate-x-0'}`} aria-label="Sidebar">
         <div className="h-full px-3 py-4 overflow-y-auto bg-primary-provider dark:bg-gray-800">
           <div className="flex justify-end h-12">
-            <button className='md:hidden' onClick={toggleSidebar}><IoIosArrowBack className='text-3xl text-white' /></button>
+            <button className='sm:hidden' onClick={toggleSidebar}><IoIosArrowBack className='text-3xl text-white' /></button>
           </div>
           <ul className="space-y-2 font-medium">
             <ProSidebarLink link='/provider' title='Dashboard' Icon={<MdDashboard className='text-2xl text-white' />} />
-            
-           { providerInfo.approvalStatus != 'true' ? (<ProSidebarLink link='/provider/add-slots' title='Add slots' Icon={<MdAddBox className='text-2xl text-white' />} />)
-            :(<ProSidebarLink link='/provider/parking-lot' title='Parking lot' Icon={<FaParking className='text-2xl text-white' />} />)}
+
+            {providerInfo.approvalStatus != 'true' ? (<ProSidebarLink link='/provider/add-slots' title='Add slots' Icon={<MdAddBox className='text-2xl text-white' />} />)
+              : (<ProSidebarLink link='/provider/parking-lot' title='Parking lot' Icon={<FaParking className='text-2xl text-white' />} />)}
             {/* <ProSidebarLink link='/provider/parking-lot' title='Parking lot' Icon={<FaParking className='text-2xl text-white' />} /> */}
             <ProSidebarLink link='/provider/profile' title='Profile' Icon={<IoMdChatboxes className='text-2xl text-white' />} />
             <ProSidebarLink link='/provider/feedbacks' title='Feedbacks' Icon={<MdFeedback className='text-2xl text-white' />} />

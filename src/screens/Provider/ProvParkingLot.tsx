@@ -20,7 +20,7 @@ function ProvParkingLot() {
   }, [])
 
   const fetchPRoviderDetails = async () => {
-    const response = await getDetails(providerInfo.id).unwrap()
+    const response = await getDetails(providerInfo._id).unwrap()
     if (response.success) {
       setProviderDetails(response.data)
     }
@@ -65,12 +65,15 @@ function ProvParkingLot() {
                 </div>
                 <div className="flex flex-col sm:flex-row items-center justify-between space-y-2 sm:space-y-0 sm:space-x-4">
                   <span className="block text-gray-700 font-medium">Images</span>
-                  <div className="flex justify-start">
-                    {providerDetails.images.map((image) => {
-                      return (
-                        <img src={image} className='h-16 m-3 rounded-sm'/>
-                      )
-                    })}
+                  <div className="flex flex-wrap justify-start">
+                    {providerDetails.images.map((image, index) => (
+                      <img
+                        key={index}
+                        src={image}
+                        alt={`Provider image ${index + 1}`}
+                        className="h-16 w-16 sm:h-20 sm:w-20 md:h-24 md:w-24 lg:h-32 lg:w-32 m-2 rounded-sm object-cover"
+                      />
+                    ))}
                   </div>
                 </div>
                 <div className="flex justify-center mt-4">

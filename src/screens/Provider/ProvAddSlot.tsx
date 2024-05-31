@@ -158,7 +158,7 @@ function ProvAddSlot() {
               </div>
             )}
 
-            {(providerInfo.approvalStatus === 'pending' || providerInfo.approvalStatus === 'rejected') && (
+            {(providerInfo.approvalStatus === 'false' || providerInfo.approvalStatus === 'rejected') && (
               <>
                 <h1 className='text-md m-7 text-center font-medium text-gray-600 md:text-xl md:font-semibold mt-10'>Add your parking lot details and verify</h1>
 

@@ -149,34 +149,39 @@ function UserFindLots() {
                       {`${lot.address.landmark}, ${lot.address.street}, ${lot.address.pinNumber}, ${lot.address.city}`}
                     </p>
                   </div>
-                  <div className="flex items-center space-x-16 text-sm">
-                    {lot.evChargeFacilityPrice && (<div className="flex place-items-center space-x-1">
-                      <IoMdBatteryCharging className="text-green-900" />
-                      <p className="text-gray-700">ev charging</p>
-                    </div>)}
-                    {lot.waterServicePrice && (<div className="flex place-items-center space-x-1">
-                      <MdLocalCarWash className="text-blue-800 " />
-                      <p className="text-gray-700">water service</p>
-                    </div>)}
-                    {lot.airPressureCheckPrice && (<div className="flex place-items-center space-x-1">
-                      <GiCartwheel className="text-black" />
-                      <p className="text-gray-700">air filling</p>
-                    </div>)}
+                  <div className="flex flex-wrap items-center space-x-4 sm:space-x-8 lg:space-x-16 text-sm">
+                    {lot.evChargeFacilityPrice && (
+                      <div className="flex items-center space-x-1 mb-2 sm:mb-0">
+                        <IoMdBatteryCharging className="text-green-900" />
+                        <p className="hidden md:block text-gray-700">ev charging</p>
+                      </div>
+                    )}
+                    {lot.waterServicePrice && (
+                      <div className="flex items-center space-x-1 mb-2 sm:mb-0">
+                        <MdLocalCarWash className="text-blue-800" />
+                        <p className="hidden md:block text-gray-700">water service</p>
+                      </div>
+                    )}
+                    {lot.airPressureCheckPrice && (
+                      <div className="flex items-center space-x-1 mb-2 sm:mb-0">
+                        <GiCartwheel className="text-black" />
+                        <p className="hidden md:block text-gray-700">air filling</p>
+                      </div>
+                    )}
                   </div>
+
                 </div>
-                <div className="flex justify-center m-5 rounded-b-lg items-center w-1/4 bg-slate-200 shadow-lg">
-                  Fare:
+                <div className="flex justify-center m-5 rounded-b-lg items-center w-1/4 bg-slate-200 shadow-lg text-xs">
                   <p className="p-2">{`${lot.pricePerHour} / hour`}</p>
                 </div>
               </Link>
             ))}
           </ul>
-          {loading ? (
-            <div className="text-center w-full mt-24 text-xl md:text-3xl text-gray-700 flex justify-center items-center">
+          {isLoading ? (
+            <div className="">
               <SkeletonCard />
               <SkeletonCard />
               <SkeletonCard />
-              <span className="mr-3">Loading</span> <Loader />
             </div>
           ) : (null)}
         </div>
@@ -185,7 +190,6 @@ function UserFindLots() {
           No results found
         </div>
       )}
-      {/* </div> */}
     </>
   );
 }
