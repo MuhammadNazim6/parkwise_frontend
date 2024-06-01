@@ -116,6 +116,17 @@ export const userApiSlice = apiSlice.injectEndpoints({
       onQueryStarted: onQueryStartedErrorToast
     }),
 
+    bookSlots: builder.mutation({
+      query: (body) => ({
+        url: `${USER_URL}/bookSlot`,
+        method: "POST",
+        data: body,
+        params: {},
+        headers: {}
+      }),
+      onQueryStarted: onQueryStartedErrorToast
+    }),
+
 
   }),
 });
@@ -130,5 +141,6 @@ export const {
   useComChangePasswordMutation,
   useGetParkingLotsMutation,
   useGetLotDetailsMutation,
-  useGetBookedSlotsMutation
+  useGetBookedSlotsMutation,
+  useBookSlotsMutation
 } = userApiSlice;

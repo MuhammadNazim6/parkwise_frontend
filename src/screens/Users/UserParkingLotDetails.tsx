@@ -13,9 +13,9 @@ import { GiCartwheel } from "react-icons/gi";
 import { MdLocalCarWash } from "react-icons/md";
 import { Loader } from '@/components/Common/BootstrapElems';
 import UserCarousel from '@/components/User/UserCarousel ';
-import { MdAccessTime } from "react-icons/md";
 import { LiaRupeeSignSolid } from "react-icons/lia";
 import UserBookingModal from '@/components/User/UserBookingModal';
+import { SlotSkeleton } from '@/components/User/SlotSkeleton';
 
 
 
@@ -33,7 +33,7 @@ function UserParkingLotDetails() {
 
   const { toast } = useToast()
   const [getDetails] = useGetLotDetailsMutation()
-  const [getBookedSlots] = useGetBookedSlotsMutation()
+  const [getBookedSlots, { isLoading }] = useGetBookedSlotsMutation()
 
 
   useEffect(() => {
@@ -63,16 +63,21 @@ function UserParkingLotDetails() {
   };
 
   const handleSlotClick = (slot) => {
+    console.log(selectedSlots);
+    console.log(slot);
+
     const tempSelectedSlots = new Set(selectedSlots);
     if (tempSelectedSlots.has(slot)) {
       tempSelectedSlots.delete(slot)
     } else {
-      tempSelectedSlots.add(slot)
+      if (slot)
+        tempSelectedSlots.add(slot)
     }
     setSelectedSlots(tempSelectedSlots);
   };
 
   const checkAvailabilty = async () => {
+    clearAllSelection()
     if (!date) {
       toast({
         variant: "destructive",
@@ -84,12 +89,13 @@ function UserParkingLotDetails() {
     if (!startingSlotTime || startingSlotTime < lotDetails.startTime) {
       setSelectedTime(lotDetails.startTime)
     }
-    setLoadingBooked(true)
+    // setLoadingBooked(true)
     const bookedData = await getBookedSlots({ date, id }).unwrap()
-    setLoadingBooked(false)
+    // setLoadingBooked(false)
     console.log(bookedData.data);
 
     const data = bookedData.data
+
     const booked = new Set();
     data.forEach(({ time }) => {
       const [start, end] = time.split('-').map(t => parseInt(t))
@@ -101,9 +107,13 @@ function UserParkingLotDetails() {
     setShowSlots(true)
   };
 
+  const clearAllSelection = () => {
+    const clearedSet = new Set()
+    setSelectedSlots(clearedSet)
+  }
 
   return (
-    <div className='min-h-screen flex flex-col md:flex-row bg-blue-50 px-4 md:px-40'>
+    <div className='min-h-screen flex flex-col md:flex-row bg-blue-50 px-4 xl:px-40'>
       <div className="w-full md:w-1/2 pt-10 md:flex h-full">
         {lotDetails ? (
           <div className="bg-white md:rounded-l-2xl shadow-xl w-full">
@@ -146,7 +156,7 @@ function UserParkingLotDetails() {
           </div>
         ) : null}
       </div>
-      <div className="w-full md:w-1/2 p-4 mt-10 md:mt-0 md:p-10">
+      <div className="w-full md:w-1/2 p-4 mt-5 lg:mt-0 lg:p-10">
         <div className="flex flex-col md:flex-row w-full">
           {/* Date */}
           <div className="w-full md:w-4/12 mb-4 md:mb-0">
@@ -182,7 +192,7 @@ function UserParkingLotDetails() {
           </div>
           {/* Time */}
           <div className="w-full md:w-6/12 h-12 flex mb-4 md:mb-0">
-            <label className='bg-white w-1/3 h-full p-3 cursor-pointer' htmlFor="time">From:</label>
+            <label className='bg-white w-1/3 h-full p-3 cursor-pointer text-nowrap' htmlFor="time">From:</label>
             <input
               type="time"
               id="time"
@@ -198,30 +208,43 @@ function UserParkingLotDetails() {
         </div>
         {showSlots && (
           <div className="mt-10 p-6 bg-white shadow-xl rounded-r-lg">
+            <div className="text-end mb-2 cursor-pointer" onClick={clearAllSelection}>Clear all</div>
             <div className="grid grid-cols-6 text-[14px]  md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-4">
-              {!loadingBooked ? (slots.map((slot, idx) => {
-                const hour = parseInt(slot.split(':')[0], 10);
-                const isBooked = bookedSlots.has(hour);
-                return (
-                  <div
-                    key={idx}
-                    onClick={isBooked ? () => { console.log('BOOKED'); } : () => handleSlotClick(slot)}
-                    className={`h-12 rounded-md cursor-pointer flex items-center justify-center text-black shadow-xl
-                  ${selectedSlots.has(slot) ? 'bg-secondary-blue active:scale-101 text-white' : isBooked ? 'bg-gray-400 cursor-not-allowed transition-transform ease-in-out active:animate-shake' : ' ring- ring-blue-400 active:scale-101'}`}
-                    aria-label={`Parking slot from ${slot}`}
-                    role="button"
-                    aria-disabled={isBooked}
-                  >
-                    {slot}
-                  </div>
-                );
-              })
-              ) : <div className="flex items-center justify-center h-96 w-96">
-                <div className="ml-32">
-                  <Loader />
-                </div>
-                <span className='ml-5'>loading available slots..</span>
-              </div>
+              {
+                !isLoading ?
+                  (slots.map((slot, idx) => {
+                    const hour = parseInt(slot.split(':')[0], 10);
+                    const isBooked = bookedSlots.has(hour);
+                    return (
+                      <div
+                        key={idx}
+                        onClick={isBooked ? () => { console.log('BOOKED'); } : () => handleSlotClick(slot)}
+                        className={`h-12 rounded-md cursor-pointer flex items-center justify-center text-black shadow-xl
+                  ${selectedSlots.has(slot) ? 'bg-secondary-blue active:scale-101 text-white' : isBooked ? 'bg-gray-400 cursor-not-allowed transition-transform ease-in-out active:animate-shake' : ' ring-1 ring-blue-400 active:scale-101'}`}
+                        aria-label={`Parking slot from ${slot}`}
+                        role="button"
+                        aria-disabled={isBooked}
+                      >
+                        {slot}
+                      </div>
+                    );
+                  })
+                  )
+                  : (slots.map((idx) => {
+                    return (
+                      <div key={idx}>
+                        <SlotSkeleton />
+                      </div>
+                    );
+                  })
+                  )
+                // : <div className="flex mt-2 justify-center h-60 w-fit">
+                //   <div className="">
+                //     <SlotSkeleton />
+
+                //   </div>
+
+                // </div>
               }
             </div>
             <div className="h-20 flex m-10 justify-evenly items-center space-x-1 rounded-lg">
@@ -253,7 +276,9 @@ function UserParkingLotDetails() {
           </button>
         </div>
       </div>) : null}
-      {lotDetails && (<UserBookingModal isOpen={bookingModalOpen} setBookingModalOpen={setBookingModalOpen} lotDetails={lotDetails} selectedSlots={selectedSlots} />)}
+      {lotDetails && (
+        <UserBookingModal isOpen={bookingModalOpen} setBookingModalOpen={setBookingModalOpen} lotDetails={lotDetails} selectedSlots={selectedSlots} date={date} checkAvailabilty={checkAvailabilty} />
+      )}
     </div>
 
   )
