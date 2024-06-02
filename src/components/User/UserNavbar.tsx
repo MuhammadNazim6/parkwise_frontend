@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, NavLink } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import LogoImg from "../../assets/Images/parkwise-high-resolution-logo-transparent.png";
 import LogoImgBlack from "../../assets/Images/parkwise-high-resolution-logo-black-transparent.png";
@@ -22,6 +22,11 @@ import { RootState } from '@/redux/store';
 
 function Navbar() {
 
+  const activeStyle = {
+    color: "#6782fc",
+    fontWeight: 500,
+    fontSize: '17px'
+  };
 
   const [nav, setNav] = useState(true)
   const handleNav = () => {
@@ -44,15 +49,15 @@ function Navbar() {
     <div className='flex justify-between items-center h-24 max-w-[1240px] mx-auto px-4  text-black'>
       <h1 className='w-full text-3xl font-bold'><img className='w-40 cursor-pointer' src={LogoImg} /></h1>
       <ul className='hidden md:flex'>
-        <Link to='/'>
+        <NavLink to='/' end style={({ isActive }) => (isActive ? activeStyle : undefined)}>
           <li className='p-4 cursor-pointer text-md w-28 '>Home</li>
-        </Link>
-        <Link to='/user/find'>
+        </NavLink>
+        <NavLink to='/user/find' style={({ isActive }) => (isActive ? activeStyle : undefined)}>
           <li className='p-4 cursor-pointer text-md w-32'>Find spots</li>
-        </Link>
-        {userInfo ? (<Link to='/user/profile'>
+        </NavLink>
+        {userInfo ? (<NavLink to='/user/profile' style={({ isActive }) => (isActive ? activeStyle : undefined)}>
           <li className='p-4 ml-3 cursor-pointer text-md w-28'>Profile</li>
-        </Link>) : null}
+        </NavLink>) : null}
         {userInfo ? (
           <AlertDialog>
             <AlertDialogTrigger>   <li className='text-md w-28' >Logout </li>
@@ -69,9 +74,9 @@ function Navbar() {
               </AlertDialogFooter>
             </AlertDialogContent>
           </AlertDialog>
-        ) : (<Link to='/login'>
+        ) : (<NavLink to='/login' style={({ isActive }) => (isActive ? activeStyle : undefined)}>
           <li className='p-4 cursor-pointer text-md w-28'>Signin</li>
-        </Link>)}
+        </NavLink>)}
         <Link className='bg-transparent text-black w-48 p-1 border-primary-blue border-2 font-semibold rounded-md flex justify-center items-center tracking-normal hover:bg-primary-blue transition duration-300 ease-in-out transform hover:shadow-lg ' to='/provider/signup'>
           <button className=''>
             List your property

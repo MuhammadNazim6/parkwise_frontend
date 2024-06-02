@@ -9,8 +9,14 @@ import { MdLocalCarWash } from "react-icons/md";
 import { GiCartwheel } from "react-icons/gi";
 import { SkeletonCard } from "@/components/Common/ListSkeleton";
 import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { setSearchData } from "@/redux/slices/searchSlice";
+import { RootState } from "@/redux/store";
 
 function UserFindLots() {
+  const { searchData } = useSelector((state: RootState) => state.search);
+  console.log('searchData: ', searchData);
+
   const [coordinates, setCoordinates] = useState([null]);
   const [price, setPrice] = useState(240)
   const [services, setServices] = useState({
@@ -18,7 +24,7 @@ function UserFindLots() {
     waterService: false,
     evCharging: false,
   });
-  const [parkingLots, setParkingLots] = useState([])
+  const [parkingLots, setParkingLots] = useState(searchData ? searchData : [])
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false)
   const WATER_SERVICE = 'waterService'
@@ -26,10 +32,15 @@ function UserFindLots() {
   const AIR_PRESSURE = 'airPressure'
   const limit = 4;
   const [getParkingLots, { isLoading }] = useGetParkingLotsMutation()
+  const dispatch = useDispatch()
 
   useEffect(() => {
     // Getting users current location
-    getCurrentCoordinatesAndFetchParkingLots()
+    if (searchData && searchData?.length > 0) {
+      return
+    } else {
+      getCurrentCoordinatesAndFetchParkingLots()
+    }
   }, [])
 
   useEffect(() => {
@@ -56,6 +67,7 @@ function UserFindLots() {
     const coordinatesStr = JSON.stringify(coordinates)
     const response = await getParkingLots({ coordinatesStr, services, price, limit, page }).unwrap()
     setParkingLots((prev) => [...response.data]);
+    dispatch(setSearchData([...response.data]))
     console.log(...response.data);
     setLoading(false)
   }
@@ -130,63 +142,66 @@ function UserFindLots() {
         </div>
       </div>
 
-      {parkingLots.length > 0 ? (
-        <div className="md:px-16 md:w-5/6 h-screen ml-auto bg-white relative">
-          <ul className="p-4">
-            {/* Parking lot list */}
-            {parkingLots.map((lot) => (
-              <Link to={`/user/find/lotDetails/${lot._id}`}
-                key={lot._id}
-                className="bg-blue-100 md:hover:bg-blue-50 m-5 rounded-b-xl flex md:flex-row justify-between hover:scale-[1.001] transition-all ease-in-out cursor-pointer p-4 h-28"
-              >
-                <div className="flex flex-col justify-between w-3/4 px-5">
-                  <div>
-                    <p className="text-lg">{lot.address?.buildingOrAreaName}</p>
-                    <p className="text-sm md:text-sm line-clamp-1 text-gray-600">
-                      {`${lot.address.landmark}, ${lot.address.street}, ${lot.address.pinNumber}, ${lot.address.city}`}
-                    </p>
-                  </div>
-                  <div className="flex flex-wrap items-center space-x-4 sm:space-x-8 lg:space-x-16 text-sm">
-                    {lot.evChargeFacilityPrice && (
-                      <div className="flex items-center space-x-1 mb-2 sm:mb-0">
-                        <IoMdBatteryCharging className="text-green-900" />
-                        <p className="hidden md:block text-gray-700">ev charging</p>
-                      </div>
-                    )}
-                    {lot.waterServicePrice && (
-                      <div className="flex items-center space-x-1 mb-2 sm:mb-0">
-                        <MdLocalCarWash className="text-blue-800" />
-                        <p className="hidden md:block text-gray-700">water service</p>
-                      </div>
-                    )}
-                    {lot.airPressureCheckPrice && (
-                      <div className="flex items-center space-x-1 mb-2 sm:mb-0">
-                        <GiCartwheel className="text-black" />
-                        <p className="hidden md:block text-gray-700">air filling</p>
-                      </div>
-                    )}
-                  </div>
-
-                </div>
-                <div className="flex justify-center m-5 rounded-b-lg items-center w-1/4 bg-slate-200 shadow-lg text-xs">
-                  <p className="p-2">{`${lot.pricePerHour} / hour`}</p>
-                </div>
-              </Link>
-            ))}
-          </ul>
-          {isLoading ? (
+      {
+        isLoading ? (
+          <div className="md:px-16 md:w-5/6 h-screen ml-auto bg-white relative">
             <div className="">
               <SkeletonCard />
               <SkeletonCard />
               <SkeletonCard />
             </div>
-          ) : (null)}
-        </div>
-      ) : (
-        <div className="text-center w-full mt-24 text-xl md:text-3xl text-gray-700 bg-white min-h-screen">
-          No results found
-        </div>
-      )}
+          </div>
+        ) : (parkingLots.length > 0 ? (
+          <div className="md:px-16 md:w-5/6 h-screen ml-auto bg-white relative">
+            <ul className="p-4">
+              {/* Parking lot list */}
+              {parkingLots.map((lot) => (
+                <Link to={`/user/find/lotDetails/${lot._id}`}
+                  key={lot._id}
+                  className="bg-blue-100 md:hover:bg-blue-50 m-5 rounded-b-xl flex md:flex-row justify-between hover:scale-[1.001] transition-all ease-in-out cursor-pointer p-4 h-28"
+                >
+                  <div className="flex flex-col justify-between w-3/4 px-5">
+                    <div>
+                      <p className="text-lg">{lot.address?.buildingOrAreaName}</p>
+                      <p className="text-sm md:text-sm line-clamp-1 text-gray-600">
+                        {`${lot.address.landmark}, ${lot.address.street}, ${lot.address.pinNumber}, ${lot.address.city}`}
+                      </p>
+                    </div>
+                    <div className="flex flex-wrap items-center space-x-4 sm:space-x-8 lg:space-x-16 text-sm">
+                      {lot.evChargeFacilityPrice && (
+                        <div className="flex items-center space-x-1 mb-2 sm:mb-0">
+                          <IoMdBatteryCharging className="text-green-900" />
+                          <p className="hidden md:block text-gray-700">ev charging</p>
+                        </div>
+                      )}
+                      {lot.waterServicePrice && (
+                        <div className="flex items-center space-x-1 mb-2 sm:mb-0">
+                          <MdLocalCarWash className="text-blue-800" />
+                          <p className="hidden md:block text-gray-700">water service</p>
+                        </div>
+                      )}
+                      {lot.airPressureCheckPrice && (
+                        <div className="flex items-center space-x-1 mb-2 sm:mb-0">
+                          <GiCartwheel className="text-black" />
+                          <p className="hidden md:block text-gray-700">air filling</p>
+                        </div>
+                      )}
+                    </div>
+
+                  </div>
+                  <div className="flex justify-center m-5 rounded-b-lg items-center w-1/4 bg-slate-200 shadow-lg text-xs">
+                    <p className="p-2">{`${lot.pricePerHour} / hour`}</p>
+                  </div>
+                </Link>
+              ))}
+            </ul>
+          </div>
+        ) : (
+          <div className="text-center w-full mt-24 text-xl md:text-3xl text-gray-700 bg-white min-h-screen">
+            No results found
+          </div>
+        ))
+      }
     </>
   );
 }

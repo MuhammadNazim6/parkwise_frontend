@@ -5,14 +5,14 @@ const initialState = {
 }
 
 const bookingSlice = createSlice({
-  name:'booking',
+  name: 'booking',
   initialState,
-  reducers:{
-    setBookingData: (state,action)=>{
+  reducers: {
+    setBookingData: (state, action) => {
       state.bookingData = action.payload
     }
   }
 });
 
-export const {setBookingData} = bookingSlice.actions
+export const { setBookingData } = bookingSlice.actions
 export default bookingSlice.reducer
