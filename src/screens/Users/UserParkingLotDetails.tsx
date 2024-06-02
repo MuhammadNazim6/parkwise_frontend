@@ -41,7 +41,6 @@ function UserParkingLotDetails() {
       try {
         const details = await getDetails(id).unwrap();
         if (details.success) {
-          console.log(details.data);
           setLotDetails(details.data);
         } else {
           console.log('Unable to fetch details');
@@ -57,15 +56,10 @@ function UserParkingLotDetails() {
 
 
   const handleTimeChange = (event) => {
-    console.log(event.target.value);
-
     setSelectedTime(event.target.value);
   };
 
   const handleSlotClick = (slot) => {
-    console.log(selectedSlots);
-    console.log(slot);
-
     const tempSelectedSlots = new Set(selectedSlots);
     if (tempSelectedSlots.has(slot)) {
       tempSelectedSlots.delete(slot)
@@ -89,11 +83,7 @@ function UserParkingLotDetails() {
     if (!startingSlotTime || startingSlotTime < lotDetails.startTime) {
       setSelectedTime(lotDetails.startTime)
     }
-    // setLoadingBooked(true)
     const bookedData = await getBookedSlots({ date, id }).unwrap()
-    // setLoadingBooked(false)
-    console.log(bookedData.data);
-
     const data = bookedData.data
 
     const booked = new Set();
@@ -218,7 +208,7 @@ function UserParkingLotDetails() {
                     return (
                       <div
                         key={idx}
-                        onClick={isBooked ? () => { console.log('BOOKED'); } : () => handleSlotClick(slot)}
+                        onClick={isBooked ? () => { console.log('Booked'); } : () => handleSlotClick(slot)}
                         className={`h-12 rounded-md cursor-pointer flex items-center justify-center text-black shadow-xl
                   ${selectedSlots.has(slot) ? 'bg-secondary-blue active:scale-101 text-white' : isBooked ? 'bg-gray-400 cursor-not-allowed transition-transform ease-in-out active:animate-shake' : ' ring-1 ring-blue-400 active:scale-101'}`}
                         aria-label={`Parking slot from ${slot}`}

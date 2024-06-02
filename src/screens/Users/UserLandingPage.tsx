@@ -5,6 +5,7 @@ import Hero_second from '../../components/User/Hero_second';
 import Hero_third from '../../components/User/Hero_third';
 import Footer from '../../components/User/Footer';
 
+
 function UserLandingPage() {
   return (
     <>
