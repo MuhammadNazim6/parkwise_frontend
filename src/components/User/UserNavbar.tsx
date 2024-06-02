@@ -27,7 +27,7 @@ function Navbar() {
   const handleNav = () => {
     setNav(!nav)
   }
-  const { userInfo } = useSelector((state:RootState) => state.auth)
+  const { userInfo } = useSelector((state: RootState) => state.auth)
   const [logout, { isLoading }] = useLogoutMutation()
   const dispatch = useDispatch()
   const navigate = useNavigate()
@@ -50,9 +50,9 @@ function Navbar() {
         <Link to='/user/find'>
           <li className='p-4 cursor-pointer text-md w-32'>Find spots</li>
         </Link>
-        <Link to='/about'>
-          <li className='p-4 ml-3 cursor-pointer text-md w-28'>About</li>
-        </Link>
+        {userInfo ? (<Link to='/user/profile'>
+          <li className='p-4 ml-3 cursor-pointer text-md w-28'>Profile</li>
+        </Link>) : null}
         {userInfo ? (
           <AlertDialog>
             <AlertDialogTrigger>   <li className='text-md w-28' >Logout </li>

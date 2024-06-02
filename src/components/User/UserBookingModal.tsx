@@ -93,11 +93,11 @@ function UserBookingModal({ isOpen, setBookingModalOpen, lotDetails, selectedSlo
                   <p className="font-medium">Total amount:</p>
                   <p className="text-sm font-medium">Rs: {bookingData.amount}</p>
                 </div>
-                <div>
-                  <PDFDownloadLink document={<ReactPdfTicket bookingData={bookingData}/>} fileName="somename.pdf">
-                    {({ blob, url, loading, error }) => (loading ? 'Loading document...' : 'Download now!')}
+                {bookingData && (<div className='flex justify-center'>
+                  <PDFDownloadLink document={<ReactPdfTicket bookingData={bookingData} />} fileName="somename.pdf">
+                    {({ blob, url, loading, error }) => (loading ? 'Loading document...' : 'Download ticket!')}
                   </PDFDownloadLink>
-                </div>
+                </div>)}
               </div>
             </>
           ) : (<>

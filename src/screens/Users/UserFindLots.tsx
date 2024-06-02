@@ -5,7 +5,6 @@ import { Slider } from "@/components/ui/slider"
 import { Checkbox } from "@/components/ui/checkbox"
 import { useGetParkingLotsMutation } from "@/redux/slices/userApiSlice";
 import UserSearchAddress from "@/components/User/UserSearchAddress";
-import { Loader } from '../../components/Common/BootstrapElems'
 import { MdLocalCarWash } from "react-icons/md";
 import { GiCartwheel } from "react-icons/gi";
 import { SkeletonCard } from "@/components/Common/ListSkeleton";
@@ -82,10 +81,8 @@ function UserFindLots() {
         <div className="hero-overlay bg-opacity-70"></div>
         <div className="hero-content text-center text-neutral-content absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full">
           <div className="w-full">
-            {/* <h1 className="mb-5 md:text-5xl text-2xl font-bold">Hello there</h1> */}
             <div className="relative flex">
               <UserSearchAddress setCoordinates={setCoordinates} />
-
             </div>
           </div>
         </div>

@@ -19,7 +19,7 @@ function UserRoutes() {
       <Route path='login' element={<CommonLeftSideLayout />}>
         <Route path='' element={<CommonLogin />} />
         <Route path='forgotpassword' element={<CommonForgotPassword />} />
-        <Route path='changePassword' element={<CommonChangePassword/>} />
+        <Route path='changePassword' element={<CommonChangePassword />} />
       </Route>
       <Route path='user/signup' element={<UserSignup />} />
       <Route path='user/email-verify' element={<UserEmailVerify />} />
@@ -27,12 +27,14 @@ function UserRoutes() {
       <Route path='user' element={<UserLayout />} >
         <Route path='find' element={<UserFindLots />} />
         <Route path='find/lotDetails/:id' element={<UserParkingLotDetails />} />
+        <Route element={<UserProtect />}>
+          {/* <Route path='profile' element={<UserProfile />} /> */}
+        </Route>
+
       </Route>
 
-      
-{/* protected start */}
-      <Route element={<UserProtect />}>
-      </Route>
+
+      {/* protected start */}
 
     </Routes>
   )
