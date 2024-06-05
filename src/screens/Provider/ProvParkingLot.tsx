@@ -20,8 +20,10 @@ function ProvParkingLot() {
   }, [])
 
   const fetchPRoviderDetails = async () => {
-    const response = await getDetails(providerInfo._id).unwrap()
+    const response = await getDetails(providerInfo.id).unwrap()
     if (response.success) {
+      console.log(response.data);
+      
       setProviderDetails(response.data)
     }
   }

@@ -20,7 +20,7 @@ function ProvProfile() {
   }, [])
 
   const fetchPRoviderDetails = async () => {
-    const response = await getDetails(providerInfo._id).unwrap()
+    const response = await getDetails(providerInfo.id).unwrap()
     if (response.success) {
       setProviderDetails(response.data)
     }

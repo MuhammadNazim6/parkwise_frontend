@@ -1,8 +1,10 @@
 import React from 'react'
 import heroImage from '../../assets/Images/heroImage.jpg'
+import { useNavigate } from 'react-router-dom'
 
 
 function Hero() {
+  const navigate = useNavigate()
   return (
     <div className='text-black bg-primary-blue'>
       <div className="max-w-6xl mx-auto px-4 py-8 md:flex md:items-center md:justify-between md:py-16">
@@ -11,8 +13,8 @@ function Hero() {
 
           <p className='text-black mt-4 md:text-lg p-5'>Welcome to our Parking Finder project! Say goodbye to circling the block endlessly—our intuitive app locates available parking spaces near you in seconds, making urban parking stress a thing of the past.</p>
           <div className="mx-24 md:mt-4 flex flex-col md:flex-row justify-between ">
-            <button className='md:bg-blue-500 hover:text-blue-900 md:hover:bg-blue-700  border-black md:text-white font-bold px-4 py-2 md:rounded'>Get started</button>
-            <button className=' md:hover:bg-amber-100 hover:text-blue-900 md:hover:border-black md:border border-black md:border-black md:text-black font-bold px-4 rounded p-3'><a href='#scroll'>How it works </a></button>
+            <button className='md:bg-blue-500 md:hover:bg-blue-600  border-black md:text-white font-bold px-4 py-2 md:rounded transform transition-transform hover:scale-[1.01] ease-in-out duration-200' onClick={() => navigate('user/find')}>Get started</button>
+            <button className=' md:hover:bg-amber-100 hover:text-blue-900 md:hover:border-black md:border border-black md:border-black md:text-black font-bold px-4 rounded p-3  transform transition-transform hover:scale-[1.01] ease-in-out duration-200'><a href='#work'>How it works </a></button>
           </div>
         </div>
         <div className='md:w-1/2 md:pl-8 md:mt-0 mt-8'>

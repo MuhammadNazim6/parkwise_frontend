@@ -103,11 +103,11 @@ function UserParkingLotDetails() {
   }
 
   return (
-    <div className='min-h-screen flex flex-col md:flex-row bg-blue-50 px-4 xl:px-40'>
+    <div className='min-h-screen flex flex-col md:flex-row bg-blue-50 px-4 xl:px-40 '>
       <div className="w-full md:w-1/2 pt-10 md:flex h-full">
         {lotDetails ? (
-          <div className="bg-white md:rounded-l-2xl shadow-xl w-full">
-            <div className="carousel md:rounded-tl-2xl w-full">
+          <div className="bg-white md:rounded-l-2xl_dis shadow-lg w-full">
+            <div className="carousel md:rousdnded-tl-2xl w-full">
               <UserCarousel carouselArr={lotDetails.images} lotDetails={lotDetails} />
             </div>
             <div className="flex m-6 justify-between pb-12 text-[13px]">
@@ -124,7 +124,7 @@ function UserParkingLotDetails() {
 
               <div className="flex flex-col space-y-2 text">
                 {lotDetails.evChargeFacilityPrice && (
-                  <div className="flex items-center space-x-2 bg-blue-50 p-1 rounded-md shadow-sm hover:bg-blue-100 transition duration-300">
+                  <div className="flex items-center space-x-2 bg-blue-50 p-1 rounded-md_dis shadow-sm hover:bg-blue-100 transition duration-300">
                     <IoMdBatteryCharging className="text-blue-600 " />
                     <p className="text-gray-700 font-medium">EV Charging</p>
                   </div>
@@ -197,7 +197,7 @@ function UserParkingLotDetails() {
           </button>
         </div>
         {showSlots && (
-          <div className="mt-10 p-6 bg-white shadow-xl rounded-r-lg">
+          <div className="mt-10 p-6 bg-white shadow-lg rounded-r-lg">
             <div className="text-end mb-2 cursor-pointer" onClick={clearAllSelection}>Clear all</div>
             <div className="grid grid-cols-6 text-[14px]  md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-4">
               {

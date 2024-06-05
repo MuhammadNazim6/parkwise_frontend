@@ -20,7 +20,7 @@ const UserCarousel = ({ carouselArr, lotDetails }) => {
   };
 
   return (
-    <div className="carousel md:rounded-tl-2xl relative w-full">
+    <div className="carousel md:rounded-tl-2xl_dis relative w-full">
         <div
           className={`carousel-item w-full h-64 transition-opacity duration-500'
             }`}
@@ -28,7 +28,7 @@ const UserCarousel = ({ carouselArr, lotDetails }) => {
           <img
             src={carouselArr[currentIndex]}
             alt={`Slide ${currentIndex}`}
-            className="w-full h-64 object-cover md:rounded-tl-2xl"
+            className="w-full h-64 object-cover md:rounded-tl-2xl_dis"
           />
         </div>
       <div className="absolute flex justify-between transform -translate-y-1/2 left-5 right-5 top-1/2">

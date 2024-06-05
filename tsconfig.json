@@ -13,7 +13,8 @@
   "module": "es2022",
     // ...
     "allowSyntheticDefaultImports": true,
-    "moduleResolution": "node"
+    "moduleResolution": "node",
+    "resolveJsonModule": true,   //for json imports
 
   },
   

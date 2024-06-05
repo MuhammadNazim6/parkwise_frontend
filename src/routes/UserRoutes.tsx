@@ -11,6 +11,7 @@ import UserProtect from '@/components/User/protected/UserProtect';
 import CommonLeftSideLayout from '@/screens/Common/CommonLeftSideLayout';
 import CommonChangePassword from '@/screens/Common/CommonChangePassword';
 import UserParkingLotDetails from '@/screens/Users/UserParkingLotDetails';
+import UserProfile from '@/screens/Users/UserProfile';
 
 function UserRoutes() {
   return (
@@ -28,7 +29,7 @@ function UserRoutes() {
         <Route path='find' element={<UserFindLots />} />
         <Route path='find/lotDetails/:id' element={<UserParkingLotDetails />} />
         <Route element={<UserProtect />}>
-          {/* <Route path='profile' element={<UserProfile />} /> */}
+          <Route path='profile' element={<UserProfile />} />
         </Route>
 
       </Route>

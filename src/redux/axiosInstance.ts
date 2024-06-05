@@ -14,10 +14,6 @@ axiosInstance.interceptors.request.use((config) => {
     config.headers.Authorization = `Bearer ${token}`;
   }
 
-  // if (config.data instanceof FormData) {
-  //   config.headers['Content-Type'] = 'multipart/form-data';
-  // }
-
   return config;
 }, (error) => {
   return Promise.reject(error);

@@ -6,6 +6,9 @@
   body {
     overflow-x: hidden; 
 }
+html {
+  scroll-behavior: smooth;
+}
 
 .space-grotesk {
   font-family: "Space Grotesk", sans-serif;

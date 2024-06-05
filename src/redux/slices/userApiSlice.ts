@@ -127,6 +127,29 @@ export const userApiSlice = apiSlice.injectEndpoints({
       onQueryStarted: onQueryStartedErrorToast
     }),
 
+    updateProfile: builder.mutation({
+      query: (body) => ({
+        url: `${USER_URL}/updateProfile`,
+        method: "PATCH",
+        data: body,
+        params: {},
+        headers: {},
+        formData: true
+      }),
+      onQueryStarted: onQueryStartedErrorToast
+    }),
+
+    fetchUserProfilePic: builder.mutation({
+      query: (id) => ({
+        url: `${USER_URL}/profilePicUser/${id}`,
+        method: "GET",
+        data: {},
+        params: {},
+        headers: {},
+      }),
+      onQueryStarted: onQueryStartedErrorToast
+    }),
+
 
   }),
 });
@@ -142,5 +165,7 @@ export const {
   useGetParkingLotsMutation,
   useGetLotDetailsMutation,
   useGetBookedSlotsMutation,
-  useBookSlotsMutation
+  useBookSlotsMutation,
+  useUpdateProfileMutation,
+  useFetchUserProfilePicMutation
 } = userApiSlice;

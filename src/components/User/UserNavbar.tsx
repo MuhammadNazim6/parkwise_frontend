@@ -89,12 +89,10 @@ function Navbar() {
         {!nav ? <AiOutlineClose size={25} className='cursor-pointer' /> : <AiOutlineMenu size={25} className='cursor-pointer' />}
       </div>
       <div className={!nav ? 'fixed left-0 top-0 w-[70%] h-full border-r bg-white ease-in-out duration-500  md:hidden z-20' : 'fixed left-[-100%] top-0 w-[60%] h-full border-r border-r-gray-900 bg-primary-blue ease-in-out duration-700 z-20'}>
-        {/* <h1 className='w-full text-3xl font-bold m-8 text-white'><img className='w-40 cursor-pointer' src={LogoImgBlack} /></h1> */}
-
-        <ul className='uppercase p-4'>
-          <li className='p-4 mt-6'><Link to="/">Home</Link></li>
-          <li className='p-4 border-t-2'><Link to="/find_spots">Find spots</Link></li>
-          <li className='p-4 border-t-2'><Link to="/about">About</Link></li>
+        <ul className=' p-4'>
+          <li className='p-4 mt-6'><NavLink to="/">Home</NavLink></li>
+          <li className='p-4 border-t-2'><NavLink to="/user/find">Find spots</NavLink></li>
+          {userInfo ? (<li className='p-4 border-t-2'><NavLink to="/user/profile">Profile</NavLink></li>) : null}
           <li className='p-4 border-t-2'>{userInfo ? (
             <AlertDialog>
               <AlertDialogTrigger>Logout</AlertDialogTrigger>

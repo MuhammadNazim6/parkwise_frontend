@@ -9,6 +9,7 @@ import ProvParkingLot from '@/screens/Provider/ProvParkingLot';
 import ProvProfile from '@/screens/Provider/ProvProfile';
 import ProvFeedbacks from '@/screens/Provider/ProvFeedbacks';
 import ProvDashboard from '@/screens/Provider/ProvDashboard';
+import ProvBookings from '@/screens/Provider/ProvBookings';
 
 
 function ProviderRouter() {
@@ -20,6 +21,7 @@ function ProviderRouter() {
         <Route path='parking-lot' element={<ProvParkingLot />} />
         <Route path='profile' element={<ProvProfile />} />
         <Route path='feedbacks' element={<ProvFeedbacks />} />
+        <Route path='bookings' element={<ProvBookings />} />
       </Route>
       <Route path='signup' element={<ProvSignup />} />
       <Route path='email-verify' element={<ProvEmailVerify />} />

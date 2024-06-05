@@ -188,7 +188,6 @@ function ProvAddSlot() {
                   }}
                   onSubmit={async (values) => {
                     await new Promise((resolve) => setTimeout(resolve, 0));
-                    console.log('jijiji');
 
                     const selectedImages = images.filter((image) => image !== null)
                     if (selectedImages.length < 3) {
@@ -244,8 +243,6 @@ function ProvAddSlot() {
                       console.log(image);
                     });
 
-
-                    // const sendForApproval = await addSlot(values).unwrap();
                     const sendForApproval = await addSlot(formData).unwrap();
                     if (sendForApproval.success) {
                       dispatch(setProviderCredentials({ ...providerInfo, approvalStatus: 'pending' }))
@@ -312,19 +309,19 @@ function ProvAddSlot() {
                     startEndTime: Yup.string().required('Select an availability time'),
                   })}
                 >
-                  {(props) => {
-                    const {
-                      values,
-                      touched,
-                      errors,
-                      dirty,
-                      isSubmitting,
-                      handleChange,
-                      handleBlur,
-                      handleSubmit,
-                      handleReset,
-                    } = props;
-                    return (
+                    {(props) => {
+                      const {
+                        values,
+                        touched,
+                        errors,
+                        dirty,
+                        isSubmitting,
+                        handleChange,
+                        handleBlur,
+                        handleSubmit,
+                        handleReset,
+                      } = props;
+                      return (
 
                       <form onSubmit={handleSubmit} className="bg-gray-300 p-6 rounded-lg shadow-md">
                         {/* Parking lot name */}
