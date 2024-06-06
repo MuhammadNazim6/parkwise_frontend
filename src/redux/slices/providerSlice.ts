@@ -86,6 +86,25 @@ export const providerApiSlice = apiSlice.injectEndpoints({
       }),
     }),
 
+    fetchParkingLotsBookings: builder.mutation({
+      query: (id) => ({
+        url: `${PROVIDER_URL}/lotsBookings/${id}`,
+        method: 'GET',
+        data: {},
+        params: {},
+        headers: {},
+      }),
+    }),
+
+    checkProvPassword: builder.mutation({
+      query: (data) => ({
+        url: `${PROVIDER_URL}/checkProvPassword`,
+        method: 'POST',
+        data: data,
+        params: {},
+        headers: {},
+      }),
+    }),
 
   })
 })
@@ -98,7 +117,8 @@ export const {
   useSendParkingLotForApprovalMutation,
   useGetProviderDetailsMutation,
   useUpdateProvProfileDetailsMutation,
-
-
+  useFetchParkingLotsBookingsMutation,
+  useCheckProvPasswordMutation
+  
 } = providerApiSlice
 

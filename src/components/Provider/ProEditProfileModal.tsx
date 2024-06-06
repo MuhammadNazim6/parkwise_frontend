@@ -11,6 +11,9 @@ import {
   InputOTPSeparator,
   InputOTPSlot,
 } from "@/components/ui/input-otp"
+import Lottie from 'lottie-react';
+import boxLoader from '../../assets/Animation/boxLoader.json'
+
 
 function ProEditProfileModal({ isOpen, onClose, profileDetails, setProviderDetails }) {
   const submitBtn = useRef(null);
@@ -19,7 +22,6 @@ function ProEditProfileModal({ isOpen, onClose, profileDetails, setProviderDetai
   const [userEnteredOtp, setUserEnteredOtp] = useState('')
   const [emailVerified, setEmailVerified] = useState(false)
   const [changedEmail, setChangedEmail] = useState('')
-
   const [updateDetails] = useUpdateProvProfileDetailsMutation()
   const [sendOtp] = useProviderVerificationMutation()
   const [checkOtp] = useProviderCheckOtpMutation()
@@ -40,13 +42,13 @@ function ProEditProfileModal({ isOpen, onClose, profileDetails, setProviderDetai
         title: "Your email has been verified",
         description: "",
       })
-      // Submitting the form again
-        // if (submitBtn.current) {
-        //   submitBtn.current.click();
-        // }
-    }else{
+      setTimeout(() => {
+        submitBtn.current.click()
+        setUserEnteredOtp('')
+      }, 100);
+    } else {
       toast({
-        variant:'destructive',
+        variant: 'destructive',
         title: "Incorrect Otp entered",
         description: "",
       })
@@ -56,7 +58,7 @@ function ProEditProfileModal({ isOpen, onClose, profileDetails, setProviderDetai
   const validationSchema = Yup.object().shape({
     name: Yup.string().required('Name is required'),
     email: Yup.string().email('Invalid email address').required('Email is required'),
-    mobile: Yup.string().required('Phone number is required')
+    mobile: Yup.string().required('Phone number is required'),
   });
 
   if (!isOpen) return null;
@@ -76,9 +78,6 @@ function ProEditProfileModal({ isOpen, onClose, profileDetails, setProviderDetai
           onSubmit={async (values, { setSubmitting }) => {
 
             if (profileDetails.email !== values.email) {
-              console.log(profileDetails.email);
-              console.log(values.email);
-              
               if (!emailVerified) {
                 setChangedEmail(values.email)
                 setEmailEdit(true)
@@ -100,32 +99,53 @@ function ProEditProfileModal({ isOpen, onClose, profileDetails, setProviderDetai
               setSubmitting(false)
               const data = response.data;
               setProviderDetails((prev) => ({ ...prev, name: data.name, email: data.email, mobile: data.mobile }))
-              dispatch(setProviderCredentials(data))
+              dispatch(setProviderCredentials({ email: data.email, mobile: data.mobile, name: data.name, role: 'provider', id: data._id, approvalStatus: data.approvalStatus }))
               setEmailVerified(false)
               onClose()
+              toast({
+                title: "Profile have been updated",
+                description: "",
+              })
             }
           }}
         >
           {({ isSubmitting }) => (
             <Form className="space-y-4">
-              <div className="flex flex-col justify-between sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-4">
-                <label className="block text-gray-700 font-medium" htmlFor="name">Name:</label>
-                <Field className="block text-gray-900" type="text" name="name" />
-              </div>
-              <ErrorMessage name="name" component="div" className="text-red-500 text-xs" />
+              <div className="space-y-6 mt-4 w-full">
+                <div className="flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-4">
+                  <label className="block text-gray-700 font-medium w-1/3 sm:text-right" htmlFor="name">Name:</label>
+                  <Field
+                    className="block w-full sm:w-2/3 text-gray-900 border border-gray-300 p-2 rounded-md bg-gray-50 focus:ring-2 focus:ring-blue-500"
+                    type="text"
+                    name="name"
+                    id="name"
+                  />
+                </div>
+                <ErrorMessage name="name" component="div" className="text-red-500 text-xs mt-1 sm:ml-[33%]" />
 
-              <div className="flex flex-col justify-between sm:flex-row items-center  space-y-2 sm:space-y-0 sm:space-x-4">
-                <label className="block text-gray-700 font-medium" htmlFor="email">Email:</label>
-                <Field className="block text-gray-900" type="email" name="email" />
+                <div className="flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-4">
+                  <label className="block text-gray-700 font-medium w-1/3 sm:text-right" htmlFor="email">Email:</label>
+                  <Field
+                    className="block w-full sm:w-2/3 text-gray-900 border border-gray-300 p-2 rounded-md bg-gray-50 focus:ring-2 focus:ring-blue-500"
+                    type="email"
+                    name="email"
+                    id="email"
+                  />
+                </div>
+                <ErrorMessage name="email" component="div" className="text-red-500 text-xs mt-1 sm:ml-[33%]" />
+
+                <div className="flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-4">
+                  <label className="block text-gray-700 font-medium w-1/3 sm:text-right" htmlFor="mobile">Mobile:</label>
+                  <Field
+                    className="block w-full sm:w-2/3 text-gray-900 border border-gray-300 p-2 rounded-md bg-gray-50 focus:ring-2 focus:ring-blue-500"
+                    type="text"
+                    name="mobile"
+                    id="mobile"
+                  />
+                </div>
+                <ErrorMessage name="mobile" component="div" className="text-red-500 text-xs mt-1 sm:ml-[33%]" />
               </div>
-              <ErrorMessage name="email" component="div" className="text-red-500 text-xs" />
-              <div className="flex flex-col justify-between sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-4">
-                <label className="block text-gray-700 font-medium" htmlFor="mobile">Phone Number:</label>
-                <Field className="block text-gray-900" type="text" name="mobile" />
-              </div>
-              <ErrorMessage name="mobile" component="div" className="text-red-500 text-xs" />
               {emailEdit ? (<div className="pt-4">
-                <p className='flex justify-center'>Enter otp sent to the mail </p>
                 <div className="flex justify-center p-5">
                   <InputOTP className='' value={userEnteredOtp} onChange={(newValue) => setUserEnteredOtp(newValue)} maxLength={6} >
                     <InputOTPGroup>
@@ -147,22 +167,24 @@ function ProEditProfileModal({ isOpen, onClose, profileDetails, setProviderDetai
                       <InputOTPSlot className='border-gray-400 h-10 w-10' index={5} />
                     </InputOTPGroup>
                   </InputOTP>
-                  <button type='button' className='p-2 btn-link' onClick={checkOtpFn}>Verify</button>
                 </div>
-                {/* <p className="text-red-500 text-sm text-center">Incorrect otp</p> */}
-
+                <div className="flex justify-center space-x-5">
+                  <button type="button" className="bg-gray-400 hover:bg-gray-300 text-sm  text-white font-semibold p-2 w-24 rounded transition-colors duration-300" onClick={onClose}>
+                    Cancel
+                  </button>
+                  <button type='button' className='bg-primary-provider hover:bg-secondary-provider text-sm  text-white font-semibold p-2 w-24 rounded transition-colors duration-300' onClick={checkOtpFn}>Verify</button>
+                </div>
               </div>) : null}
-
-
-
-              <div className='flex justify-center space-x-5 pt-8'>
-                <button type="button" className="rounded-md px-4 py-2 bg-primary-provider hover:bg-secondary-provider text-white" onClick={onClose}>
+              {!emailEdit ? (isSubmitting ? (<div className="flex justify-center items-center w-full mt-10">
+                <Lottie animationData={boxLoader} className='h-20' />
+              </div>) : (<div className='flex justify-center space-x-5 pt-8'>
+                <button type="button" className="bg-gray-400 hover:bg-gray-300 text-sm  text-white font-semibold p-2 w-24 rounded transition-colors duration-300" onClick={onClose}>
                   Cancel
                 </button>
-                <button type="submit" ref={submitBtn} className="rounded-md px-4 py-2 bg-primary-provider hover:bg-secondary-provider text-white" disabled={isSubmitting}>
-                  {isSubmitting ? 'Updating...' : 'Update'}
+                <button type="submit" ref={submitBtn} className=" bg-primary-provider hover:bg-secondary-provider text-sm  text-white font-semibold p-2 w-24 rounded transition-colors duration-300" disabled={isSubmitting}>
+                  Update
                 </button>
-              </div>
+              </div>)) : null}
             </Form>
           )}
         </Formik>

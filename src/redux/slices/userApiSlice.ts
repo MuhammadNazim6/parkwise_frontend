@@ -150,6 +150,17 @@ export const userApiSlice = apiSlice.injectEndpoints({
       onQueryStarted: onQueryStartedErrorToast
     }),
 
+    // checkOtpUser: builder.mutation({
+    //   query: (data) => ({
+    //     url: `${USER_URL}/check-otp`,
+    //     method: "POST",
+    //     data: data,
+    //     params: {},
+    //     headers: {},
+    //   }),
+    //   onQueryStarted: onQueryStartedErrorToast
+    // }),
+
 
   }),
 });
@@ -167,5 +178,6 @@ export const {
   useGetBookedSlotsMutation,
   useBookSlotsMutation,
   useUpdateProfileMutation,
-  useFetchUserProfilePicMutation
+  useFetchUserProfilePicMutation,
+  // useCheckOtpUserMutation
 } = userApiSlice;

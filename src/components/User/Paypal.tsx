@@ -4,6 +4,12 @@ import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from "@/redux/store";
 import { useParams } from 'react-router-dom';
 import { setBookingData } from '@/redux/slices/bookingSlice';
+declare global {
+  interface Window {
+    paypal: any;
+  }
+}
+
 
 function Paypal({ services, selectedSlots, totalAmount, date, checkAvailabilty, setAfterPayment }) {
   
@@ -81,8 +87,3 @@ function Paypal({ services, selectedSlots, totalAmount, date, checkAvailabilty, 
 
 export default Paypal
 
-interface Window {
-  paypal: {
-    Buttons: (options: any) => any;
-  };
-}

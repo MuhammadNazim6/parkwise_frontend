@@ -1,18 +1,11 @@
 import React, { useEffect, useState } from 'react'
-import profileImage from '../../../src/assets/Images/Plogo.png'
-import { RiImageEditLine } from "react-icons/ri";
 import { useGetProviderDetailsMutation } from '@/redux/slices/providerSlice';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
-import { Loader } from '@/components/Common/BootstrapElems';
-import ProEditProfileModal from '@/components/Provider/ProEditProfileModal';
-
 
 function ProvParkingLot() {
   const { providerInfo } = useSelector((state: RootState) => state.auth);
   const [providerDetails, setProviderDetails] = useState(null)
-  const [isEditProfileModalOpen, setIsEditProfileModalOpen] = useState(false)
-
 
   const [getDetails] = useGetProviderDetailsMutation()
   useEffect(() => {
@@ -33,7 +26,7 @@ function ProvParkingLot() {
       {providerDetails && providerDetails.approvalStatus === 'true' ? (
         <div className="p-4 sm:ml-64 h-full">
           <div className="p-2 border-2 min-h-screen border-gray-200 border-dashed rounded-lg dark:border-gray-700 flex justify-center items-center">
-            <div className="h-auto bg-[#b0c8d0] w-full max-w-3xl m-16 shadow-2xl rounded-lg relative flex items-center justify-center p-8">
+            <div className="h-auto bg-gray-100 w-full max-w-3xl m-16 shadow-2xl rounded-lg relative flex items-center justify-center p-8">
               <div className="space-y-6 mt-8 w-full">
                 <div className="flex flex-col sm:flex-row items-start justify-between space-y-2 sm:space-y-0 sm:space-x-4">
                   <span className="block text-gray-700 font-medium">Address:</span>
@@ -79,8 +72,8 @@ function ProvParkingLot() {
                   </div>
                 </div>
                 <div className="flex justify-center mt-4">
-                  <button type='button' className="bg-blue-600 hover:bg-blue-700 text-white font-semibold p-2 m-2 w-32 rounded flex items-center justify-around transition-colors duration-300">
-                    <RiImageEditLine className="text-xl" /> Edit
+                  <button type='button' className="bg-primary-provider hover:bg-secondary-provider text-sm text-white font-semibold p-2 m-2 w-32 rounded flex items-center justify-around transition-colors duration-300">
+                   Edit
                   </button>
                 </div>
               </div>

@@ -9,6 +9,8 @@ import { Link, useLocation, NavLink } from 'react-router-dom';
 import { IoIosArrowBack } from "react-icons/io";
 import { useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
+import { IoBookmarks } from "react-icons/io5";
+
 
 function Sidebar() {
 
@@ -28,14 +30,12 @@ function Sidebar() {
       }
     };
     window.addEventListener('resize', handleResize);
-
     return () => {
       window.removeEventListener('resize', handleResize);
     };
   }, []);
 
   const { providerInfo } = useSelector((state: RootState) => state.auth);
-
   return (
     <>
       <button onClick={toggleSidebar} data-drawer-target="default-sidebar" data-drawer-toggle="default-sidebar" aria-controls="default-sidebar" type="button" className="inline-flex items-center p-2 mt-2 ms-3 text-sm text-gray-500 rounded-lg sm:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600">
@@ -55,7 +55,7 @@ function Sidebar() {
               : (<ProSidebarLink link='/provider/parking-lot' title='Parking lot' Icon={<FaParking className='text-2xl text-white' />} />)}
             <ProSidebarLink link='/provider/profile' title='Profile' Icon={<IoMdChatboxes className='text-2xl text-white' />} />
             {/* <ProSidebarLink link= '/provider/feedbacks' title='Feedbacks' Icon={<MdFeedback className='text-2xl text-white' />} /> */}
-            <ProSidebarLink link= '/provider/bookings' title='Bookings' Icon={<MdFeedback className='text-2xl text-white' />} />
+            <ProSidebarLink link= '/provider/bookings' title='Bookings' Icon={<IoBookmarks  className='text-lg text-white' />} />
           </ul>
         </div>
       </aside>

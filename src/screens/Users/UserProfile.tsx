@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { RiImageEditLine } from "react-icons/ri";
-import { MdOutlineFeedback } from "react-icons/md";
 import { Formik, Field, FieldArray, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import Lottie from 'lottie-react'
@@ -13,12 +12,17 @@ import profile_icon from '../../assets/Images/profile-icon.jpg'
 import { useToast } from "@/components/ui/use-toast"
 import BookingsListModal from '@/components/User/profileComponents/BookingsListModal';
 import { useDisclosure } from '@chakra-ui/react'
+import { useProviderVerificationMutation } from '@/redux/slices/providerSlice';
+import { useProviderCheckOtpMutation } from '@/redux/slices/providerSlice';
+import OtpModal from '@/components/User/profileComponents/userProfileOtpModal';
+import { MdOutlinePassword } from "react-icons/md";
 
 
 
 
 function UserProfile() {
   const { userInfo } = useSelector((state: RootState) => state.auth);
+  const submitBtn = useRef(null);
   const dispatch = useDispatch()
   const [updateProfile, { isLoading }] = useUpdateProfileMutation()
   const [editProfile, setEditProfile] = useState(false)
@@ -29,8 +33,20 @@ function UserProfile() {
   const [getProfilePic] = useFetchUserProfilePicMutation()
   const { toast } = useToast()
   const { isOpen: isBookingsModalOpen, onOpen: openBookingsModal, onClose: closeBookingsModal } = useDisclosure()
-  
-  useEffect(() => { 
+  const { isOpen: isOtpModalOpen, onOpen: openOtpModal, onClose: closeOtpModal } = useDisclosure()
+
+  const [sendOtp, { isLoading: isLoadingOtpSent }] = useProviderVerificationMutation()
+  const [checkOtp] = useProviderCheckOtpMutation()
+  const [emailEdit, setEmailEdit] = useState(false)
+  const [userEnteredOtp, setUserEnteredOtp] = useState('')
+  const [emailVerified, setEmailVerified] = useState(false)
+  const [changedEmail, setChangedEmail] = useState('')
+  const [otpErr, setOtpErr] = useState('')
+
+  const { isOpen, onOpen, onClose } = useDisclosure()
+
+
+  useEffect(() => {
     fetchUserProfilePic()
   }, [userInfo])
 
@@ -49,18 +65,46 @@ function UserProfile() {
     profileInputRef.current.click()
   }
   const handleFileChange = (event) => {
-    console.log(event.target.files[0]);
-
     const file = event.target.files[0]
     if (file) {
       setAddedFile(file)
       const reader = new FileReader()
       reader.onloadend = () => {
         setChangedImage(reader.result)
-        console.log(reader.result);
-
       }
       reader.readAsDataURL(file)
+    }
+  }
+
+  const checkOtpFn = async () => {
+    const data = {
+      email: changedEmail,
+      enteredOtp: userEnteredOtp
+    }
+    const checked = await checkOtp(data).unwrap()
+    if (checked.success) {
+      setEmailEdit(false)
+      setEmailVerified(true)
+      toast({
+        title: "Your email has been verified",
+        description: "",
+      })
+      closeOtpModal()
+      setUserEnteredOtp('')
+      setTimeout(() => {
+        submitBtn.current.click()
+        setUserEnteredOtp('')
+      }, 100);
+    } else {
+      toast({
+        variant: 'destructive',
+        title: "Incorrect Otp entered",
+        description: "",
+      })
+      setOtpErr('Incorrect otp entered')
+      setTimeout(() => {
+        setOtpErr('')
+      }, 2000);
     }
   }
 
@@ -89,7 +133,24 @@ function UserProfile() {
               }}
               onSubmit={async (values) => {
                 await new Promise((resolve) => setTimeout(resolve, 0));
-                console.log(values);
+                if (userInfo.email !== values.email) {
+                  if (!emailVerified) {
+                    setChangedEmail(values.email)
+                    setEmailEdit(true)
+                    openOtpModal()
+                    const data = {
+                      email: values.email,
+                      name: userInfo.name
+                    }
+                    const otpSent = await sendOtp(data).unwrap()
+                    otpSent.success ? (toast({
+                      title: "Otp sent successfully",
+                      description: "",
+                    })) : null
+                    return
+                  }
+                }
+
                 const formdata = new FormData()
                 formdata.append('id', values.id)
                 formdata.append('name', values.name)
@@ -100,8 +161,13 @@ function UserProfile() {
 
                 const updated = await updateProfile(formdata).unwrap()
                 if (updated.success) {
+                  setEmailVerified(false)
                   dispatch(setCredentials({ email: values.email, mobile: values.mobile, name: values.name, role: 'user', id: values.id }))
                   handleSetEditProfile()
+                  toast({
+                    title: "Profile updated successfully",
+                    description: "",
+                  })
                 } else {
                   toast({
                     variant: "destructive",
@@ -138,7 +204,6 @@ function UserProfile() {
                 } = props;
                 return (
                   <div className="flex justify-center">
-                    
                     <form onSubmit={handleSubmit} className="p-6 rounded-lg lg:w-2/3 w-full ">
                       <FloatingLabelInput label='name' id='name' type='text' value={values.name} onChange={handleChange} errorMsg={errors.name} touched={touched.name} />
                       <FloatingLabelInput label='email' id='email' type='text' value={values.email} onChange={handleChange} errorMsg={errors.email} touched={touched.email} />
@@ -147,7 +212,7 @@ function UserProfile() {
                       {!isLoading ? (
                         <>
                           <div className="flex justify-center mt-8">
-                            <button className='btn hover:bg-[#5b87e5a1] w-full bg-primary-blue'>Save</button>
+                            <button ref={submitBtn} className='btn hover:bg-[#5b87e5a1] w-full bg-primary-blue'>Save</button>
                           </div>
                           <div className="flex justify-center mt-2">
                             <button className='btn w-full btn-outline hover:bg-[#aec2eca1] hover:text-black' onClick={handleSetEditProfile}>Cancel</button>
@@ -155,8 +220,8 @@ function UserProfile() {
                         </>
                       ) : (
                         <div className="flex justify-center items-center mt-5">
-                        <Lottie animationData={boxLoader} className='w-28' />
-                      </div>
+                          <Lottie animationData={boxLoader} className='w-28' />
+                        </div>
                       )}
 
                     </form>
@@ -182,16 +247,18 @@ function UserProfile() {
               <div className='w-1/3 font-extrabold text-center p-4 m-2 rounded-lg hover:text-black text-gray-700'><span className='text-2xl cursor-pointer'>12</span><p className='text-sm cursor-pointer text-nowrap' onClick={openBookingsModal}>Bookings</p> </div>
               <div className='w-1/3 font-extrabold text-center p-4 m-2 rounded-lg hover:text-black text-gray-700'><span className='text-2xl cursor-pointer'>07</span><p className='text-sm cursor-pointer text-nowrap'>Fav slots</p> </div>
               <div className='w-1/3 font-extrabold text-center p-4 m-2 rounded-lg hover:text-black text-gray-700'><span className='text-2xl cursor-pointer'>33</span><p className='text-sm cursor-pointer text-nowrap'>Reviews</p> </div>
-            </div> 
+            </div>
             <div className="flex bg-gray-100 justify-between m-5 rounded-lg shadow-md transition-transform hover:scale-[1.01] ease-in-out duration-300">
               <div className='w-full text-black flex justify-center items-center space-x-1 p-1 m-2 rounded-lg cursor-pointer' onClick={handleSetEditProfile}><RiImageEditLine /><span className='text-md' >Edit profile</span></div>
             </div>
-            {/* <div className="flex bg-gray-100 justify-between m-5 rounded-lg shadow-md transition-transform hover:scale-[1.01] ease-in-out duration-300">
-              <div className='w-full text-black flex justify-center items-center space-x-1 p-1 m-2 rounded-lg cursor-pointer'><MdOutlineFeedback /><span className='text-md'>Give Feedback</span></div>
-            </div> */}
+            <div className="flex bg-gray-100 justify-between m-5 rounded-lg shadow-md transition-transform hover:scale-[1.01] ease-in-out duration-300">
+              <div className='w-full text-black flex justify-center items-center space-x-1 p-1 m-2 rounded-lg cursor-pointer'><MdOutlinePassword /><span className='text-md'>Change password</span></div>
+            </div>
           </div>
         </div>)}
-        <BookingsListModal isOpen={isBookingsModalOpen} onClose={closeBookingsModal}/>
+
+      <BookingsListModal isOpen={isBookingsModalOpen} onClose={closeBookingsModal} />
+      <OtpModal isOpen={isOtpModalOpen} onClose={closeOtpModal} userEnteredOtp={userEnteredOtp} setUserEnteredOtp={setUserEnteredOtp} checkOtpFn={checkOtpFn} otpErr={otpErr}/>
 
     </div>
   )
@@ -229,3 +296,4 @@ const FloatingLabelInput = ({ label, id, type, value, onChange, errorMsg, touche
     </div>
   );
 };
+

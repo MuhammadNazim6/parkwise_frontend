@@ -13,7 +13,7 @@ export const commonApiSLice = apiSlice.injectEndpoints({
         url: `${COMMON_URL}/login`,
         method: "POST",
         data: data,
-        params: {}, 
+        params: {},
         headers: {}
       }),
       onQueryStarted: onQueryStartedErrorToast
@@ -23,13 +23,28 @@ export const commonApiSLice = apiSlice.injectEndpoints({
         url: `${COMMON_URL}/resend-otp`,
         method: "POST",
         data: data,
-        params: {}, 
+        params: {},
         headers: {}
-        
+
       }),
       onQueryStarted: onQueryStartedErrorToast
     }),
+
+    fetchBookingDetails: builder.mutation({
+      query: (id) => ({
+        url: `${COMMON_URL}/bookingDetails/${id}`,
+        method: 'GET',
+        data: {},
+        params: {},
+        headers: {},
+      }),
+    }),
+
   })
 })
 
-export const { useCommonResendOtpMutation, useCommonLoginMutation } = commonApiSLice
+export const {
+  useCommonResendOtpMutation,
+  useCommonLoginMutation,
+  useFetchBookingDetailsMutation
+} = commonApiSLice

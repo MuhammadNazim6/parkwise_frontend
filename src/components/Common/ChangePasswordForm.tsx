@@ -27,7 +27,7 @@ function ChangePasswordForm() {
   const location = useLocation();
   const navigate = useNavigate();
   const { email } = location.state;
-  const [changePassword, { isLoading }] = useComChangePasswordMutation();
+  const [changePassword, { isLoading }] = useComChangePasswordMutation()
 
   const [showPassword, setShowPassword] = useState(true);
   const [showConfPassword, setShowConfPassword] = useState(true);
