@@ -55,16 +55,10 @@ function ProvBookings() {
     }
   }
 
-  // const slotBookings = [
-  //   { id: '665c928e05af3604214451ab', slots: ['12:00,12:00,12:00'], date: '2024-06-01', amount: '200', username: 'nazim' },
-  //   { id: 2, slots: ['01:00'], date: '2024-06-02', amount: '150', username: 'sabith' },
-  //   { id: 3, slots: ['19:00'], date: '2024-06-03', amount: '400', username: 'rishal' },
-  // ];
   const [bookingDetails, setBookingDetails] = useState(null)
 
   const handleDetailsModal = async (id) => {
     const details = await fetchBookingDetails(id).unwrap()
-    console.log(details.data);
     setBookingDetails(details.data[0])
     openBookingDetailsModal()
   }
@@ -80,10 +74,11 @@ function ProvBookings() {
             <div className="text-gray-700 font-semibold  w-1/5 p-1 text-center hidden lg:block">User</div>
             <div className="text-gray-700 font-semibold  w-1/4 md:w-1/4 lg:w-1/5 p-1 text-center hidden md:block">Details</div>
           </div>
-          {bookings && (bookings.map((booking) => (
+          {bookings && (
+            bookings.map((booking) => (
             <div key={booking._id} className="flex bg-gray-100 w-full">
               <div className="flex-grow">
-                <div className={`shadow-sm rounded-md p-4 mt-2 cursor-pointer ${isSmallScreen ? `bg-yellow-300` : null}`} onClick={isSmallScreen ? () => { handleDetailsModal(booking._id) } : null}>
+                <div className={`shadow-sm rounded-md p-4 mt-2 cursor-pointe`} onClick={isSmallScreen ? () => { handleDetailsModal(booking._id) } : null}>
                   <div className="flex items-center justify-between w-full">
                     <div className="text-gray-700 font-semibold p-1 w-1/3 md:w-1/4 lg:w-1/5 text-sm text-center">{new Date(booking.bookingDate).toLocaleDateString()}</div>
                     <div className="text-gray-700 font-semibold p-1 w-1/3 md:w-1/4 lg:w-1/5 text-sm text-center">{booking.selectedSlots.length}</div>

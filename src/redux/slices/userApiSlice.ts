@@ -150,16 +150,38 @@ export const userApiSlice = apiSlice.injectEndpoints({
       onQueryStarted: onQueryStartedErrorToast
     }),
 
-    // checkOtpUser: builder.mutation({
-    //   query: (data) => ({
-    //     url: `${USER_URL}/check-otp`,
-    //     method: "POST",
-    //     data: data,
-    //     params: {},
-    //     headers: {},
-    //   }),
-    //   onQueryStarted: onQueryStartedErrorToast
-    // }),
+    checkUserPassword: builder.mutation({
+      query: (data) => ({
+        url: `${USER_URL}/checkUserPassword`,
+        method: "POST",
+        data: data,
+        params: {},
+        headers: {},
+      }),
+      onQueryStarted: onQueryStartedErrorToast
+    }),
+
+    fetchUserBookings: builder.mutation({
+      query: (data) => ({
+        url: `${USER_URL}/fetchUserBookings?userId=${data.userId}&page=${data.page}`,
+        method: "GET",
+        data: data,
+        params: {},
+        headers: {},
+      }),
+      onQueryStarted: onQueryStartedErrorToast
+    }),
+
+    cancelBooking: builder.mutation({
+      query: (bookingId) => ({
+        url: `${USER_URL}/cancelBooking/${bookingId}`,
+        method: "PATCH",
+        data: {},
+        params: {},
+        headers: {},
+      }),
+      onQueryStarted: onQueryStartedErrorToast
+    }),
 
 
   }),
@@ -179,5 +201,7 @@ export const {
   useBookSlotsMutation,
   useUpdateProfileMutation,
   useFetchUserProfilePicMutation,
-  // useCheckOtpUserMutation
+  useCheckUserPasswordMutation,
+  useFetchUserBookingsMutation,
+  useCancelBookingMutation
 } = userApiSlice;

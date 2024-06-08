@@ -264,7 +264,7 @@ function ProvAddSlot() {
                       .min(5, "Must be 5 characters or more")
                       .required("Name is required"),
                     parkingCount: Yup.number()
-                      .min(3, 'Count must be greater than 3')
+                      // .min(3, 'Count must be greater than 3')
                       .max(50, 'Count must be less than 50')
                       .required('Count is required'),
                     oneHourParkingAmount: Yup.number()

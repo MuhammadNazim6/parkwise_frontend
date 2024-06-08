@@ -17,7 +17,6 @@ import boxLoader from '../../assets/Animation/boxLoader.json'
 
 function ProEditProfileModal({ isOpen, onClose, profileDetails, setProviderDetails }) {
   const submitBtn = useRef(null);
-
   const [emailEdit, setEmailEdit] = useState(false)
   const [userEnteredOtp, setUserEnteredOtp] = useState('')
   const [emailVerified, setEmailVerified] = useState(false)

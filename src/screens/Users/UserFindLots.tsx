@@ -12,10 +12,21 @@ import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { setSearchData } from "@/redux/slices/searchSlice";
 import { RootState } from "@/redux/store";
+import noResultsAnim from '../../assets/Animation/noResultsAnim.json'
+import Lottie from "lottie-react";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination"
+
 
 function UserFindLots() {
   const { searchData } = useSelector((state: RootState) => state.search);
-  console.log('searchData: ', searchData);
 
   const [coordinates, setCoordinates] = useState([null]);
   const [price, setPrice] = useState(240)
@@ -26,6 +37,8 @@ function UserFindLots() {
   });
   const [parkingLots, setParkingLots] = useState(searchData ? searchData : [])
   const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1)
+  const [totalCount, setTotalCount] = useState(0)
   const [loading, setLoading] = useState(false)
   const WATER_SERVICE = 'waterService'
   const EV_CHARGING = 'evCharging'
@@ -48,7 +61,7 @@ function UserFindLots() {
       console.log('In useEffect (Not on initial render)');
       fetchParkingLots()
     }
-  }, [coordinates, price, services])
+  }, [coordinates, price, services,page])
 
   const handlePriceChange = (value) => {
     setPrice(value)
@@ -66,9 +79,10 @@ function UserFindLots() {
     setLoading(true)
     const coordinatesStr = JSON.stringify(coordinates)
     const response = await getParkingLots({ coordinatesStr, services, price, limit, page }).unwrap()
-    setParkingLots((prev) => [...response.data]);
-    dispatch(setSearchData([...response.data]))
-    console.log(...response.data);
+    setParkingLots((prev) => [...response.data.parkingLotsPaginated]);
+    dispatch(setSearchData([...response.data.parkingLotsPaginated]))
+    setTotalPages(response.data.totalPages)
+    setTotalCount(response.data.totalCount)
     setLoading(false)
   }
 
@@ -81,6 +95,19 @@ function UserFindLots() {
           setCoordinates([longitude, latitude])
         }
       })
+    }
+  }
+
+
+  const handlePrevPageClick = ()=>{
+    if(page > 1){
+      setPage((prev)=>prev-1)
+    }
+  }
+
+  const handleNextPageClick = ()=>{
+    if(page < totalPages){
+      setPage((prev)=>prev+1)
     }
   }
 
@@ -195,10 +222,38 @@ function UserFindLots() {
                 </Link>
               ))}
             </ul>
+           <div className="fixed inset-x-0 bottom-5 flex justify-center">
+           <Pagination className="">
+              <PaginationContent className="bg p-1 glass rounded-lg">
+                <PaginationItem className="cursor-pointer">
+                  <PaginationPrevious onClick={handlePrevPageClick} />
+                </PaginationItem>
+
+                <Pagination>
+                  {Array.from({ length: totalPages }, (_, index) => (
+                    <PaginationItem key={index} className="cursor-pointer">
+                      <PaginationLink isActive={page === index+1} onClick={()=>setPage(index+1)}>{index + 1}</PaginationLink>
+                    </PaginationItem>
+                  ))}
+                </Pagination>
+
+                <PaginationItem>
+                  <PaginationEllipsis />
+                </PaginationItem>
+
+                <PaginationItem className="cursor-pointer">
+                  <PaginationNext onClick={handleNextPageClick} />
+                </PaginationItem>
+              </PaginationContent>
+            </Pagination>
+           </div>
           </div>
         ) : (
           <div className="text-center w-full mt-24 text-xl md:text-3xl text-gray-700 bg-white min-h-screen">
-            No results found
+            <div className="flex justify-center items-center h-72">
+              {/* <Lottie animationData={noResultsAnim} className='h-64' /> */}
+              No result
+            </div>
           </div>
         ))
       }

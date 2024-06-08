@@ -9,22 +9,23 @@ import {
   ModalCloseButton,
   Button
 } from '@chakra-ui/react'
+import { useToast } from "@/components/ui/use-toast"
+import { useCheckUserPasswordMutation, useComChangePasswordMutation } from '@/redux/slices/userApiSlice';
 import FloatingLabelInput from '@/components/Common/FloatingInput'
 import { Formik } from "formik";
-import { useToast } from "@/components/ui/use-toast"
 import * as Yup from "yup";
-import { useCheckProvPasswordMutation } from '@/redux/slices/providerSlice';
-import { useComChangePasswordMutation } from '@/redux/slices/userApiSlice';
-import boxLoader from '../../assets/Animation/boxLoader.json'
 import Lottie from 'lottie-react';
+import boxLoader from '../../../assets/Animation/boxLoader.json'
 
 
-function ProvChangePassModal({ isOpen, onClose, providerId, provEmail }) {
+const UserChangePassModal = ({ isOpen, onClose, userId, userEmail }) => {
   const passwordRegex = /^(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?])(?=.*[a-zA-Z0-9]).{6,}$/;
   const { toast } = useToast()
-  const [checkPassword, { isLoading: isCheckLoading }] = useCheckProvPasswordMutation()
+  const [checkPassword, { isLoading: isCheckLoading }] = useCheckUserPasswordMutation()
   const [changePassword, { isLoading }] = useComChangePasswordMutation()
-
+  console.log(userId);
+  console.log(userEmail);
+  
 
   return (
     <div className="">
@@ -34,7 +35,6 @@ function ProvChangePassModal({ isOpen, onClose, providerId, provEmail }) {
           <ModalHeader>Change your password</ModalHeader>
           <ModalCloseButton />
           <ModalBody pb={6}>
-
             <Formik
               initialValues={{
                 currentPass: '',
@@ -44,7 +44,7 @@ function ProvChangePassModal({ isOpen, onClose, providerId, provEmail }) {
               onSubmit={async (values) => {
                 await new Promise((resolve) => setTimeout(resolve, 0));
                 const form = {
-                  provId: providerId,
+                  userId: userId,
                   password: values.currentPass
                 }
                 const passwordChecked = await checkPassword(form).unwrap()
@@ -57,8 +57,10 @@ function ProvChangePassModal({ isOpen, onClose, providerId, provEmail }) {
                   })
                   return
                 }
+                console.log('password correct');
+
                 const formData = {
-                  email: provEmail,
+                  email: userEmail,
                   password: values.newPass
                 }
                 const changedPassword = await changePassword(formData).unwrap()
@@ -109,6 +111,8 @@ function ProvChangePassModal({ isOpen, onClose, providerId, provEmail }) {
                         <FloatingLabelInput label='New password' id='newPass' type='text' value={values.newPass} onChange={handleChange} errorMsg={errors.newPass} touched={touched.newPass} />
                         <FloatingLabelInput label='Confirm password' id='confirmPass' type='text' value={values.confirmPass} onChange={handleChange} errorMsg={errors.confirmPass} touched={touched.confirmPass} />
                       </div>
+                    
+
                       <div className="flex justify-end">
                         {isCheckLoading || isLoading ? (
                           <div className="flex justify-center items-center w-full mt-10">
@@ -116,10 +120,10 @@ function ProvChangePassModal({ isOpen, onClose, providerId, provEmail }) {
                           </div>
 
                         ) : (<div className="mt-5">
-                          <button type='submit' className='btn bg-primary-provider hover:bg-secondary-provider text-sm  text-white font-semibold p-2 m-2 w-24 rounded transition-colors duration-300'>
+                          <button type='submit' className='btn bg-primary-provider hover:bg-secondary-provider text-sm  text-white font-semibold p-1 m-2 w-24 rounded transition-colors duration-300'>
                             Save
                           </button>
-                          <button type='button' onClick={onClose} className='btn bg-gray-400 hover:bg-gray-300 text-sm  text-white font-semibold p-2 m-2 w-24 rounded transition-colors duration-300'>
+                          <button type='button' onClick={onClose} className='btn bg-gray-400 hover:bg-gray-300 text-sm  text-white font-semibold p-1 m-2 w-24 rounded transition-colors duration-300'>
                             Cancel
                           </button>
                         </div>)}
@@ -132,7 +136,6 @@ function ProvChangePassModal({ isOpen, onClose, providerId, provEmail }) {
             </Formik>
           </ModalBody>
           <ModalFooter>
-
           </ModalFooter>
         </ModalContent>
       </Modal>
@@ -140,6 +143,4 @@ function ProvChangePassModal({ isOpen, onClose, providerId, provEmail }) {
   )
 }
 
-export default ProvChangePassModal
-
-
+export default UserChangePassModal

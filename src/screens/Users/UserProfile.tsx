@@ -16,7 +16,7 @@ import { useProviderVerificationMutation } from '@/redux/slices/providerSlice';
 import { useProviderCheckOtpMutation } from '@/redux/slices/providerSlice';
 import OtpModal from '@/components/User/profileComponents/userProfileOtpModal';
 import { MdOutlinePassword } from "react-icons/md";
-
+import UserChangePassModal from '@/components/User/profileComponents/UserChangePassModal';
 
 
 
@@ -34,6 +34,7 @@ function UserProfile() {
   const { toast } = useToast()
   const { isOpen: isBookingsModalOpen, onOpen: openBookingsModal, onClose: closeBookingsModal } = useDisclosure()
   const { isOpen: isOtpModalOpen, onOpen: openOtpModal, onClose: closeOtpModal } = useDisclosure()
+  const { isOpen: isOpenChangePassModal, onOpen: openChangePassModal, onClose: closeChangePassModal } = useDisclosure()
 
   const [sendOtp, { isLoading: isLoadingOtpSent }] = useProviderVerificationMutation()
   const [checkOtp] = useProviderCheckOtpMutation()
@@ -42,9 +43,14 @@ function UserProfile() {
   const [emailVerified, setEmailVerified] = useState(false)
   const [changedEmail, setChangedEmail] = useState('')
   const [otpErr, setOtpErr] = useState('')
+  const [bookingListOpen, setBookingListOpen] = useState(true)
 
-  const { isOpen, onOpen, onClose } = useDisclosure()
+  const [bookingsPage, setBookingsPage] = useState(1)
 
+  const handleBookingListModalOpen = () => {
+    setBookingListOpen(true)
+    openBookingsModal()
+  }
 
   useEffect(() => {
     fetchUserProfilePic()
@@ -107,7 +113,6 @@ function UserProfile() {
       }, 2000);
     }
   }
-
 
   return (
     <div>
@@ -244,22 +249,22 @@ function UserProfile() {
               <div className='mt-1 text-lg text-gray-800'>{userInfo.mobile}</div>
             </div>
             <div className="flex bg-primary-blue justify-between m-4 p-2 rounded-lg shadow-xl">
-              <div className='w-1/3 font-extrabold text-center p-4 m-2 rounded-lg hover:text-black text-gray-700'><span className='text-2xl cursor-pointer'>12</span><p className='text-sm cursor-pointer text-nowrap' onClick={openBookingsModal}>Bookings</p> </div>
-              <div className='w-1/3 font-extrabold text-center p-4 m-2 rounded-lg hover:text-black text-gray-700'><span className='text-2xl cursor-pointer'>07</span><p className='text-sm cursor-pointer text-nowrap'>Fav slots</p> </div>
+              <div onClick={openBookingsModal} className='w-1/3 font-extrabold text-center p-4 m-2 rounded-lg hover:text-black text-gray-700'><span className='text-2xl cursor-pointer'>2</span><p className='text-sm cursor-pointer text-nowrap' >Bookings</p> </div>
+              <div className='w-1/3 font-extrabold text-center p-4 m-2 rounded-lg hover:text-black text-gray-700'><span className='text-2xl cursor-pointer'>Rs 400</span><p className='text-sm cursor-pointer text-nowrap'>Wallet balance</p> </div>
               <div className='w-1/3 font-extrabold text-center p-4 m-2 rounded-lg hover:text-black text-gray-700'><span className='text-2xl cursor-pointer'>33</span><p className='text-sm cursor-pointer text-nowrap'>Reviews</p> </div>
             </div>
             <div className="flex bg-gray-100 justify-between m-5 rounded-lg shadow-md transition-transform hover:scale-[1.01] ease-in-out duration-300">
               <div className='w-full text-black flex justify-center items-center space-x-1 p-1 m-2 rounded-lg cursor-pointer' onClick={handleSetEditProfile}><RiImageEditLine /><span className='text-md' >Edit profile</span></div>
             </div>
             <div className="flex bg-gray-100 justify-between m-5 rounded-lg shadow-md transition-transform hover:scale-[1.01] ease-in-out duration-300">
-              <div className='w-full text-black flex justify-center items-center space-x-1 p-1 m-2 rounded-lg cursor-pointer'><MdOutlinePassword /><span className='text-md'>Change password</span></div>
+              <div className='w-full text-black flex justify-center items-center space-x-1 p-1 m-2 rounded-lg cursor-pointer' onClick={openChangePassModal}><MdOutlinePassword /><span className='text-md'>Change password</span></div>
             </div>
           </div>
         </div>)}
 
-      <BookingsListModal isOpen={isBookingsModalOpen} onClose={closeBookingsModal} />
-      <OtpModal isOpen={isOtpModalOpen} onClose={closeOtpModal} userEnteredOtp={userEnteredOtp} setUserEnteredOtp={setUserEnteredOtp} checkOtpFn={checkOtpFn} otpErr={otpErr}/>
-
+      {bookingListOpen && (<BookingsListModal isOpen={isBookingsModalOpen} onClose={closeBookingsModal} userId={userInfo.id} page={bookingsPage} setPage={setBookingsPage} />)}
+      <OtpModal isOpen={isOtpModalOpen} onClose={closeOtpModal} userEnteredOtp={userEnteredOtp} setUserEnteredOtp={setUserEnteredOtp} checkOtpFn={checkOtpFn} otpErr={otpErr} isLoadingOtpSent={isLoadingOtpSent} />
+      <UserChangePassModal isOpen={isOpenChangePassModal} onClose={closeChangePassModal} userId={userInfo.id} userEmail={userInfo.email} />
     </div>
   )
 }
@@ -268,6 +273,7 @@ export default UserProfile
 
 
 // ________________________
+
 
 const FloatingLabelInput = ({ label, id, type, value, onChange, errorMsg, touched }) => {
   const [isFocused, setIsFocused] = useState(false);

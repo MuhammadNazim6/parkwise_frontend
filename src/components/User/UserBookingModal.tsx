@@ -41,6 +41,7 @@ function UserBookingModal({ isOpen, setBookingModalOpen, lotDetails, selectedSlo
     }
     setTotalAmount((selectedSlots.size * lotDetails.pricePerHour) + serviceCharge)
   }
+  
 
   const addRemoveService = (service) => {
     setServices((prev) => ({ ...prev, [service]: !prev[service] }))
