@@ -183,7 +183,7 @@ export const userApiSlice = apiSlice.injectEndpoints({
       onQueryStarted: onQueryStartedErrorToast
     }),
 
-    confirmkSlotAvailability: builder.mutation({
+    confirmSlotAvailability: builder.mutation({
       query: (data) => ({
         url: `${USER_URL}/confirmSlot`,
         method: "POST",
@@ -193,6 +193,29 @@ export const userApiSlice = apiSlice.injectEndpoints({
       }),
       onQueryStarted: onQueryStartedErrorToast
     }),
+
+    getFilledSlots: builder.mutation({
+      query: (bookingId) => ({
+        url: `${USER_URL}/getFilledSlots/${bookingId}`,
+        method: "GET",
+        data: {},
+        params: {},
+        headers: {},
+      }),
+      onQueryStarted: onQueryStartedErrorToast
+    }),
+
+    rescheduleSlots: builder.mutation({
+      query: (data) => ({
+        url: `${USER_URL}/rescheduleSlots`,
+        method: "PATCH",
+        data: data,
+        params: {},
+        headers: {},
+      }),
+      onQueryStarted: onQueryStartedErrorToast
+    }),
+
 
 
   }),
@@ -215,5 +238,7 @@ export const {
   useCheckUserPasswordMutation,
   useFetchUserBookingsMutation,
   useCancelBookingMutation,
-  useConfirmkSlotAvailabilityMutation
+  useConfirmSlotAvailabilityMutation,
+  useGetFilledSlotsMutation,
+  useRescheduleSlotsMutation
 } = userApiSlice;

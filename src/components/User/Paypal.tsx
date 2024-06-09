@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { useBookSlotsMutation, useConfirmkSlotAvailabilityMutation } from '@/redux/slices/userApiSlice';
+import { useBookSlotsMutation, useConfirmSlotAvailabilityMutation } from '@/redux/slices/userApiSlice';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from "@/redux/store";
 import { useParams } from 'react-router-dom';
@@ -21,7 +21,7 @@ function Paypal({ services, selectedSlots, totalAmount, date, checkAvailabilty, 
   const [paypalInstance, setPaypalInstance] = useState(null)
   const [bookSlots, { isLoading }] = useBookSlotsMutation()
   const paypal = useRef(null)
-  const [confirmSlotAvailability, { isLoading: confirmSlotLoading }] = useConfirmkSlotAvailabilityMutation()
+  const [confirmSlotAvailability, { isLoading: confirmSlotLoading }] = useConfirmSlotAvailabilityMutation()
   const { toast } = useToast()
 
 

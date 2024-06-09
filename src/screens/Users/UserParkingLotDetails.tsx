@@ -5,18 +5,18 @@ import { Calendar } from "@/components/ui/calendar"
 import { Popover, PopoverContent, PopoverTrigger, } from "@/components/ui/popover"
 import { CalendarIcon } from "@radix-ui/react-icons"
 import { Button } from "@/components/ui/button"
-import { format, parse } from "date-fns"
+import { format } from "date-fns"
 import { cn } from "@/lib/utils"
 import { useToast } from "@/components/ui/use-toast"
 import { IoMdBatteryCharging } from "react-icons/io";
 import { GiCartwheel } from "react-icons/gi";
 import { MdLocalCarWash } from "react-icons/md";
-import { Loader } from '@/components/Common/BootstrapElems';
 import UserCarousel from '@/components/User/UserCarousel ';
 import { LiaRupeeSignSolid } from "react-icons/lia";
 import UserBookingModal from '@/components/User/UserBookingModal';
 import { SlotSkeleton } from '@/components/User/SlotSkeleton';
-
+import Lottie from 'lottie-react';
+import checkAvalblAnim from '../../assets/Animation/checkAvalblAnim.json'
 
 
 function UserParkingLotDetails() {
@@ -28,7 +28,6 @@ function UserParkingLotDetails() {
   const [showSlots, setShowSlots] = useState(false);
   const startingSlotTime = parseInt(selectedTime.slice(0, 2))
   const [selectedSlots, setSelectedSlots] = useState(new Set());
-  const [loadingBooked, setLoadingBooked] = useState(false)
   const [bookingModalOpen, setBookingModalOpen] = useState(false)
 
   const { toast } = useToast()
@@ -196,7 +195,7 @@ function UserParkingLotDetails() {
             <span>Check</span>
           </button>
         </div>
-        {showSlots && (
+        {showSlots ? (
           <div className="mt-10 p-6 bg-white shadow-lg rounded-r-lg">
             <div className="text-end mb-2 cursor-pointer" onClick={clearAllSelection}>Clear all</div>
             <div className="grid grid-cols-6 text-[14px]  md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-4">
@@ -228,13 +227,7 @@ function UserParkingLotDetails() {
                     );
                   })
                   )
-                // : <div className="flex mt-2 justify-center h-60 w-fit">
-                //   <div className="">
-                //     <SlotSkeleton />
 
-                //   </div>
-
-                // </div>
               }
             </div>
             <div className="h-20 flex m-10 justify-evenly items-center space-x-1 rounded-lg">
@@ -252,6 +245,13 @@ function UserParkingLotDetails() {
                 <div className="w-[18px] h-[18px] bg-secondary-blue text-secondary-blue rounded-sm">.</div>
                 <div>Selected</div>
               </div>
+            </div>
+          </div>
+        ) : (
+          <div className="flex justify-center items-center h-96">
+            <div className="">
+              <Lottie animationData={checkAvalblAnim} className='h-44' />
+              <p className='text-center text-gray-800'>Check for available slots now</p>
             </div>
           </div>
         )}

@@ -14,6 +14,7 @@ import { setSearchData } from "@/redux/slices/searchSlice";
 import { RootState } from "@/redux/store";
 import noResultsAnim from '../../assets/Animation/noResultsAnim.json'
 import Lottie from "lottie-react";
+import { BiCurrentLocation } from "react-icons/bi";
 import {
   Pagination,
   PaginationContent,
@@ -61,7 +62,7 @@ function UserFindLots() {
       console.log('In useEffect (Not on initial render)');
       fetchParkingLots()
     }
-  }, [coordinates, price, services,page])
+  }, [coordinates, price, services, page])
 
   const handlePriceChange = (value) => {
     setPrice(value)
@@ -99,15 +100,15 @@ function UserFindLots() {
   }
 
 
-  const handlePrevPageClick = ()=>{
-    if(page > 1){
-      setPage((prev)=>prev-1)
+  const handlePrevPageClick = () => {
+    if (page > 1) {
+      setPage((prev) => prev - 1)
     }
   }
 
-  const handleNextPageClick = ()=>{
-    if(page < totalPages){
-      setPage((prev)=>prev+1)
+  const handleNextPageClick = () => {
+    if (page < totalPages) {
+      setPage((prev) => prev + 1)
     }
   }
 
@@ -124,6 +125,7 @@ function UserFindLots() {
               <UserSearchAddress setCoordinates={setCoordinates} />
             </div>
           </div>
+          <button className="flex justify-center items-center w-1/12 glass bg-white text-black hover:bg-slate-300 active:scale-[.98] active:duration-75 transition-all rounded-sm p-1 text-xs h-9" onClick={getCurrentCoordinatesAndFetchParkingLots}><BiCurrentLocation className="text-3xl"/>Current location</button>
         </div>
       </div>
 
@@ -175,7 +177,7 @@ function UserFindLots() {
             <div className="">
               <SkeletonCard />
               <SkeletonCard />
-              <SkeletonCard />
+              {/* <SkeletonCard /> */}
             </div>
           </div>
         ) : (parkingLots.length > 0 ? (
@@ -222,31 +224,31 @@ function UserFindLots() {
                 </Link>
               ))}
             </ul>
-           <div className="fixed inset-x-0 bottom-5 flex justify-center">
-           <Pagination className="">
-              <PaginationContent className="bg p-1 glass rounded-lg">
-                <PaginationItem className="cursor-pointer">
-                  <PaginationPrevious onClick={handlePrevPageClick} />
-                </PaginationItem>
+            <div className="fixed inset-x-0 bottom-5 flex justify-center">
+              <Pagination className="">
+                <PaginationContent className="bg p-1 glass rounded-lg">
+                  <PaginationItem className="cursor-pointer">
+                    <PaginationPrevious onClick={handlePrevPageClick} />
+                  </PaginationItem>
 
-                <Pagination>
-                  {Array.from({ length: totalPages }, (_, index) => (
-                    <PaginationItem key={index} className="cursor-pointer">
-                      <PaginationLink isActive={page === index+1} onClick={()=>setPage(index+1)}>{index + 1}</PaginationLink>
-                    </PaginationItem>
-                  ))}
-                </Pagination>
+                  <Pagination>
+                    {Array.from({ length: totalPages }, (_, index) => (
+                      <PaginationItem key={index} className="cursor-pointer">
+                        <PaginationLink isActive={page === index + 1} onClick={() => setPage(index + 1)}>{index + 1}</PaginationLink>
+                      </PaginationItem>
+                    ))}
+                  </Pagination>
 
-                <PaginationItem>
-                  <PaginationEllipsis />
-                </PaginationItem>
+                  <PaginationItem>
+                    <PaginationEllipsis />
+                  </PaginationItem>
 
-                <PaginationItem className="cursor-pointer">
-                  <PaginationNext onClick={handleNextPageClick} />
-                </PaginationItem>
-              </PaginationContent>
-            </Pagination>
-           </div>
+                  <PaginationItem className="cursor-pointer">
+                    <PaginationNext onClick={handleNextPageClick} />
+                  </PaginationItem>
+                </PaginationContent>
+              </Pagination>
+            </div>
           </div>
         ) : (
           <div className="text-center w-full mt-24 text-xl md:text-3xl text-gray-700 bg-white min-h-screen">

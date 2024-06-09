@@ -11,9 +11,8 @@ import {
 } from '@chakra-ui/react'
 import Lottie from 'lottie-react'
 import { useToast } from "@/components/ui/use-toast"
-import { useFetchUserBookingsMutation, useCancelBookingMutation } from '@/redux/slices/userApiSlice';
+import { useFetchUserBookingsMutation, useCancelBookingMutation, useGetFilledSlotsMutation, useRescheduleSlotsMutation } from '@/redux/slices/userApiSlice';
 import resheduleAnim from '../../../assets/Animation/resheduleAnim.json'
-import binAnim from '../../../assets/Animation/binAnim.json'
 import cancelledAnim from '../../../assets/Animation/cancelledAnim.json'
 import { useFetchBookingDetailsMutation } from '@/redux/slices/commonSlice';
 import {
@@ -40,12 +39,18 @@ function BookingsListModal({ isOpen, onClose, userId, page, setPage }) {
   const [isSmallScreen, setIsSmallScreen] = useState(window.innerWidth <= 770);
   const [bookings, setBookings] = useState(null);
   const [bookingDetails, setBookingDetails] = useState(null);
+  const [error, setError] = useState('')
   const [fetchBookings, { isLoading }] = useFetchUserBookingsMutation()
   const [fetchBookingDetails] = useFetchBookingDetailsMutation()
+  const [getBookedSlots] = useGetFilledSlotsMutation()
   const [cancelBooking] = useCancelBookingMutation()
+  const [rescheduleSlots] = useRescheduleSlotsMutation()
+
+  const [bookedSlotsOfParkingLot, setBookedSlotsOfParkingLot] = useState([])
 
   const [totalPages, setTotalPages] = useState(1)
-
+  const slots = Array.from({ length: 24 }, (_, index) => `${1 + index}:00 `)
+  const [selectedSlots, setSelectedSlots] = useState(new Set());
 
   const { toast } = useToast()
   useEffect(() => {
@@ -83,6 +88,9 @@ function BookingsListModal({ isOpen, onClose, userId, page, setPage }) {
   const handleGetBookingDetails = async (bookingId) => {
     const details = await fetchBookingDetails(bookingId).unwrap()
     setBookingDetails(details.data[0])
+
+    const response = await getBookedSlots(bookingId).unwrap()
+    setBookedSlotsOfParkingLot(response.data)
   }
 
   const manageCloseOfModal = async () => {
@@ -97,6 +105,7 @@ function BookingsListModal({ isOpen, onClose, userId, page, setPage }) {
         title: "Your booking has been cancelled",
         description: "Refund has been credited to your wallet",
       })
+      fetchBookingsOfUser()
       manageCloseOfModal()
 
     } else {
@@ -117,6 +126,36 @@ function BookingsListModal({ isOpen, onClose, userId, page, setPage }) {
   const handleNextPageClick = () => {
     if (page < totalPages) {
       setPage((prev) => prev + 1)
+    }
+  }
+
+  const handleSlotClick = (slot) => {
+    const tempSelectedSlots = new Set(selectedSlots);
+
+    if (tempSelectedSlots.has(slot)) {
+      tempSelectedSlots.delete(slot)
+    } else {
+      if (tempSelectedSlots.size === bookingDetails.selectedSlots.length) {
+        setError(`You can choose only ${bookingDetails.selectedSlots.length} slot.`)
+        setTimeout(() => {
+          setError('')
+        }, 2000);
+        return
+      }
+      tempSelectedSlots.add(slot)
+    }
+    setSelectedSlots(tempSelectedSlots);
+  };
+
+  const handleRescheduleSlots = async (bookingId) => {
+
+    const data = {
+      bookingId,
+      slots: Array.from(selectedSlots)
+    }
+    const rescheduled = await rescheduleSlots(data).unwrap()
+    if (rescheduled.success) {
+      alert('rescheduled successfully')
     }
   }
 
@@ -153,14 +192,42 @@ function BookingsListModal({ isOpen, onClose, userId, page, setPage }) {
                               <AccordionIcon />
                             </AccordionButton>
                           </h2>
-                          <AccordionPanel className='h-96' pb={4}>
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-                            tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
-                            veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-                            commodo consequat.
+                          <AccordionPanel className='h-96' pb={1}>
+                            <p className='text-center'> Select {bookingDetails.selectedSlots.length} available slots</p>
+                            <div className="grid grid-cols-6 text-[14px]  md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-4 m-3">
+                              {
+                                (slots.map((slot, idx) => {
+                                  const hour = parseInt(slot.split(':')[0]);
+                                  let isBooked = false;
+
+                                  for (let i = 0; i < bookedSlotsOfParkingLot.length; i++) {
+                                    if (hour === parseInt(bookedSlotsOfParkingLot[i].time.split('-')[0])) {
+                                      isBooked = true
+                                    }
+                                  }
+
+                                  return (
+                                    <div
+                                      key={idx}
+                                      onClick={isBooked ? () => { console.log('Booked'); } : () => handleSlotClick(slot)}
+                                      className={`h-12 rounded-md cursor-pointer flex items-center justify-center text-black shadow-xl  ring-1 ring-blue-400
+                                    ${selectedSlots.has(slot) ? 'bg-secondary-blue active:scale-101 text-white' : isBooked ? 'bg-gray-400 cursor-not-allowed transition-transform ease-in-out active:animate-shake' : ' ring-1 ring-blue-400 active:scale-101'}`}
+                                      aria-label={`Parking slot from ${slot}`}
+                                      role="button"
+                                      aria-disabled={isBooked}
+                                    >
+                                      {slot}
+                                    </div>
+                                  );
+                                })
+                                )}
+                            </div>
+                            <p className='text-red-700 text-center'>&nbsp;{error}</p>
+                            <div className="flex justify-center mt-1">
+                              <button className='btn btn-md bg-primary-blue' onClick={() => handleRescheduleSlots(bookingDetails._id)}>Update</button>
+                            </div>
                           </AccordionPanel>
                         </AccordionItem>
-
                         <AccordionItem>
                           <h2>
                             <AccordionButton>
