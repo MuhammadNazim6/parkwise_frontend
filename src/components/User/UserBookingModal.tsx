@@ -120,7 +120,7 @@ function UserBookingModal({ isOpen, setBookingModalOpen, lotDetails, selectedSlo
             </ModalBody>
             <div className="flex justify-evenly items-center">
               <p className='flex items-center justify-center text-xl font-bold'><LiaRupeeSignSolid /> <span>{totalAmount}.00</span></p>
-              <Paypal services={services} selectedSlots={selectedSlots} totalAmount={totalAmount} date={date} checkAvailabilty={checkAvailabilty} setAfterPayment={setAfterPayment} />
+              <Paypal services={services} selectedSlots={selectedSlots} totalAmount={totalAmount} date={date} checkAvailabilty={checkAvailabilty} setAfterPayment={setAfterPayment} onModalClose={onClose}/>
             </div>
           </>)}
         </ModalContent>

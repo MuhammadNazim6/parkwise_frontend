@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { useBookSlotsMutation } from '@/redux/slices/userApiSlice';
+import { useBookSlotsMutation, useConfirmkSlotAvailabilityMutation } from '@/redux/slices/userApiSlice';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from "@/redux/store";
 import { useParams } from 'react-router-dom';
@@ -9,33 +9,64 @@ declare global {
     paypal: any;
   }
 }
+import { useToast } from "@/components/ui/use-toast"
 
 
-function Paypal({ services, selectedSlots, totalAmount, date, checkAvailabilty, setAfterPayment }) {
-  
+
+function Paypal({ services, selectedSlots, totalAmount, date, checkAvailabilty, setAfterPayment ,onModalClose}) {
+
   const { userInfo } = useSelector((state: RootState) => state.auth);
   const { id } = useParams()
   const dispatch = useDispatch()
   const [paypalInstance, setPaypalInstance] = useState(null)
   const [bookSlots, { isLoading }] = useBookSlotsMutation()
   const paypal = useRef(null)
+  const [confirmSlotAvailability, { isLoading: confirmSlotLoading }] = useConfirmkSlotAvailabilityMutation()
+  const { toast } = useToast()
+
+
+  const checkLiveSlotAvailablity = async () => {
+    const data = {
+      slots: Array.from(selectedSlots),
+      lotId: id,
+      date
+    }
+    const checked = await confirmSlotAvailability(data).unwrap()
+    if (checked.success) {
+      if (checked.data.length) {
+        toast({
+          variant: "destructive",
+          title: checked.data.join(', '),
+          description: "The above selected slots have already been filled, Kindly Try other slots.",
+        })
+        return false
+      }
+    }
+    return true
+  }
 
   useEffect(() => {
     const description = `Booking for services: ${services.airPressure ? 'Air pressure adjustment, ' : null} ${services.waterService ? 'Water service, ' : null}  ${services.evCharging ? 'EV charging' : null}.`;
     const convertedAmount = totalAmount * 0.016
-
     if (!paypalInstance) {
       const newPaypalInstance = window.paypal.Buttons({
-        createOrder: (data: any, actions: any, err: any) => {
-          return actions.order.create({
-            purchase_units: [{
-              description: description,
-              amount: {
-                currency_code: 'CAD',
-                value: convertedAmount,
-              },
-            }],
-          });
+        createOrder: async (data: any, actions: any, err: any) => {
+          const isAvailable = await checkLiveSlotAvailablity()
+          if (isAvailable) {
+            return actions.order.create({
+              purchase_units: [{
+                description: description,
+                amount: {
+                  currency_code: 'CAD',
+                  value: convertedAmount,
+                },
+              }],
+            });
+          }else{
+            onModalClose()
+            checkAvailabilty()
+          }
+
         },
         onApprove: async (data, actions) => {
           const order = await actions.order.capture()

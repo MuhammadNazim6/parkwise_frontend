@@ -183,6 +183,17 @@ export const userApiSlice = apiSlice.injectEndpoints({
       onQueryStarted: onQueryStartedErrorToast
     }),
 
+    confirmkSlotAvailability: builder.mutation({
+      query: (data) => ({
+        url: `${USER_URL}/confirmSlot`,
+        method: "POST",
+        data: data,
+        params: {},
+        headers: {},
+      }),
+      onQueryStarted: onQueryStartedErrorToast
+    }),
+
 
   }),
 });
@@ -203,5 +214,6 @@ export const {
   useFetchUserProfilePicMutation,
   useCheckUserPasswordMutation,
   useFetchUserBookingsMutation,
-  useCancelBookingMutation
+  useCancelBookingMutation,
+  useConfirmkSlotAvailabilityMutation
 } = userApiSlice;
