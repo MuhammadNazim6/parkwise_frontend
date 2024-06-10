@@ -85,6 +85,13 @@ function BookingsListModal({ isOpen, onClose, userId, page, setPage }) {
     }
   }
 
+  const formatDate = (dateStr) => {
+    let bookingDate = new Date(dateStr);
+    bookingDate.setDate(bookingDate.getDate() - 1)
+    let newDateStr = bookingDate.toLocaleDateString()
+    return newDateStr
+  }
+
   const handleGetBookingDetails = async (bookingId) => {
     const details = await fetchBookingDetails(bookingId).unwrap()
     setBookingDetails(details.data[0])
@@ -96,6 +103,10 @@ function BookingsListModal({ isOpen, onClose, userId, page, setPage }) {
   const manageCloseOfModal = async () => {
     setBookingDetails(null)
     onClose()
+  }
+
+  const manageGoBack = async () => {
+    setBookingDetails(null)
   }
 
   const manageCancelBooking = async (bookingId) => {
@@ -131,7 +142,6 @@ function BookingsListModal({ isOpen, onClose, userId, page, setPage }) {
 
   const handleSlotClick = (slot) => {
     const tempSelectedSlots = new Set(selectedSlots);
-
     if (tempSelectedSlots.has(slot)) {
       tempSelectedSlots.delete(slot)
     } else {
@@ -148,14 +158,18 @@ function BookingsListModal({ isOpen, onClose, userId, page, setPage }) {
   };
 
   const handleRescheduleSlots = async (bookingId) => {
-
     const data = {
       bookingId,
       slots: Array.from(selectedSlots)
     }
     const rescheduled = await rescheduleSlots(data).unwrap()
     if (rescheduled.success) {
-      alert('rescheduled successfully')
+      toast({
+        title: "Your booking has been rescheduled.",
+        description: ""
+      })
+      manageCloseOfModal()
+
     }
   }
 
@@ -185,7 +199,7 @@ function BookingsListModal({ isOpen, onClose, userId, page, setPage }) {
                             <AccordionButton>
                               <Box as='span' flex='1' textAlign='left'>
                                 <div className="h-1/2 rounded-md flex justify-center transition duration-300 ease-in-out hover:bg-[#f5f4f48a] cursor-pointer">
-                                  <Lottie animationData={resheduleAnim} className='h-10' />
+                                  {/* <Lottie animationData={resheduleAnim} className='h-10' /> */}
                                   <p className='flex justify-center items-center cursor-pointer text-lg'>Reshedule Booking</p>
                                 </div>
                               </Box>
@@ -233,8 +247,6 @@ function BookingsListModal({ isOpen, onClose, userId, page, setPage }) {
                             <AccordionButton>
                               <Box as='span' flex='1' textAlign='left'>
                                 <div className="h-1/2 rounded-md flex justify-center transition duration-300 ease-in-out hover:bg-[#f5f4f48a] cursor-pointer">
-                                  {/* <Lottie animationData={binAnim} className='h-10 cursor-pointer' /> */}
-
                                   <p className='flex justify-center items-center cursor-pointer text-lg'>Cancel booking</p>
                                 </div>
                               </Box>
@@ -264,6 +276,10 @@ function BookingsListModal({ isOpen, onClose, userId, page, setPage }) {
                       <p className="text-gray-600 md:text-lg font-semibold">{bookingDetails.selectedSlots.length}</p>
                     </div>
                     <div className="p-2 mb-3 pl-6 ring-gray-300 bg-white shadow-md rounded-lg">
+                      <p className="text-sm text-gray-700">Slots:</p>
+                      <p className="text-gray-600 md:text-lg font-semibold">{bookingDetails.selectedSlots.join(', ')}</p>
+                    </div>
+                    <div className="p-2 mb-3 pl-6 ring-gray-300 bg-white shadow-md rounded-lg">
                       <p className=" text-sm text-gray-700">Services Used:</p>
                       <ul className="list-disc list-inside ml-4">
                         {Object.entries(bookingDetails.servicesUsed).map(([service, used], index) => (
@@ -275,15 +291,15 @@ function BookingsListModal({ isOpen, onClose, userId, page, setPage }) {
                     </div>
                     <div className="p-2 mb-3 pl-6 ring-gray-300 bg-white shadow-md rounded-lg">
                       <p className="text-sm text-gray-700">Booking Date:</p>
-                      <p className="text-gray-600 font-semibold md:text-lg">{new Date(bookingDetails.bookingDate).toLocaleDateString()}</p>
+                      <p className="text-gray-600 font-semibold md:text-lg">{formatDate(bookingDetails.bookingDate)}</p>
                     </div>
                     <div className="p-2 mb-3 pl-6 ring-gray-300 bg-white shadow-md rounded-lg">
                       <p className="text-sm text-gray-700">Booked On:</p>
-                      <p className="text-gray-600 font-semibold md:text-lg">{new Date(bookingDetails.createdAt).toLocaleDateString()}</p>
+                      <p className="text-gray-600 font-semibold md:text-lg">{formatDate(bookingDetails.createdAt)}</p>
                     </div>
                     <div className="p-2 mb-3 pl-6 ring-gray-300 bg-white shadow-md rounded-lg">
                       <p className="text-sm text-gray-700">Amount:</p>
-                      <p className="text-gray-600 font-semibold md:text-lg">{bookingDetails.amount}</p>
+                      <p className="text-gray-600 font-semibold md:text-lg">Rs {bookingDetails.amount}</p>
                     </div>
                   </div>
                 </div>
@@ -307,7 +323,7 @@ function BookingsListModal({ isOpen, onClose, userId, page, setPage }) {
                             onClick={isSmallScreen ? () => { handleGetBookingDetails(booking._id) } : null}
                           >
                             <div className="flex items-center justify-between w-full">
-                              <div className="text-gray-700 font-semibold p-1 w-1/4 md:w-1/4 text-sm text-center">{new Date(booking.bookingDate).toLocaleDateString()}</div>
+                              <div className="text-gray-700 font-semibold p-1 w-1/4 md:w-1/4 text-sm text-center">{formatDate(booking.bookingDate)}</div>
                               <div className="text-gray-700 font-semibold p-1 w-1/4 md:w-1/4 text-sm text-center">{booking.selectedSlots.length}</div>
                               <div className="text-gray-700 font-semibold p-1 w-1/4 md:w-1/4 text-sm text-center">{booking.amount}</div>
                               <div className={`text-gray-700 font-semibold p-1 w-1/4 md:w-1/4 text-sm text-center ${booking.bookingStatus === 'cancelled' ? `text-red-800` : null} `}>{booking.bookingStatus}</div>
@@ -346,9 +362,12 @@ function BookingsListModal({ isOpen, onClose, userId, page, setPage }) {
               </>
             )}
           </ModalBody>
-          <ModalFooter>
+          <div className='flex space-x-7 justify-between m-5'>
+            <div className="">
+              {bookingDetails && <Button onClick={manageGoBack}>Go back</Button>}
+            </div>
             <Button onClick={manageCloseOfModal}>Cancel</Button>
-          </ModalFooter>
+          </div>
         </ModalContent>
       </Modal>
     </>

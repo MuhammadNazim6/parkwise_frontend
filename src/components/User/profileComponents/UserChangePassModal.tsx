@@ -23,9 +23,6 @@ const UserChangePassModal = ({ isOpen, onClose, userId, userEmail }) => {
   const { toast } = useToast()
   const [checkPassword, { isLoading: isCheckLoading }] = useCheckUserPasswordMutation()
   const [changePassword, { isLoading }] = useComChangePasswordMutation()
-  console.log(userId);
-  console.log(userEmail);
-  
 
   return (
     <div className="">

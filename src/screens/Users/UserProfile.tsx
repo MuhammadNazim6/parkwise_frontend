@@ -5,7 +5,7 @@ import * as Yup from "yup";
 import Lottie from 'lottie-react'
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '@/redux/store';
-import { useUpdateProfileMutation, useFetchUserProfilePicMutation } from '@/redux/slices/userApiSlice';
+import { useUpdateProfileMutation, useFetchUserProfilePicMutation, useGetUserDetailsMutation } from '@/redux/slices/userApiSlice';
 import { setCredentials } from '@/redux/slices/authSlice';
 import boxLoader from '../../assets/Animation/boxLoader.json'
 import profile_icon from '../../assets/Images/profile-icon.jpg'
@@ -17,6 +17,7 @@ import { useProviderCheckOtpMutation } from '@/redux/slices/providerSlice';
 import OtpModal from '@/components/User/profileComponents/userProfileOtpModal';
 import { MdOutlinePassword } from "react-icons/md";
 import UserChangePassModal from '@/components/User/profileComponents/UserChangePassModal';
+import UserWalletModal from '@/components/User/profileComponents/UserWalletModal';
 
 
 
@@ -27,14 +28,18 @@ function UserProfile() {
   const [updateProfile, { isLoading }] = useUpdateProfileMutation()
   const [editProfile, setEditProfile] = useState(false)
   const [profileImage, setProfileImage] = useState(profile_icon)
+  const [userDetails, setUserDetails] = useState()
   const [addedFile, setAddedFile] = useState(null)
   const [changedImage, setChangedImage] = useState(null)
   const profileInputRef = useRef(null)
+
   const [getProfilePic] = useFetchUserProfilePicMutation()
+  const [getUserDetails] = useGetUserDetailsMutation()
   const { toast } = useToast()
   const { isOpen: isBookingsModalOpen, onOpen: openBookingsModal, onClose: closeBookingsModal } = useDisclosure()
   const { isOpen: isOtpModalOpen, onOpen: openOtpModal, onClose: closeOtpModal } = useDisclosure()
   const { isOpen: isOpenChangePassModal, onOpen: openChangePassModal, onClose: closeChangePassModal } = useDisclosure()
+  const { isOpen: isOpenWalletModal, onOpen: openWalletModal, onClose: closeWalletModal } = useDisclosure()
 
   const [sendOtp, { isLoading: isLoadingOtpSent }] = useProviderVerificationMutation()
   const [checkOtp] = useProviderCheckOtpMutation()
@@ -47,19 +52,26 @@ function UserProfile() {
 
   const [bookingsPage, setBookingsPage] = useState(1)
 
-  const handleBookingListModalOpen = () => {
-    setBookingListOpen(true)
-    openBookingsModal()
-  }
+  // const handleBookingListModalOpen = () => {
+  //   setBookingListOpen(true)
+  //   openBookingsModal()
+  // }
 
   useEffect(() => {
     fetchUserProfilePic()
+    fetchUserDetails()
   }, [userInfo])
 
   const fetchUserProfilePic = async () => {
     const response = await getProfilePic(userInfo.id).unwrap()
     if (response.success) {
       setProfileImage(response.data)
+    }
+  }
+  const fetchUserDetails = async () => {
+    const response = await getUserDetails(userInfo.id).unwrap()
+    if (response.success) {
+      setUserDetails(response.data)
     }
   }
 
@@ -250,7 +262,7 @@ function UserProfile() {
             </div>
             <div className="flex bg-primary-blue justify-between m-4 p-2 rounded-lg shadow-xl">
               <div onClick={openBookingsModal} className='w-1/3 font-extrabold text-center p-4 m-2 rounded-lg hover:text-black text-gray-700'><span className='text-2xl cursor-pointer'>2</span><p className='text-sm cursor-pointer text-nowrap' >Bookings</p> </div>
-              <div className='w-1/3 font-extrabold text-center p-4 m-2 rounded-lg hover:text-black text-gray-700'><span className='text-2xl cursor-pointer'>Rs 400</span><p className='text-sm cursor-pointer text-nowrap'>Wallet balance</p> </div>
+              <div onClick={openWalletModal} className='w-1/3 font-extrabold text-center p-4 m-2 rounded-lg hover:text-black text-gray-700'><span className='md:text-2xl text-sm cursor-pointer'>Rs {userDetails && userDetails.wallet.balance}</span><p className='text-sm cursor-pointer text-nowrap'>Wallet</p> </div>
               <div className='w-1/3 font-extrabold text-center p-4 m-2 rounded-lg hover:text-black text-gray-700'><span className='text-2xl cursor-pointer'>33</span><p className='text-sm cursor-pointer text-nowrap'>Reviews</p> </div>
             </div>
             <div className="flex bg-gray-100 justify-between m-5 rounded-lg shadow-md transition-transform hover:scale-[1.01] ease-in-out duration-300">
@@ -265,6 +277,7 @@ function UserProfile() {
       {bookingListOpen && (<BookingsListModal isOpen={isBookingsModalOpen} onClose={closeBookingsModal} userId={userInfo.id} page={bookingsPage} setPage={setBookingsPage} />)}
       <OtpModal isOpen={isOtpModalOpen} onClose={closeOtpModal} userEnteredOtp={userEnteredOtp} setUserEnteredOtp={setUserEnteredOtp} checkOtpFn={checkOtpFn} otpErr={otpErr} isLoadingOtpSent={isLoadingOtpSent} />
       <UserChangePassModal isOpen={isOpenChangePassModal} onClose={closeChangePassModal} userId={userInfo.id} userEmail={userInfo.email} />
+      <UserWalletModal isOpen={isOpenWalletModal} onClose={closeWalletModal} />
     </div>
   )
 }

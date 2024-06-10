@@ -216,6 +216,17 @@ export const userApiSlice = apiSlice.injectEndpoints({
       onQueryStarted: onQueryStartedErrorToast
     }),
 
+    getUserDetails: builder.mutation({
+      query: (userId) => ({
+        url: `${USER_URL}/userDetails/${userId}`,
+        method: "GET",
+        data: {},
+        params: {},
+        headers: {},
+      }),
+      onQueryStarted: onQueryStartedErrorToast
+    }),
+
 
 
   }),
@@ -240,5 +251,6 @@ export const {
   useCancelBookingMutation,
   useConfirmSlotAvailabilityMutation,
   useGetFilledSlotsMutation,
-  useRescheduleSlotsMutation
+  useRescheduleSlotsMutation,
+  useGetUserDetailsMutation
 } = userApiSlice;
