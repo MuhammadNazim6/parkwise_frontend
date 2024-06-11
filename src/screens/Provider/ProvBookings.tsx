@@ -17,6 +17,7 @@ import { useToast } from "@/components/ui/use-toast"
 import { RootState } from '@/redux/store'
 import { useFetchParkingLotsBookingsMutation } from '@/redux/slices/providerSlice'
 import ProvBookingDetailsAnim from '../../assets/Animation/ProvBookingDetailsAnim.json'
+import noBookingsIng from '../../assets/Images/noBookingsIng.png'
 
 function ProvBookings() {
 
@@ -74,7 +75,7 @@ function ProvBookings() {
             <div className="text-gray-700 font-semibold  w-1/5 p-1 text-center hidden lg:block">User</div>
             <div className="text-gray-700 font-semibold  w-1/4 md:w-1/4 lg:w-1/5 p-1 text-center hidden md:block">Details</div>
           </div>
-          {bookings && (
+          {(bookings && bookings.length)? (
             bookings.map((booking) => (
             <div key={booking._id} className="flex bg-gray-100 w-full">
               <div className="flex-grow">
@@ -90,6 +91,10 @@ function ProvBookings() {
               </div>
             </div>
           ))
+          ) : (
+            <div className="flex justify-center items-start h-full">
+              <img src={noBookingsIng} className='h-1/2 mt-20' />
+            </div>
           )}
         </div>
 

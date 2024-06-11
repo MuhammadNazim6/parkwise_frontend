@@ -18,6 +18,7 @@ import OtpModal from '@/components/User/profileComponents/userProfileOtpModal';
 import { MdOutlinePassword } from "react-icons/md";
 import UserChangePassModal from '@/components/User/profileComponents/UserChangePassModal';
 import UserWalletModal from '@/components/User/profileComponents/UserWalletModal';
+import { Wallet } from 'lucide-react';
 
 
 
@@ -51,11 +52,6 @@ function UserProfile() {
   const [bookingListOpen, setBookingListOpen] = useState(true)
 
   const [bookingsPage, setBookingsPage] = useState(1)
-
-  // const handleBookingListModalOpen = () => {
-  //   setBookingListOpen(true)
-  //   openBookingsModal()
-  // }
 
   useEffect(() => {
     fetchUserProfilePic()
@@ -263,7 +259,7 @@ function UserProfile() {
             <div className="flex bg-primary-blue justify-between m-4 p-2 rounded-lg shadow-xl">
               <div onClick={openBookingsModal} className='w-1/3 font-extrabold text-center p-4 m-2 rounded-lg hover:text-black text-gray-700'><span className='text-2xl cursor-pointer'>2</span><p className='text-sm cursor-pointer text-nowrap' >Bookings</p> </div>
               <div onClick={openWalletModal} className='w-1/3 font-extrabold text-center p-4 m-2 rounded-lg hover:text-black text-gray-700'><span className='md:text-2xl text-sm cursor-pointer'>Rs {userDetails && userDetails.wallet.balance}</span><p className='text-sm cursor-pointer text-nowrap'>Wallet</p> </div>
-              <div className='w-1/3 font-extrabold text-center p-4 m-2 rounded-lg hover:text-black text-gray-700'><span className='text-2xl cursor-pointer'>33</span><p className='text-sm cursor-pointer text-nowrap'>Reviews</p> </div>
+              <div className='w-1/3 font-extrabold text-center p-4 m-2 rounded-lg hover:text-black text-gray-700'><span className='text-2xl cursor-pointer'>33</span><p className='text-sm cursor-pointer text-nowrap'>Messages</p> </div>
             </div>
             <div className="flex bg-gray-100 justify-between m-5 rounded-lg shadow-md transition-transform hover:scale-[1.01] ease-in-out duration-300">
               <div className='w-full text-black flex justify-center items-center space-x-1 p-1 m-2 rounded-lg cursor-pointer' onClick={handleSetEditProfile}><RiImageEditLine /><span className='text-md' >Edit profile</span></div>
@@ -277,7 +273,7 @@ function UserProfile() {
       {bookingListOpen && (<BookingsListModal isOpen={isBookingsModalOpen} onClose={closeBookingsModal} userId={userInfo.id} page={bookingsPage} setPage={setBookingsPage} />)}
       <OtpModal isOpen={isOtpModalOpen} onClose={closeOtpModal} userEnteredOtp={userEnteredOtp} setUserEnteredOtp={setUserEnteredOtp} checkOtpFn={checkOtpFn} otpErr={otpErr} isLoadingOtpSent={isLoadingOtpSent} />
       <UserChangePassModal isOpen={isOpenChangePassModal} onClose={closeChangePassModal} userId={userInfo.id} userEmail={userInfo.email} />
-      <UserWalletModal isOpen={isOpenWalletModal} onClose={closeWalletModal} />
+      {userDetails && <UserWalletModal isOpen={isOpenWalletModal} onClose={closeWalletModal} wallet={userDetails.wallet} />}
     </div>
   )
 }

@@ -89,6 +89,9 @@ module.exports = {
         "caret-blink": "caret-blink 1.25s ease-out infinite",
         shake: 'shake 0.5s cubic-bezier(0.4, 0.0, 0.2, 1)',
       },
+        screens: {
+          xs: '475px', // Define xs as 475px or any value you need
+        },
     },
   },
   plugins: [
