@@ -20,7 +20,7 @@ import { RootState } from '@/redux/store';
 import { useSelector } from 'react-redux';
 import { TbSend } from "react-icons/tb";
 import { TbSend2 } from "react-icons/tb";
-import { useFetchConversationsMutation, useFetchMessagesMutation } from '@/redux/slices/commonSlice';
+import { useFetchConnectionsMutation, useFetchMessagesMutation } from '@/redux/slices/commonSlice';
 
 
 
@@ -28,7 +28,7 @@ import { useFetchConversationsMutation, useFetchMessagesMutation } from '@/redux
 function UserChats() {
   const [showSearchBar, setShowSearchBar] = useState(false)
   const { isOpen, onToggle } = useDisclosure()
-  const [getConversations, { isLoading: getConversationsLoading }] = useFetchConversationsMutation()
+  const [getConnections, { isLoading: getConnectionsLoading }] = useFetchConnectionsMutation()
   const [getMessages, { isLoading: getMessagesLoading }] = useFetchMessagesMutation()
   const users = [
     {
@@ -105,7 +105,7 @@ function UserChats() {
     { senderId: '123', recieverId: '456', message: '.' },
   ])
 
-  const [conversations, setConversations] = useState([])
+  const [connections, setConnections] = useState([])
   const [messages, setMessages] = useState([])
   const [recieverId, setRecieverId] = useState('')
 
@@ -135,13 +135,15 @@ function UserChats() {
   }, [])
 
   useEffect(() => {
-    handleFetchConversations()
-  })
+    handleFetchConnections()
+  }, [])
 
-  const handleFetchConversations = async () => {
-    const response = await getConversations(userInfo.id).unwrap()
+  const handleFetchConnections = async () => {
+    console.log('Inside');
+    
+    const response = await getConnections(userInfo.id).unwrap()
     if (response.success) {
-      setConversations(response.data)
+      setConnections(response.data)
     }
   }
   const handleFetchMessages = async () => {
@@ -217,23 +219,23 @@ function UserChats() {
           </div>
         </Collapse>
 
-        {users.map((user, index) => {
+        {connections.map((user, index) => {
           return (
             <div className="mt-1 w-ful md:w-full lg:w-9/12" onClick={openDrawer}>
               <div className="flex lg:ml-1 w-full xs:w-8/12 sm:w-7/12 md:w-full justify-start">
                 <div className="p-3 w-1/5">
                   <Wrap>
                     <WrapItem>
-                      <Avatar name={user.name} src='https://bit.ly/tioluwani-kolawole' />
+                      <Avatar name={user.secondPersonId.parkingName} src='https://bit.ly/tioluwani-kolawole' />
                     </WrapItem>
                   </Wrap>
                 </div>
                 <div className=" w-3/5 pt-2">
                   <div className="font-semibold">
-                    {user.name}
+                    {user.secondPersonId.parkingName}
                   </div>
                   <div className="text-sm">
-                    {user.message}
+                    {user.lastMessage}
                   </div>
                 </div>
                 {index % 2 == 0 && <div className="p-1 flex justify-center items-center w-1/5">
@@ -385,9 +387,9 @@ function UserChats() {
           <form className='w-full ml-3 relative' onSubmit={enterButtonSend}>
             <input type='text' value={text} onChange={(e) => setText(e.target.value)} className='w-11/12 rounded-lg shadow-xl ' />
           </form>
-          <TbSend2 className={`absolute right-20 bottom-6 text-2xl transition-opacity ${!text.length ? 'opacity-0' : 'opacity-100'}`}
+          <TbSend2 className={`absolute right-20 bottom-6 text-2xl transition-opacity cursor-pointer ${!text.length ? 'opacity-0' : 'opacity-100'}`}
           />
-          <TbSend onClick={addToMessages} className={`absolute right-20 bottom-6 text-2xl transition-opacity ${text.length ? 'opacity-0' : 'opacity-100'}`}
+          <TbSend onClick={addToMessages} className={`absolute right-20 bottom-6 text-2xl transition-opacity cursor-pointer ${text.length ? 'opacity-0' : 'opacity-100'}`}
           />
         </div>
         <div ref={pageEndRef} />

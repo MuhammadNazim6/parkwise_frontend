@@ -228,7 +228,6 @@ export const userApiSlice = apiSlice.injectEndpoints({
     }),
 
 
-
   }),
 });
 
