@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import { IoSearchOutline } from "react-icons/io5";
 import { IoMdClose } from "react-icons/io";
 import { Avatar, AvatarBadge, AvatarGroup, Wrap, WrapItem, Divider, Center, useDisclosure, Collapse, Badge, Button, Input } from '@chakra-ui/react'
@@ -15,6 +15,12 @@ import {
 import { IoChevronBackSharp } from "react-icons/io5";
 import { IoMdCall } from "react-icons/io";
 import { FaVideo } from "react-icons/fa";
+import { socket } from '@/App';
+import { RootState } from '@/redux/store';
+import { useSelector } from 'react-redux';
+import { TbSend } from "react-icons/tb";
+import { TbSend2 } from "react-icons/tb";
+import { useFetchConversationsMutation, useFetchMessagesMutation } from '@/redux/slices/commonSlice';
 
 
 
@@ -22,6 +28,8 @@ import { FaVideo } from "react-icons/fa";
 function UserChats() {
   const [showSearchBar, setShowSearchBar] = useState(false)
   const { isOpen, onToggle } = useDisclosure()
+  const [getConversations, { isLoading: getConversationsLoading }] = useFetchConversationsMutation()
+  const [getMessages, { isLoading: getMessagesLoading }] = useFetchMessagesMutation()
   const users = [
     {
       name: 'Sabith muhammad',
@@ -80,6 +88,96 @@ function UserChats() {
     },
   ];
 
+  const [messages1, setMessages1] = useState([
+    { senderId: '123', recieverId: '456', message: 'Hey my first message' },
+    { senderId: '456', recieverId: '123', message: 'Hey my first message' },
+    { senderId: '456', recieverId: '123', message: 'Hey my first message' },
+    { senderId: '456', recieverId: '123', message: 'Hey my first message' },
+    { senderId: '123', recieverId: '456', message: 'Hey my first message' },
+    { senderId: '456', recieverId: '123', message: 'Hey my first message' },
+    { senderId: '123', recieverId: '456', message: 'Hey my first message' },
+    { senderId: '123', recieverId: '456', message: 'Hey my first message' },
+    { senderId: '123', recieverId: '456', message: 'Hey my first message' },
+    { senderId: '123', recieverId: '456', message: 'Hey my first message' },
+    { senderId: '123', recieverId: '456', message: 'Hey my first message' },
+    { senderId: '123', recieverId: '456', message: 'Hey my first message' },
+    { senderId: '123', recieverId: '456', message: 'Hey my first message' },
+    { senderId: '123', recieverId: '456', message: '.' },
+  ])
+
+  const [conversations, setConversations] = useState([])
+  const [messages, setMessages] = useState([])
+  const [recieverId, setRecieverId] = useState('')
+
+  const [text, setText] = useState('')
+  const { userInfo } = useSelector((state: RootState) => state.auth)
+  const messagesEndRef = useRef(null);
+  const pageEndRef = useRef(null);
+
+
+  useEffect(() => {
+    // scrollToPageBottom()
+
+    setTimeout(() => {
+      scrollToBottomChat()
+    }, 500)
+    socket.emit('chatMessage', { sender: '6651a376aea668ffe8262ea3', recipient: '6651a376aea668ffe8262ea3', message: 'Helllo my dear friends i am user' });
+    socket.emit('enterChat', userInfo.id);
+
+    // socket.on('notification', (data) => {
+    //   alert(data.message)
+    // })
+
+    return () => {
+      socket.emit('exitChat', userInfo.id);
+    }
+
+  }, [])
+
+  useEffect(() => {
+    handleFetchConversations()
+  })
+
+  const handleFetchConversations = async () => {
+    const response = await getConversations(userInfo.id).unwrap()
+    if (response.success) {
+      setConversations(response.data)
+    }
+  }
+  const handleFetchMessages = async () => {
+    setRecieverId('recievrId')
+    const data = {
+      senderId: userInfo.id,
+      recieverId: recieverId
+    }
+
+    const response = await getMessages(data).unwrap()
+    if (response.success) {
+      setMessages(response.data)
+    }
+  }
+
+  const scrollToBottomChat = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+  const scrollToPageBottom = () => {
+    pageEndRef.current.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  const enterButtonSend = (e) => {
+    e.preventDefault()
+    addToMessages()
+  }
+  const addToMessages = () => {
+    if (text.length) {
+      setMessages((prev) => [...prev, { senderId: '123', recieverId: '456', message: text }])
+      setText('')
+    }
+    setTimeout(() => {
+      scrollToBottomChat()
+    })
+  }
+
   const isFullScreen = useBreakpointValue({ base: true, md: false });
   const { isOpen: isOpenDrawer, onOpen: openDrawer, onClose: closeDrawer } = useDisclosure()
   const btnRef = useRef()
@@ -89,10 +187,10 @@ function UserChats() {
   }
 
   return (
-    <div className='flex w-full'>
-      <div className='w-full md:w-5/12'>
-        <div className="flex w-full">
-          <div className="flex justify-between p-4 w-full bg-blue-50 z-10 md:w-full">
+    <div className='flex h-screen w-full md:px-8 lg:px-10 xl:px-16 pt-2'>
+      <div className='w-full md:w-5/12 overflow-y-scroll hide-scrollbar rounded-l-xl'>
+        <div className="flex w-full sticky top-0 z-10">
+          <div className="flex justify-between p-3 w-full bg--200 glass z-10 md:w-full">
             <div className="flex w-2/3 space-x-2">
               <Wrap>
                 <WrapItem>
@@ -102,7 +200,7 @@ function UserChats() {
               <div className="w-2/3 font-medium">Welcome Back,<p className='text-[16px] font-semibold'> Nazim!</p></div>
             </div>
             <div className="" onClick={onToggle}>
-              <div className="rounded-full bg-primary-blue h-11 w-11 flex justify-center items-center text-xl">
+              <div className="rounded-full bg-primary-blue h-11 w-11 flex justify-center items-center text-xl cursor-pointer">
                 <button
                   className={`text-2xl text-white transition-transform ease-in-out ${isOpen ? 'active:animate-spin' : ''}`}
                   onClick={toggleSearchBar}
@@ -113,8 +211,8 @@ function UserChats() {
             </div>
           </div>
         </div>
-        <Collapse in={isOpen} animateOpacity className='sticky top-0 z-10 md:w-full'>
-          <div className="flex justify-between p-5 w-full bg-blue-50 shadow-lg space-x-3">
+        <Collapse in={isOpen} animateOpacity className='sticky bg--200 glass top-0 z-10 md:w-full'>
+          <div className="flex justify-between p-5 w-full glass shadow-lg space-x-3">
             <input type='text' className='w-full h-9 rounded-2xl' placeholder='Search your chat..' />
           </div>
         </Collapse>
@@ -189,7 +287,7 @@ function UserChats() {
                         </div>
                         <div className="chat-bubble bg-blue-600">Helloooo</div>
                       </div>
-                      
+
                       <div className="chat chat-start">
                         <div className="chat-image avatar">
                           <div className="w-10 rounded-full">
@@ -198,19 +296,19 @@ function UserChats() {
                         </div>
                         <div className="chat-bubble bg-blue-600">It was you who would bring balance to the Force</div>
                       </div>
- 
+
                       <div className="chat chat-end">
                         <div className="chat-image avatar">
                           <div className="w-10 rounded-full">
                             <img alt="Tailwind CSS chat bubble component" src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg" />
                           </div>
                         </div>
-                       
+
                         <div className="chat-bubble">I hate you!</div>
-                      
+
                       </div>
-                      
-                   
+
+
                       <div className="chat chat-start">
                         <div className="chat-image avatar">
                           <div className="w-10 rounded-full">
@@ -219,7 +317,7 @@ function UserChats() {
                         </div>
                         <div className="chat-bubble bg-blue-600">It was you who would bring balance to the Force</div>
                       </div>
-                    
+
                       <div className="chat chat-end">
                         <div className="chat-image avatar">
                           <div className="w-10 rounded-full">
@@ -237,10 +335,6 @@ function UserChats() {
                       </div>
                     </DrawerBody>
                     <DrawerFooter>
-                      {/* <Button variant='outline' mr={3} onClick={closeDrawer}>
-                        Cancel
-                      </Button> */}
-                      {/* <Button colorScheme='blue'>Save</Button> */}
                     </DrawerFooter>
                   </DrawerContent>
                 </Drawer>}
@@ -250,10 +344,56 @@ function UserChats() {
           )
         })}
       </div>
-      <div className="h-screen bg-yellow-300 w-7/12 hidden md:block">
-        Hello
+      <div className="w-7/12 hidden md:block overflow-y-scroll hide-scrollbar outline outline-slate-200 outline-1 rounded-r-xl max-h-[700px]">
+        <div className="bg-blue-200 shadow-lg glass w-full sticky top-0 z-10">
+          <div className='flex items-center space-x-3 p-4 '>
+
+            <Wrap>
+              <WrapItem>
+                <Avatar size={'sm'} name='Shohail muhd' src='https://bit.ly/tioluwani-kolawole' />
+              </WrapItem>
+            </Wrap>
+
+            <div className='flex-grow'>
+              <p className='text-md font-semibold'>Shohail muhd</p>
+              <p className='text-xs text-gray-400 flex items-center'>
+                Active now
+                <span className='h-2 w-2 ml-2 mt-[1px] rounded-full bg-[#5cb63e]'></span>
+              </p>
+            </div>
+
+            <div className='flex space-x-9 justify-end'>
+              <IoMdCall className='text-2xl cursor-pointer' />
+              <FaVideo className='text-2xl cursor-pointer' />
+            </div>
+          </div>
+        </div>
+
+        <div className="p-5">
+          {messages.map((msg) => {
+            return (
+              <>
+                <div className={`chat ${msg.senderId === '123' ? 'chat-end' : 'chat-start'} mt-2 `}>
+                  <div className={`chat-bubble rounded-lg glass shadow-xl text-sm  text-white ${msg.senderId === '123' ? 'bg-blue-500' : 'bg-blue-800'}`}>{msg.message}</div>
+                </div>
+              </>
+            )
+          })}
+          <div className='h-4' ref={messagesEndRef} />
+        </div>
+        <div className="fixed bottom-0 right-0 bg-white h-14 rounded-md w-7/12">
+          <form className='w-full ml-3 relative' onSubmit={enterButtonSend}>
+            <input type='text' value={text} onChange={(e) => setText(e.target.value)} className='w-11/12 rounded-lg shadow-xl ' />
+          </form>
+          <TbSend2 className={`absolute right-20 bottom-6 text-2xl transition-opacity ${!text.length ? 'opacity-0' : 'opacity-100'}`}
+          />
+          <TbSend onClick={addToMessages} className={`absolute right-20 bottom-6 text-2xl transition-opacity ${text.length ? 'opacity-0' : 'opacity-100'}`}
+          />
+        </div>
+        <div ref={pageEndRef} />
       </div>
     </div>
+
   )
 }
 

@@ -58,6 +58,10 @@ function Navbar() {
         {userInfo ? (<NavLink to='/user/profile' style={({ isActive }) => (isActive ? activeStyle : undefined)}>
           <li className='p-4 ml-3 cursor-pointer text-md w-28'>Profile</li>
         </NavLink>) : null}
+        {userInfo ? (<NavLink to='/user/chats' style={({ isActive }) => (isActive ? activeStyle : undefined)}>
+          <li className='p-4 ml-3 cursor-pointer text-md w-28'>Chats</li>
+        </NavLink>) : null}
+
         {userInfo ? (
           <AlertDialog>
             <AlertDialogTrigger>   <li className='text-md w-28' >Logout </li>

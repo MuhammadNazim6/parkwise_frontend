@@ -3,6 +3,7 @@ import { RiImageEditLine } from "react-icons/ri";
 import { Formik, Field, FieldArray, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import Lottie from 'lottie-react'
+import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '@/redux/store';
 import { useUpdateProfileMutation, useFetchUserProfilePicMutation, useGetUserDetailsMutation } from '@/redux/slices/userApiSlice';
@@ -18,8 +19,6 @@ import OtpModal from '@/components/User/profileComponents/userProfileOtpModal';
 import { MdOutlinePassword } from "react-icons/md";
 import UserChangePassModal from '@/components/User/profileComponents/UserChangePassModal';
 import UserWalletModal from '@/components/User/profileComponents/UserWalletModal';
-import { Wallet } from 'lucide-react';
-
 
 
 function UserProfile() {
@@ -259,7 +258,7 @@ function UserProfile() {
             <div className="flex bg-primary-blue justify-between m-4 p-2 rounded-lg shadow-xl">
               <div onClick={openBookingsModal} className='w-1/3 font-extrabold text-center p-4 m-2 rounded-lg hover:text-black text-gray-700'><span className='text-2xl cursor-pointer'>2</span><p className='text-sm cursor-pointer text-nowrap' >Bookings</p> </div>
               <div onClick={openWalletModal} className='w-1/3 font-extrabold text-center p-4 m-2 rounded-lg hover:text-black text-gray-700'><span className='md:text-2xl text-sm cursor-pointer'>Rs {userDetails && userDetails.wallet.balance}</span><p className='text-sm cursor-pointer text-nowrap'>Wallet</p> </div>
-              <div className='w-1/3 font-extrabold text-center p-4 m-2 rounded-lg hover:text-black text-gray-700'><span className='text-2xl cursor-pointer'>33</span><p className='text-sm cursor-pointer text-nowrap'>Messages</p> </div>
+              <Link to='/user/chats' className='w-1/3 font-extrabold text-center p-4 m-2 rounded-lg hover:text-black text-gray-700'><span className='text-2xl cursor-pointer'>33</span><p className='text-sm cursor-pointer text-nowrap'>Messages</p> </Link>
             </div>
             <div className="flex bg-gray-100 justify-between m-5 rounded-lg shadow-md transition-transform hover:scale-[1.01] ease-in-out duration-300">
               <div className='w-full text-black flex justify-center items-center space-x-1 p-1 m-2 rounded-lg cursor-pointer' onClick={handleSetEditProfile}><RiImageEditLine /><span className='text-md' >Edit profile</span></div>

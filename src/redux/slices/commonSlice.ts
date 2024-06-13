@@ -40,11 +40,35 @@ export const commonApiSLice = apiSlice.injectEndpoints({
       }),
     }),
 
+    fetchConversations: builder.mutation({
+      query: (id) => ({
+        url: `${COMMON_URL}/getConversations/${id}`,
+        method: 'GET',
+        data: {},
+        params: {},
+        headers: {},
+      }),
+    }),
+
+    fetchMessages: builder.mutation({
+      query: (data) => ({
+        url: `${COMMON_URL}/getMessages?senderId=${data.senderId}&recieverId=${data.recieverId}`,
+        method: 'GET',
+        data: {},
+        params: {},
+        headers: {},
+      }),
+    }),
+
+
+
   })
 })
 
 export const {
   useCommonResendOtpMutation,
   useCommonLoginMutation,
-  useFetchBookingDetailsMutation
+  useFetchBookingDetailsMutation,
+  useFetchConversationsMutation,
+  useFetchMessagesMutation
 } = commonApiSLice

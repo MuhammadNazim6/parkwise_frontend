@@ -31,7 +31,7 @@ function UserRoutes() {
         <Route path='find/lotDetails/:id' element={<UserParkingLotDetails />} />
         <Route element={<UserProtect />}>
           <Route path='profile' element={<UserProfile />} />
-          <Route path='profile/chats' element={<UserChats />} />
+          <Route path='chats' element={<UserChats/>} />
         </Route>
 
       </Route>
