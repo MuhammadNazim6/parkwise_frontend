@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import { useGetLotDetailsMutation, useGetBookedSlotsMutation } from '@/redux/slices/userApiSlice';
 import { Calendar } from "@/components/ui/calendar"
 import { Popover, PopoverContent, PopoverTrigger, } from "@/components/ui/popover"
@@ -17,6 +17,7 @@ import UserBookingModal from '@/components/User/UserBookingModal';
 import { SlotSkeleton } from '@/components/User/SlotSkeleton';
 import Lottie from 'lottie-react';
 import checkAvalblAnim from '../../assets/Animation/checkAvalblAnim.json'
+import { HiOutlineChatBubbleLeftRight } from "react-icons/hi2";
 
 
 function UserParkingLotDetails() {
@@ -120,7 +121,11 @@ function UserParkingLotDetails() {
                 <p className="text-gray-900">{lotDetails.address.city}</p>
                 <p className="text-gray-900">{lotDetails.address.state}</p>
               </div>
-
+              <div className="mt-4 ml-5">
+                <Link to={`/user/chats?ID=${id}`}   className="flex justify-center items-center space-x-2 text-md bg-blue-100 p-3 cursor-pointer rounded-md">
+                  <span > Chat now</span> <HiOutlineChatBubbleLeftRight />
+                </Link>
+              </div>
               <div className="flex flex-col space-y-2 text">
                 {lotDetails.evChargeFacilityPrice && (
                   <div className="flex items-center space-x-2 bg-blue-50 p-1 rounded-md_dis shadow-sm hover:bg-blue-100 transition duration-300">

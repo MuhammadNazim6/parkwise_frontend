@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react'
 import { IoSearchOutline } from "react-icons/io5";
 import { IoMdClose } from "react-icons/io";
+import { useSearchParams } from 'react-router-dom';
 import { Avatar, AvatarBadge, AvatarGroup, Wrap, WrapItem, Divider, Center, useDisclosure, Collapse, Badge, Button, Input } from '@chakra-ui/react'
 import {
   Drawer,
@@ -20,94 +21,33 @@ import { RootState } from '@/redux/store';
 import { useSelector } from 'react-redux';
 import { TbSend } from "react-icons/tb";
 import { TbSend2 } from "react-icons/tb";
-import { useFetchConnectionsMutation, useFetchMessagesMutation } from '@/redux/slices/commonSlice';
-
-
+import { useFetchConnectionsMutation, useFetchMessagesMutation, useSendSaveMessageMutation } from '@/redux/slices/commonSlice';
+import { useGetLotDetailsMutation } from '@/redux/slices/userApiSlice';
 
 
 function UserChats() {
+  const [searchParams] = useSearchParams();
+  const ID = searchParams.get('ID');
+
+  const SenderReceiverType = Object.freeze({
+    USER: 'User',
+    PROVIDER: 'Provider'
+  });
+  const messageType = Object.freeze({
+    TEXT: 'text',
+  });
+
   const [showSearchBar, setShowSearchBar] = useState(false)
   const { isOpen, onToggle } = useDisclosure()
   const [getConnections, { isLoading: getConnectionsLoading }] = useFetchConnectionsMutation()
   const [getMessages, { isLoading: getMessagesLoading }] = useFetchMessagesMutation()
-  const users = [
-    {
-      name: 'Sabith muhammad',
-      message: 'Wanna grab a coffee???',
-      avatar: 'https://bit.ly/tioluwani-kolawole',
-    },
-    {
-      name: 'John Doe',
-      message: 'Hey, how are you?',
-      avatar: 'https://bit.ly/tioluwani-kolawole',
-    },
-    {
-      name: 'Jane Smith',
-      message: 'Are you coming to the meeting?',
-      avatar: 'https://bit.ly/ryan-florence',
-    },
-    {
-      name: 'Alex Johnson',
-      message: 'Let’s catch up later!',
-      avatar: 'https://bit.ly/kent-c-dodds',
-    },
-    {
-      name: 'Emily Davis',
-      message: 'Good morning!',
-      avatar: 'https://bit.ly/prosper-baba',
-    },
-    {
-      name: 'Michael Brown',
-      message: 'Have you seen the latest movie?',
-      avatar: 'https://bit.ly/sage-adebayo',
-    },
-    {
-      name: 'Sophia Wilson',
-      message: 'What time is the party?',
-      avatar: 'https://bit.ly/andrew-codes',
-    },
-    {
-      name: 'David Garcia',
-      message: 'How was your weekend?',
-      avatar: 'https://bit.ly/dan-abramov',
-    },
-    {
-      name: 'Emma Martinez',
-      message: 'I love your new profile picture!',
-      avatar: 'https://bit.ly/code-beast',
-    },
-    {
-      name: 'William Anderson',
-      message: 'Let’s go for a hike!',
-      avatar: 'https://bit.ly/ken-wheeler',
-    },
-    {
-      name: 'Olivia Taylor',
-      message: 'Happy birthday!',
-      avatar: 'https://bit.ly/tim-neuenschwander',
-    },
-  ];
-
-  const [messages1, setMessages1] = useState([
-    { senderId: '123', recieverId: '456', message: 'Hey my first message' },
-    { senderId: '456', recieverId: '123', message: 'Hey my first message' },
-    { senderId: '456', recieverId: '123', message: 'Hey my first message' },
-    { senderId: '456', recieverId: '123', message: 'Hey my first message' },
-    { senderId: '123', recieverId: '456', message: 'Hey my first message' },
-    { senderId: '456', recieverId: '123', message: 'Hey my first message' },
-    { senderId: '123', recieverId: '456', message: 'Hey my first message' },
-    { senderId: '123', recieverId: '456', message: 'Hey my first message' },
-    { senderId: '123', recieverId: '456', message: 'Hey my first message' },
-    { senderId: '123', recieverId: '456', message: 'Hey my first message' },
-    { senderId: '123', recieverId: '456', message: 'Hey my first message' },
-    { senderId: '123', recieverId: '456', message: 'Hey my first message' },
-    { senderId: '123', recieverId: '456', message: 'Hey my first message' },
-    { senderId: '123', recieverId: '456', message: '.' },
-  ])
+  const [getLotDetails] = useGetLotDetailsMutation()
+  const [sendAndSaveMessage] = useSendSaveMessageMutation()
 
   const [connections, setConnections] = useState([])
   const [messages, setMessages] = useState([])
-  const [recieverId, setRecieverId] = useState('')
+  const [receiverId, setReceiverId] = useState('')
+  const [receiverDetails, setReceiverDetails] = useState({})
 
   const [text, setText] = useState('')
   const { userInfo } = useSelector((state: RootState) => state.auth)
@@ -116,22 +56,28 @@ function UserChats() {
 
 
   useEffect(() => {
-    // scrollToPageBottom()
-
     setTimeout(() => {
       scrollToBottomChat()
     }, 500)
-    socket.emit('chatMessage', { sender: '6651a376aea668ffe8262ea3', recipient: '6651a376aea668ffe8262ea3', message: 'Helllo my dear friends i am user' });
     socket.emit('enterChat', userInfo.id);
+    // socket.emit('chatMessage', { sender: '6651a376aea6684ffe8262ea3', recipient: '6651a376aea668ffe8262ea3', message: 'Helllo my dear friekknds i am user' });
 
-    // socket.on('notification', (data) => {
-    //   alert(data.message)
-    // })
+    socket.on('notification', (data) => {  //chatMessge needed here
+      // checking if the sender is in the cinversation
+      if (data.sender === receiverId) {
+        setMessages((prev) => [...prev, { senderId: data.sender, recieverId: data.recipient, message: data.message }])
+        setTimeout(() => {
+          scrollToBottomChat()
+        }, 100)
+        // should update the conversation also
+      } else {
+        // update the conversation here
+      }
 
+    })
     return () => {
       socket.emit('exitChat', userInfo.id);
     }
-
   }, [])
 
   useEffect(() => {
@@ -139,40 +85,73 @@ function UserChats() {
   }, [])
 
   const handleFetchConnections = async () => {
-    console.log('Inside');
-    
-    const response = await getConnections(userInfo.id).unwrap()
-    if (response.success) {
-      setConnections(response.data)
+    if (ID) {
+      setReceiverId(ID)
+      handleFetchMessages(ID)
+      const recieverProvider = await getLotDetails(ID).unwrap()
+      setReceiverDetails(recieverProvider.data)
+      const response = await getConnections(userInfo.id).unwrap()
+      if (response.success) {
+        const connectionExists = response.data.some((user) => user.secondPersonId._id === ID)
+        if (!connectionExists) {
+          setConnections([{ secondPersonId: { _id: ID, parkingName: recieverProvider.data.parkingName }, secondPersonType: 'Provider', lastMessage: 'dddd', updatedAt: '' }, ...response.data])
+        } else {
+          setConnections(response.data)
+        }
+      }
+    } else {
+      const response = await getConnections(userInfo.id).unwrap()
+      if (response.success) setConnections(response.data)
     }
   }
-  const handleFetchMessages = async () => {
-    setRecieverId('recievrId')
+
+  const reloadConnections = async () => {
+    const response = await getConnections(userInfo.id).unwrap()
+    if (response.success) setConnections(response.data)
+  }
+
+
+  const handleFetchMessages = async (recieverId) => {
+    setReceiverId(recieverId)
+    const recieverResponse = await getLotDetails(recieverId).unwrap()
+    setReceiverDetails(recieverResponse.data)
+
     const data = {
       senderId: userInfo.id,
       recieverId: recieverId
     }
-
     const response = await getMessages(data).unwrap()
     if (response.success) {
       setMessages(response.data)
     }
+    scrollToBottomChat()
   }
 
   const scrollToBottomChat = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  };
-  const scrollToPageBottom = () => {
-    pageEndRef.current.scrollIntoView({ behavior: 'smooth' });
   };
 
   const enterButtonSend = (e) => {
     e.preventDefault()
     addToMessages()
   }
-  const addToMessages = () => {
+
+  const addToMessages = async () => {
     if (text.length) {
-      setMessages((prev) => [...prev, { senderId: '123', recieverId: '456', message: text }])
+      setMessages((prev) => [...prev, { senderId: userInfo.id, recieverId: '456', message: text }])
+      socket.emit('chatMessage', { sender: userInfo.id, recipient: receiverId, message: text });
+
+      const data = {
+        senderId: userInfo.id,
+        senderType: SenderReceiverType.USER,
+        receiverId,
+        receiverType: SenderReceiverType.PROVIDER,
+        message: text,
+        messageType: messageType.TEXT
+      }
+
+      const saved = await sendAndSaveMessage(data).unwrap();
+      reloadConnections()
       setText('')
     }
     setTimeout(() => {
@@ -221,8 +200,8 @@ function UserChats() {
 
         {connections.map((user, index) => {
           return (
-            <div className="mt-1 w-ful md:w-full lg:w-9/12" onClick={openDrawer}>
-              <div className="flex lg:ml-1 w-full xs:w-8/12 sm:w-7/12 md:w-full justify-start">
+            <div key={user.secondPersonId._id} className={`mt-1 w-ful md:w-full lg:w-9/12  rounded-lg ${user.secondPersonId._id === receiverId ? 'bg-slate-200' : ''}`} onClick={openDrawer} >
+              <div className="flex lg:ml-1 w-full xs:w-8/12 sm:w-7/12 md:w-full justify-start bg-yellw-300 cursor-pointer" onClick={() => handleFetchMessages(user.secondPersonId._id)}>
                 <div className="p-3 w-1/5">
                   <Wrap>
                     <WrapItem>
@@ -238,162 +217,143 @@ function UserChats() {
                     {user.lastMessage}
                   </div>
                 </div>
-                {index % 2 == 0 && <div className="p-1 flex justify-center items-center w-1/5">
+                {/* {index % 2 == 0 && <div className="p-1 flex justify-center items-center w-1/5">
                   <Badge ml='4' colorScheme='green' className='overflow-hidden'>
                     1
                   </Badge>
-                </div>}
+                </div>} */}
 
-                {isFullScreen && <Drawer
-                  isOpen={isOpenDrawer}
-                  placement='right'
-                  onClose={closeDrawer}
-                  finalFocusRef={btnRef}
-                >
-                  {/* <DrawerOverlay /> */}
-                  <DrawerContent
-                    width={isFullScreen ? '100vw' : 'auto'}
-                    height={isFullScreen ? '100vh' : 'auto'}
-                    maxWidth={isFullScreen ? '100vw' : '60vw'}
-                  >
-
-                    <DrawerHeader className='flex items-center space-x-3'>
-                      <IoChevronBackSharp onClick={closeDrawer} className='text-2xl text-gray-600 cursor-pointer' />
-
-                      <Wrap>
-                        <WrapItem>
-                          <Avatar name='Shohail muhd' src='https://bit.ly/tioluwani-kolawole' />
-                        </WrapItem>
-                      </Wrap>
-
-                      <div className='flex-grow'>
-                        <p className='text-md font-semibold'>Shohail muhd</p>
-                        <p className='text-sm text-gray-400 flex items-center'>
-                          Active now
-                          <span className='h-2 w-2 ml-1 mt-[6px] rounded-full bg-[#5cb63e]'></span>
-                        </p>
-                      </div>
-
-                      <div className='flex space-x-9 justify-end'>
-                        <IoMdCall className='text-2xl cursor-pointer' />
-                        <FaVideo className='text-2xl cursor-pointer' />
-                      </div>
-                    </DrawerHeader>
-                    <Divider orientation='horizontal' />
-                    <DrawerBody>
-                      <div className="chat chat-start">
-                        <div className="chat-image avatar">
-                          <div className="w-10 rounded-full">
-                            <img alt="Tailwind CSS chat bubble component" src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg" />
-                          </div>
-                        </div>
-                        <div className="chat-bubble bg-blue-600">Helloooo</div>
-                      </div>
-
-                      <div className="chat chat-start">
-                        <div className="chat-image avatar">
-                          <div className="w-10 rounded-full">
-                            <img alt="Tailwind CSS chat bubble component" src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg" />
-                          </div>
-                        </div>
-                        <div className="chat-bubble bg-blue-600">It was you who would bring balance to the Force</div>
-                      </div>
-
-                      <div className="chat chat-end">
-                        <div className="chat-image avatar">
-                          <div className="w-10 rounded-full">
-                            <img alt="Tailwind CSS chat bubble component" src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg" />
-                          </div>
-                        </div>
-
-                        <div className="chat-bubble">I hate you!</div>
-
-                      </div>
-
-
-                      <div className="chat chat-start">
-                        <div className="chat-image avatar">
-                          <div className="w-10 rounded-full">
-                            <img alt="Tailwind CSS chat bubble component" src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg" />
-                          </div>
-                        </div>
-                        <div className="chat-bubble bg-blue-600">It was you who would bring balance to the Force</div>
-                      </div>
-
-                      <div className="chat chat-end">
-                        <div className="chat-image avatar">
-                          <div className="w-10 rounded-full">
-                            <img alt="Tailwind CSS chat bubble component" src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg" />
-                          </div>
-                        </div>
-                        <div className="chat-header">
-                          Anakin
-                          <time className="text-xs opacity-50">12:46</time>
-                        </div>
-                        <div className="chat-bubble">I hate you!</div>
-                        <div className="chat-footer opacity-50">
-                          Seen at 12:46
-                        </div>
-                      </div>
-                    </DrawerBody>
-                    <DrawerFooter>
-                    </DrawerFooter>
-                  </DrawerContent>
-                </Drawer>}
               </div>
               <Divider orientation='horizontal' />
             </div>
           )
         })}
+
+        {/* DRAWER */}
+        {isFullScreen && <Drawer
+          isOpen={isOpenDrawer}
+          placement='right'
+          onClose={closeDrawer}
+          finalFocusRef={btnRef}
+        >
+          {/* <DrawerOverlay /> */}
+          {receiverId && <DrawerContent
+            width={isFullScreen ? '100vw' : 'auto'}
+            height={isFullScreen ? '100vh' : 'auto'}
+            maxWidth={isFullScreen ? '100vw' : '60vw'}
+          >
+
+            <DrawerHeader className='flex items-center space-x-3'>
+              <IoChevronBackSharp onClick={closeDrawer} className='text-2xl text-gray-600 cursor-pointer' />
+
+              <Wrap>
+                <WrapItem>
+                  <Avatar size={'sm'} name={receiverDetails.parkingName} src='https://bit.ly/tioluwani-kolawole' />
+                </WrapItem>
+              </Wrap>
+
+              <div className='flex-grow'>
+                <p className='text-md font-semibold'>{receiverDetails.parkingName}</p>
+                <p className='text-xs text-gray-700 flex items-center'>
+                  Active now
+                  <span className='h-2 w-2 ml-2 mt-[1px] rounded-full bg-[#5cb63e]'></span>
+                </p>
+              </div>
+
+              <div className='flex space-x-9 justify-end'>
+                <IoMdCall className='text-2xl cursor-pointer' />
+                <FaVideo className='text-2xl cursor-pointer' />
+              </div>
+            </DrawerHeader>
+            <Divider orientation='horizontal' />
+            <DrawerBody>
+              {messages.map((msg) => {
+                return (
+                  <>
+                    <div className={`chat ${msg.senderId === userInfo.id ? 'chat-end' : 'chat-start'} mt-2 `}>
+                      <div className={`chat-bubble rounded-lg shadow-xl text-sm  text-white ${msg.senderId === userInfo.id ? 'bg-blue-500' : 'bg-blue-800'}`}>{msg.message}</div>
+                    </div>
+                  </>
+                )
+              })}
+              <div className='h-4' ref={messagesEndRef} />
+
+            </DrawerBody>
+              <div className="fixed bottom-0 right-0 bg-white h-14 rounded-md w-full">
+                <form className='w-full ml-7 relative' onSubmit={enterButtonSend}>
+                  <input type='text' value={text} onChange={(e) => setText(e.target.value)} className='w-11/12 rounded-lg shadow-xl ' />
+                </form>
+                <TbSend2 className={`absolute right-10 bottom-6 text-2xl transition-opacity cursor-pointer ${!text.length ? 'opacity-0' : 'opacity-100'}`}
+                />
+                <TbSend onClick={addToMessages} className={`absolute right-10  bottom-6 text-2xl transition-opacity cursor-pointer ${text.length ? 'opacity-0' : 'opacity-100'}`}
+                />
+              </div>
+            <DrawerFooter>
+            </DrawerFooter>
+          </DrawerContent>}
+        </Drawer>}
       </div>
-      <div className="w-7/12 hidden md:block overflow-y-scroll hide-scrollbar outline outline-slate-200 outline-1 rounded-r-xl max-h-[700px]">
-        <div className="bg-blue-200 shadow-lg glass w-full sticky top-0 z-10">
-          <div className='flex items-center space-x-3 p-4 '>
 
-            <Wrap>
-              <WrapItem>
-                <Avatar size={'sm'} name='Shohail muhd' src='https://bit.ly/tioluwani-kolawole' />
-              </WrapItem>
-            </Wrap>
+      {receiverId ?
+        (<div className="w-7/12 hidden md:block overflow-y-scroll hide-scrollbar outline outline-slate-200 outline-1 rounded-r-xl max-h-[700px]">
+          <div className="bg-blue-200 shadow-lg glass w-full sticky top-0 z-10">
+            <div className='flex items-center space-x-3 p-4 '>
 
-            <div className='flex-grow'>
-              <p className='text-md font-semibold'>Shohail muhd</p>
-              <p className='text-xs text-gray-400 flex items-center'>
-                Active now
-                <span className='h-2 w-2 ml-2 mt-[1px] rounded-full bg-[#5cb63e]'></span>
-              </p>
-            </div>
+              <Wrap>
+                <WrapItem>
+                  <Avatar size={'sm'} name={receiverDetails.parkingName} src='https://bit.ly/tioluwani-kolawole' />
+                </WrapItem>
+              </Wrap>
 
-            <div className='flex space-x-9 justify-end'>
-              <IoMdCall className='text-2xl cursor-pointer' />
-              <FaVideo className='text-2xl cursor-pointer' />
+              <div className='flex-grow'>
+                <p className='text-md font-semibold'>{receiverDetails.parkingName}</p>
+                <p className='text-xs text-gray-700 flex items-center'>
+                  Active now
+                  <span className='h-2 w-2 ml-2 mt-[1px] rounded-full bg-[#5cb63e]'></span>
+                </p>
+              </div>
+
+              <div className='flex space-x-9 justify-end'>
+                <IoMdCall className='text-2xl cursor-pointer' />
+                <FaVideo className='text-2xl cursor-pointer' />
+              </div>
             </div>
           </div>
-        </div>
 
-        <div className="p-5">
-          {messages.map((msg) => {
-            return (
-              <>
-                <div className={`chat ${msg.senderId === '123' ? 'chat-end' : 'chat-start'} mt-2 `}>
-                  <div className={`chat-bubble rounded-lg glass shadow-xl text-sm  text-white ${msg.senderId === '123' ? 'bg-blue-500' : 'bg-blue-800'}`}>{msg.message}</div>
-                </div>
-              </>
-            )
-          })}
-          <div className='h-4' ref={messagesEndRef} />
-        </div>
-        <div className="fixed bottom-0 right-0 bg-white h-14 rounded-md w-7/12">
-          <form className='w-full ml-3 relative' onSubmit={enterButtonSend}>
-            <input type='text' value={text} onChange={(e) => setText(e.target.value)} className='w-11/12 rounded-lg shadow-xl ' />
-          </form>
-          <TbSend2 className={`absolute right-20 bottom-6 text-2xl transition-opacity cursor-pointer ${!text.length ? 'opacity-0' : 'opacity-100'}`}
-          />
-          <TbSend onClick={addToMessages} className={`absolute right-20 bottom-6 text-2xl transition-opacity cursor-pointer ${text.length ? 'opacity-0' : 'opacity-100'}`}
-          />
-        </div>
-        <div ref={pageEndRef} />
-      </div>
+          <div className="p-5">
+            {messages.map((msg) => {
+              return (
+                <>
+                  <div className={`chat ${msg.senderId === userInfo.id ? 'chat-end' : 'chat-start'} mt-2 `}>
+                    <div className={`chat-bubble rounded-lg  shadow-xl text-sm  text-white ${msg.senderId === userInfo.id ? 'bg-blue-500' : 'bg-blue-800'}`}>{msg.message}</div>
+                  </div>
+                </>
+              )
+            })}
+            <div className='h-4' ref={messagesEndRef} />
+          </div>
+          <div className="fixed bottom-0 right-0 bg-white h-14 rounded-md w-7/12">
+            <form className='w-full ml-3 relative' onSubmit={enterButtonSend}>
+              <input type='text' value={text} onChange={(e) => setText(e.target.value)} className='w-11/12 rounded-lg shadow-xl ' />
+            </form>
+            <TbSend2 className={`absolute right-20 bottom-6 text-2xl transition-opacity cursor-pointer ${!text.length ? 'opacity-0' : 'opacity-100'}`}
+            />
+            <TbSend onClick={addToMessages} className={`absolute right-20 bottom-6 text-2xl transition-opacity cursor-pointer ${text.length ? 'opacity-0' : 'opacity-100'}`}
+            />
+          </div>
+          <div ref={pageEndRef} />
+        </div>) :
+        (
+          <div className="w-7/12 hidden md:block overflow-y-scroll hide-scrollbar outline outline-slate-300 outline-1 rounded-r-xl max-h-[700px]">
+            <div className="flex justify-center items-center bg-gray-100 h-full">
+              <div className="">
+                <p className='text-center text-2xl text-gray-800'>Chat for Parkwise </p>
+                <p className='text-center text-lg text-gray-500'> Get in contact with the parking providers </p>
+              </div>
+            </div>
+          </div>
+        )
+      }
     </div>
 
   )

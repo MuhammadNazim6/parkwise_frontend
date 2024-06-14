@@ -52,14 +52,25 @@ export const commonApiSLice = apiSlice.injectEndpoints({
 
     fetchMessages: builder.mutation({
       query: (data) => ({
-        url: `${COMMON_URL}/getMessages?senderId=${data.senderId}&recieverId=${data.recieverId}`,
+        url: `${COMMON_URL}/getMessages?senderId=${data.senderId}&receiverId=${data.recieverId}`,
         method: 'GET',
         data: {},
         params: {},
         headers: {},
       }),
     }),
+    
+    sendSaveMessage: builder.mutation({
+      query: (data) => ({
+        url: `${COMMON_URL}/saveMessage`,
+        method: 'POST',
+        data: data,
+        params: {},
+        headers: {},
+      }),
+    }),
 
+    
 
 
   })
@@ -70,5 +81,6 @@ export const {
   useCommonLoginMutation,
   useFetchBookingDetailsMutation,
   useFetchConnectionsMutation,
-  useFetchMessagesMutation
+  useFetchMessagesMutation,
+  useSendSaveMessageMutation
 } = commonApiSLice
