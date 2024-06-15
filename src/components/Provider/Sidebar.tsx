@@ -5,11 +5,14 @@ import { FaParking } from "react-icons/fa";
 import { IoMdChatboxes } from "react-icons/io";
 import { MdFeedback } from "react-icons/md";
 import ProSidebarLink from './ProSidebarLink';
-import { Link, useLocation, NavLink } from 'react-router-dom';
 import { IoIosArrowBack } from "react-icons/io";
 import { useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
 import { IoBookmarks } from "react-icons/io5";
+import { ImProfile } from "react-icons/im";
+import { PiChatText } from "react-icons/pi";
+import { BsFillChatTextFill } from "react-icons/bs";
+
 
 
 function Sidebar() {
@@ -53,7 +56,8 @@ function Sidebar() {
             {/* <ProSidebarLink link='/provider' title='Dashboard' Icon={<MdDashboard className='text-2xl text-white' />} /> */}
             {providerInfo.approvalStatus != 'true' ? (<ProSidebarLink link='/provider/add-slots' title='Add slots' Icon={<MdAddBox className='text-2xl text-white' />} />)
               : (<ProSidebarLink link='/provider/parking-lot' title='Parking lot' Icon={<FaParking className='text-2xl text-white' />} />)}
-            <ProSidebarLink link='/provider/profile' title='Profile' Icon={<IoMdChatboxes className='text-2xl text-white' />} />
+           <ProSidebarLink link='/provider/profile' title='Profile' Icon={<ImProfile className='text-2xl text-white' />} />
+           <ProSidebarLink link='/provider/chats' title='Chats' Icon={<BsFillChatTextFill  className='text-2xl text-white' />} />
             {/* <ProSidebarLink link= '/provider/feedbacks' title='Feedbacks' Icon={<MdFeedback className='text-2xl text-white' />} /> */}
             <ProSidebarLink link= '/provider/bookings' title='Bookings' Icon={<IoBookmarks  className='text-lg text-white' />} />
           </ul>

@@ -40,12 +40,6 @@ function ProvProfile() {
                 <div className="absolute right-5 top-3 h-12 bg-gray-100 overflow-hidden transition duration-300 ease-in-out cursor-pointer">
                   <p className='text-black hover:text-gray-500' onClick={openPassChangeModal}>Change password</p>
 
-                  {/* <img src={providerDetails.images[0]} alt='profile image' className='rounded-t-xl w-full h-full object-cover relative contrast-10' />
-                  <div className="absolute inset-0 flex justify-center items-center opacity-0 hover:opacity-100 transition-opacity duration-300">
-                  <button type='button' className="bg-gray-600 text-white px-2 py-1 ml-2 rounded">
-                  <RiImageEditLine />
-                  </button>
-                  </div> */}
                 </div>
                 <div className="space-y-6 mt-16 w-full">
                   <div className="flex flex-col sm:flex-row items-center justify-between space-y-2 sm:space-y-0 sm:space-x-4">

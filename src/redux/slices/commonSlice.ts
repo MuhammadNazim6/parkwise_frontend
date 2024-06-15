@@ -70,6 +70,16 @@ export const commonApiSLice = apiSlice.injectEndpoints({
       }),
     }),
 
+    getSenderName: builder.mutation({
+      query: (id) => ({
+        url: `${COMMON_URL}/getSender/${id}`,
+        method: 'GET',
+        data: {},
+        params: {},
+        headers: {},
+      }),
+    }),
+
     
 
 
@@ -82,5 +92,6 @@ export const {
   useFetchBookingDetailsMutation,
   useFetchConnectionsMutation,
   useFetchMessagesMutation,
-  useSendSaveMessageMutation
+  useSendSaveMessageMutation,
+  useGetSenderNameMutation
 } = commonApiSLice

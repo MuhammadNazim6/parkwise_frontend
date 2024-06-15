@@ -1,8 +1,7 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link, useNavigate, NavLink } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import LogoImg from "../../assets/Images/parkwise-high-resolution-logo-transparent.png";
-import LogoImgBlack from "../../assets/Images/parkwise-high-resolution-logo-black-transparent.png";
 import { AiOutlineClose, AiOutlineMenu } from 'react-icons/ai';
 import { useLogoutMutation } from '../../redux/slices/userApiSlice';
 import { userLogout } from '../../redux/slices/authSlice';
@@ -33,16 +32,16 @@ function Navbar() {
     setNav(!nav)
   }
   const { userInfo } = useSelector((state: RootState) => state.auth)
+ 
   const [logout, { isLoading }] = useLogoutMutation()
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const handleLogout = async () => {
     const res = await logout(null);
-    if (res) {
-      dispatch(userLogout())
-      setNav(!nav)
-      navigate('/')
-    }
+    navigate('/login')
+    dispatch(userLogout())
+    setNav(!nav)
+    navigate('')
 
   }
   return (
@@ -94,9 +93,12 @@ function Navbar() {
       </div>
       <div className={!nav ? 'fixed left-0 top-0 w-[70%] h-full border-r bg-white ease-in-out duration-500  md:hidden z-20' : 'fixed left-[-100%] top-0 w-[60%] h-full border-r border-r-gray-900 bg-primary-blue ease-in-out duration-700 z-20'}>
         <ul className=' p-4'>
-          <li className='p-4 mt-6'><NavLink to="/">Home</NavLink></li>
-          <li className='p-4 border-t-2'><NavLink to="/user/find">Find spots</NavLink></li>
-          {userInfo ? (<li className='p-4 border-t-2'><NavLink to="/user/profile">Profile</NavLink></li>) : null}
+          <li className='p-4 mt-6'><NavLink style={({ isActive }) => (isActive ? activeStyle : undefined)} to="/">Home</NavLink></li>
+          <li className='p-4 border-t-2'><NavLink style={({ isActive }) => (isActive ? activeStyle : undefined)} to="/user/find">Find spots</NavLink></li>
+          {userInfo ? (<li className='p-4 border-t-2'><NavLink style={({ isActive }) => (isActive ? activeStyle : undefined)} to="/user/profile">Profile</NavLink></li>) : null}
+
+          {userInfo ? (<li className='p-4 border-t-2'><NavLink style={({ isActive }) => (isActive ? activeStyle : undefined)} to="/user/chats">Chats</NavLink></li>) : null}
+
           <li className='p-4 border-t-2'>{userInfo ? (
             <AlertDialog>
               <AlertDialogTrigger>Logout</AlertDialogTrigger>

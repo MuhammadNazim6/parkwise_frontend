@@ -26,12 +26,12 @@ function UserRoutes() {
       <Route path='user/signup' element={<UserSignup />} />
       <Route path='user/email-verify' element={<UserEmailVerify />} />
 
-      <Route path='user' element={<UserLayout />} >
-        <Route path='find' element={<UserFindLots />} />
-        <Route path='find/lotDetails/:id' element={<UserParkingLotDetails />} />
+      <Route element={<UserLayout />} >
+        <Route path='/user/find' element={<UserFindLots />} />
+        <Route path='/user/find/lotDetails/:id' element={<UserParkingLotDetails />} />
         <Route element={<UserProtect />}>
-          <Route path='profile' element={<UserProfile />} />
-          <Route path='chats' element={<UserChats/>} />
+          <Route path='/user/profile' element={<UserProfile />} />
+          <Route path='/user/chats' element={<UserChats />} />
         </Route>
 
       </Route>

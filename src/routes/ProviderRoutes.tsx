@@ -10,6 +10,7 @@ import ProvProfile from '@/screens/Provider/ProvProfile';
 import ProvFeedbacks from '@/screens/Provider/ProvFeedbacks';
 import ProvDashboard from '@/screens/Provider/ProvDashboard';
 import ProvBookings from '@/screens/Provider/ProvBookings';
+import ProvChats from '@/screens/Provider/ProvChats';
 
 
 function ProviderRouter() {
@@ -22,6 +23,7 @@ function ProviderRouter() {
         <Route path='profile' element={<ProvProfile />} />
         <Route path='feedbacks' element={<ProvFeedbacks />} />
         <Route path='bookings' element={<ProvBookings />} />
+        <Route path='chats' element={<ProvChats/>} />
       </Route>
       <Route path='signup' element={<ProvSignup />} />
       <Route path='email-verify' element={<ProvEmailVerify />} />

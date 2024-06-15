@@ -42,7 +42,6 @@ function ProvBookings() {
   }, [])
 
   const fetchBookingsOfParkingLot = async () => {
-    console.log('fetchBookingsOfParkingLot');
     const response = await fetchBookingsOfLot(providerInfo.id).unwrap()
     if (response.success) {
       console.log(response.data)

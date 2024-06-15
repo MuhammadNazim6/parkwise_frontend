@@ -11,21 +11,45 @@ import io from 'socket.io-client';
 import { useSelector } from 'react-redux';
 import { RootState } from './redux/store';
 export const socket = io('http://localhost:3000');
-
+import toast from 'react-hot-toast';
+import { useGetSenderNameMutation } from './redux/slices/commonSlice';
 
 function App() {
 
   const { userInfo, providerInfo } = useSelector((state: RootState) => state.auth)
+  const [getSenderName] = useGetSenderNameMutation()
 
   useEffect(() => {
+
     if (userInfo) {
       socket.emit('register', userInfo.id);
     } else if (providerInfo) {
       socket.emit('register', providerInfo.id);
     }
 
-    // socket.emit('chatMessage', { sender: 'Nazim', recipient: '663aa143844fcd3e079b0a1f', message: 'Helllo my dear friends i am user' });
+    socket.on('notification', async (data) => {
+      const sender = await getSenderName(data.sender).unwrap()
+      toast(   
+        <div className='w-60 m-1'>
+          <p className="text-xs">New message</p>
+          <p className="font-semibold text-sm mt-2">{sender.data}</p>
+          <p className='text-sm'>{data.message}</p>
+        </div>,
+        {
+          style: {
+            border: '1px solid #67b3fb',
+            padding: '',
+            color: '#212020',
+          },
+          iconTheme: {
+            primary: '#212020',
+            secondary: '#FFFAEE',
+          },
+        }
+      );
+    })
     return () => {
+      socket.off('notification')
       socket.disconnect();
     };
 

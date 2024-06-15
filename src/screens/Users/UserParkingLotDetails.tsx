@@ -110,7 +110,7 @@ function UserParkingLotDetails() {
             <div className="carousel md:rousdnded-tl-2xl w-full">
               <UserCarousel carouselArr={lotDetails.images} lotDetails={lotDetails} />
             </div>
-            <div className="flex m-6 justify-between pb-12 text-[13px]">
+            <div className="flex m-6 justify-between text-[13px]">
               <div className="flex flex-col">
                 <p className="text-gray-900">{lotDetails.address.buildingOrAreaName}</p>
                 <p className="text-gray-900">{lotDetails.address.street}</p>
@@ -121,32 +121,39 @@ function UserParkingLotDetails() {
                 <p className="text-gray-900">{lotDetails.address.city}</p>
                 <p className="text-gray-900">{lotDetails.address.state}</p>
               </div>
-              <div className="mt-4 ml-5">
-                <Link to={`/user/chats?ID=${id}`}   className="flex justify-center items-center space-x-2 text-md bg-blue-100 p-3 cursor-pointer rounded-md">
-                  <span > Chat now</span> <HiOutlineChatBubbleLeftRight />
-                </Link>
-              </div>
+            
               <div className="flex flex-col space-y-2 text">
                 {lotDetails.evChargeFacilityPrice && (
                   <div className="flex items-center space-x-2 bg-blue-50 p-1 rounded-md_dis shadow-sm hover:bg-blue-100 transition duration-300">
-                    <IoMdBatteryCharging className="text-blue-600 " />
+                    <IoMdBatteryCharging className="" />
                     <p className="text-gray-700 font-medium">EV Charging</p>
                   </div>
                 )}
                 {lotDetails.waterServicePrice && (
                   <div className="flex items-center space-x-2 bg-green-50 p-1 rounded-md shadow-sm hover:bg-green-100 transition duration-300">
-                    <MdLocalCarWash className="text-green-600 " />
+                    <MdLocalCarWash className=" " />
                     <p className="text-gray-700 font-medium">Water Service</p>
                   </div>
                 )}
                 {lotDetails.airPressureCheckPrice && (
                   <div className="flex items-center space-x-2 bg-yellow-50 p-1 rounded-md shadow-sm hover:bg-yellow-100 transition duration-300">
-                    <GiCartwheel className="text-yellow-600 " />
+                    <GiCartwheel className=" " />
                     <p className="text-gray-700 font-medium">Air Filling</p>
                   </div>
                 )}
               </div>
             </div>
+
+            <div className="transition duration-300 ease-in-out transform hover:scale-102 bg-blue-200 rounded-b-md hover:scale-[1.01] hover:bg-blue-300">
+      <Link 
+        to={`/user/chats?ID=${id}`} 
+        className="flex justify-center items-center space-x-2 text-md  p-3 cursor-pointer rounded-md w-full   active:bg-blue-400"
+      >
+        <span>Chat now</span>
+        <HiOutlineChatBubbleLeftRight />
+      </Link>
+    </div>
+
           </div>
         ) : null}
       </div>

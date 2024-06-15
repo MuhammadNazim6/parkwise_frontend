@@ -23,6 +23,8 @@ import { TbSend } from "react-icons/tb";
 import { TbSend2 } from "react-icons/tb";
 import { useFetchConnectionsMutation, useFetchMessagesMutation, useSendSaveMessageMutation } from '@/redux/slices/commonSlice';
 import { useGetLotDetailsMutation } from '@/redux/slices/userApiSlice';
+import EmojiPicker from 'emoji-picker-react';
+import { BsEmojiSmile } from "react-icons/bs";
 
 
 function UserChats() {
@@ -37,7 +39,6 @@ function UserChats() {
     TEXT: 'text',
   });
 
-  const [showSearchBar, setShowSearchBar] = useState(false)
   const { isOpen, onToggle } = useDisclosure()
   const [getConnections, { isLoading: getConnectionsLoading }] = useFetchConnectionsMutation()
   const [getMessages, { isLoading: getMessagesLoading }] = useFetchMessagesMutation()
@@ -45,40 +46,96 @@ function UserChats() {
   const [sendAndSaveMessage] = useSendSaveMessageMutation()
 
   const [connections, setConnections] = useState([])
+  const [filteredConnections, setFilteredConnections] = useState([])
+  const [searchText, setSearchText] = useState('');
   const [messages, setMessages] = useState([])
   const [receiverId, setReceiverId] = useState('')
   const [receiverDetails, setReceiverDetails] = useState({})
+  const [showEmoji, setShowEmoji] = useState(false)
 
   const [text, setText] = useState('')
   const { userInfo } = useSelector((state: RootState) => state.auth)
   const messagesEndRef = useRef(null);
   const pageEndRef = useRef(null);
+  const btnRef = useRef()
 
+  // Filter function start
+  useEffect(() => {
+    setFilteredConnections(connections)
+  }, [connections])
 
   useEffect(() => {
-    setTimeout(() => {
-      scrollToBottomChat()
-    }, 500)
-    socket.emit('enterChat', userInfo.id);
-    // socket.emit('chatMessage', { sender: '6651a376aea6684ffe8262ea3', recipient: '6651a376aea668ffe8262ea3', message: 'Helllo my dear friekknds i am user' });
-
-    socket.on('notification', (data) => {  //chatMessge needed here
-      // checking if the sender is in the cinversation
-      if (data.sender === receiverId) {
-        setMessages((prev) => [...prev, { senderId: data.sender, recieverId: data.recipient, message: data.message }])
-        setTimeout(() => {
-          scrollToBottomChat()
-        }, 100)
-        // should update the conversation also
-      } else {
-        // update the conversation here
-      }
-
+    filterFunction(searchText);
+  }, [searchText, connections]);
+  const filterFunction = (searchText) => {
+    const tempConn = connections.filter((c) => {
+      return c.secondPersonId.parkingName.toLowerCase().includes(searchText.toLowerCase())
     })
+    setFilteredConnections(tempConn)
+  }
+
+  const handleSearchTextChange = (e) => {
+    setSearchText(e.target.value)
+  }
+  // Filter function end
+
+  const isFullScreen = useBreakpointValue({ base: true, md: false });
+  const { isOpen: isOpenDrawer, onOpen: openDrawer, onClose: closeDrawer } = useDisclosure()
+
+  useEffect(() => {
+    socket.on('chatMessage', handleChatMessage);
+
+    socket.emit('register', userInfo.id);
+    socket.emit('enterChat', userInfo.id);
+
+    // Cleanup
     return () => {
+      socket.off('chatMessage', handleChatMessage);
       socket.emit('exitChat', userInfo.id);
-    }
-  }, [])
+    };
+  }, []);
+
+  const handleChatMessage = (data) => {
+
+    setMessages((prevMsgs) => {
+      if (data.sender !== receiverId) {
+        console.log('Message is from the current receiver');
+        const updatedMessages = [
+          ...prevMsgs,
+          { senderId: data.sender, receiverId: data.recipient, message: data.message },
+        ];
+        setTimeout(() => {
+          scrollToBottomChat();
+        }, 100);
+        return updatedMessages;
+      }
+      return prevMsgs;
+    });
+
+    setConnections((prevConnections) => {
+      const connectionExists = prevConnections.some((user) => {
+        return user.secondPersonId._id === data.sender;
+      });
+
+      if (!connectionExists) {
+        return [
+          {
+            secondPersonId: { _id: data.sender, name: 'SAHAD' },
+            secondPersonType: 'Provider',
+            lastMessage: data.message,
+            updatedAt: new Date().toISOString(),
+          },
+          ...prevConnections,
+        ];
+      } else {
+        return prevConnections.map((user) =>
+          user.secondPersonId._id === data.sender
+            ? { ...user, lastMessage: data.message, updatedAt: new Date().toISOString() }
+            : user
+        );
+      }
+    });
+  };
 
   useEffect(() => {
     handleFetchConnections()
@@ -90,6 +147,7 @@ function UserChats() {
       handleFetchMessages(ID)
       const recieverProvider = await getLotDetails(ID).unwrap()
       setReceiverDetails(recieverProvider.data)
+      openDrawer()
       const response = await getConnections(userInfo.id).unwrap()
       if (response.success) {
         const connectionExists = response.data.some((user) => user.secondPersonId._id === ID)
@@ -138,8 +196,9 @@ function UserChats() {
 
   const addToMessages = async () => {
     if (text.length) {
-      setMessages((prev) => [...prev, { senderId: userInfo.id, recieverId: '456', message: text }])
+      setMessages((prev) => [...prev, { senderId: userInfo.id, recieverId: receiverId, message: text }])
       socket.emit('chatMessage', { sender: userInfo.id, recipient: receiverId, message: text });
+      setShowEmoji(false)
 
       const data = {
         senderId: userInfo.id,
@@ -159,32 +218,33 @@ function UserChats() {
     })
   }
 
-  const isFullScreen = useBreakpointValue({ base: true, md: false });
-  const { isOpen: isOpenDrawer, onOpen: openDrawer, onClose: closeDrawer } = useDisclosure()
-  const btnRef = useRef()
-
-  const toggleSearchBar = () => {
-    setShowSearchBar((prev) => !prev)
+  // emoji handling
+  const handleEmogiClick = (e) => {
+    setText((prev) => prev + e.emoji)
+  }
+  const toggleEmojiModal = () => {
+    setShowEmoji(!showEmoji)
   }
 
+
   return (
-    <div className='flex h-screen w-full md:px-8 lg:px-10 xl:px-16 pt-2'>
+    <div className='flex h-screen w-full md:px-8 lg:px-10 xl:px-20 pt-2'>
       <div className='w-full md:w-5/12 overflow-y-scroll hide-scrollbar rounded-l-xl'>
         <div className="flex w-full sticky top-0 z-10">
           <div className="flex justify-between p-3 w-full bg--200 glass z-10 md:w-full">
             <div className="flex w-2/3 space-x-2">
               <Wrap>
                 <WrapItem>
-                  <Avatar name='Muhammad Nazim' src='https://bit.ly/tioluwani-kolawole' />
+                  <Avatar name={userInfo.name} src='https://bit.ly/tioluwani-kolawole' />
                 </WrapItem>
               </Wrap>
-              <div className="w-2/3 font-medium">Welcome Back,<p className='text-[16px] font-semibold'> Nazim!</p></div>
+
+              <div className="w-2/3 font-medium">Welcome Back,<p className='text-[16px] font-semibold'> {userInfo.name}!</p></div>
             </div>
             <div className="" onClick={onToggle}>
               <div className="rounded-full bg-primary-blue h-11 w-11 flex justify-center items-center text-xl cursor-pointer">
                 <button
                   className={`text-2xl text-white transition-transform ease-in-out ${isOpen ? 'active:animate-spin' : ''}`}
-                  onClick={toggleSearchBar}
                 >
                   {isOpen ? <IoMdClose /> : <IoSearchOutline className='font-semibold' />}
                 </button>
@@ -194,35 +254,23 @@ function UserChats() {
         </div>
         <Collapse in={isOpen} animateOpacity className='sticky bg--200 glass top-0 z-10 md:w-full'>
           <div className="flex justify-between p-5 w-full glass shadow-lg space-x-3">
-            <input type='text' className='w-full h-9 rounded-2xl' placeholder='Search your chat..' />
+            <input type='text' value={searchText} onChange={handleSearchTextChange} className='w-full h-9 rounded-2xl' placeholder='Search your chat..' />
           </div>
         </Collapse>
 
-        {connections.map((user, index) => {
+        {filteredConnections.map((user, index) => {
           return (
-            <div key={user.secondPersonId._id} className={`mt-1 w-ful md:w-full lg:w-9/12  rounded-lg ${user.secondPersonId._id === receiverId ? 'bg-slate-200' : ''}`} onClick={openDrawer} >
-              <div className="flex lg:ml-1 w-full xs:w-8/12 sm:w-7/12 md:w-full justify-start bg-yellw-300 cursor-pointer" onClick={() => handleFetchMessages(user.secondPersonId._id)}>
-                <div className="p-3 w-1/5">
+
+            <div key={user.secondPersonId._id} className={`flex w-full ${user.secondPersonId._id === receiverId ? 'bg-slate-200' : ''}`} onClick={openDrawer}>
+              <div className="flex p-3 w-full cursor-pointer" onClick={() => handleFetchMessages(user.secondPersonId._id)}>
+                <div className="flex w-full space-x-2">
                   <Wrap>
                     <WrapItem>
                       <Avatar name={user.secondPersonId.parkingName} src='https://bit.ly/tioluwani-kolawole' />
                     </WrapItem>
                   </Wrap>
+                  <div className="w-full text-sm font-semibold mt-2">{user.secondPersonId.parkingName}<p className='text-[11px] font-normal'> {user.lastMessage}</p></div>
                 </div>
-                <div className=" w-3/5 pt-2">
-                  <div className="font-semibold">
-                    {user.secondPersonId.parkingName}
-                  </div>
-                  <div className="text-sm">
-                    {user.lastMessage}
-                  </div>
-                </div>
-                {/* {index % 2 == 0 && <div className="p-1 flex justify-center items-center w-1/5">
-                  <Badge ml='4' colorScheme='green' className='overflow-hidden'>
-                    1
-                  </Badge>
-                </div>} */}
-
               </div>
               <Divider orientation='horizontal' />
             </div>
@@ -279,15 +327,15 @@ function UserChats() {
               <div className='h-4' ref={messagesEndRef} />
 
             </DrawerBody>
-              <div className="fixed bottom-0 right-0 bg-white h-14 rounded-md w-full">
-                <form className='w-full ml-7 relative' onSubmit={enterButtonSend}>
-                  <input type='text' value={text} onChange={(e) => setText(e.target.value)} className='w-11/12 rounded-lg shadow-xl ' />
-                </form>
-                <TbSend2 className={`absolute right-10 bottom-6 text-2xl transition-opacity cursor-pointer ${!text.length ? 'opacity-0' : 'opacity-100'}`}
-                />
-                <TbSend onClick={addToMessages} className={`absolute right-10  bottom-6 text-2xl transition-opacity cursor-pointer ${text.length ? 'opacity-0' : 'opacity-100'}`}
-                />
-              </div>
+            <div className="fixed bottom-0 right-0 bg-white h-14 rounded-md w-full">
+              <form className='w-full ml-7 relative' onSubmit={enterButtonSend}>
+                <input type='text' value={text} onChange={(e) => setText(e.target.value)} className='w-11/12 rounded-lg shadow-xl ' />
+              </form>
+              <TbSend2 className={`absolute right-10 bottom-6 text-2xl transition-opacity cursor-pointer ${!text.length ? 'opacity-0' : 'opacity-100'}`}
+              />
+              <TbSend onClick={addToMessages} className={`absolute right-10  bottom-6 text-2xl transition-opacity cursor-pointer ${text.length ? 'opacity-0' : 'opacity-100'}`}
+              />
+            </div>
             <DrawerFooter>
             </DrawerFooter>
           </DrawerContent>}
@@ -332,10 +380,15 @@ function UserChats() {
             })}
             <div className='h-4' ref={messagesEndRef} />
           </div>
-          <div className="fixed bottom-0 right-0 bg-white h-14 rounded-md w-7/12">
-            <form className='w-full ml-3 relative' onSubmit={enterButtonSend}>
-              <input type='text' value={text} onChange={(e) => setText(e.target.value)} className='w-11/12 rounded-lg shadow-xl ' />
+          <div className="fixed bottom-0 right-2  bg-white h-14 rounded-md w-[56%] mr-2">
+            <form className='w-full relative' onSubmit={enterButtonSend}>
+              <input type='text' value={text} onChange={(e) => setText(e.target.value)} className='px-12 w-11/12 rounded-lg shadow-xl ' />
             </form>
+            <BsEmojiSmile onClick={toggleEmojiModal} className='absolute left-3 bottom-6 hover:text-gray-500 active:scale-[1.08] text-2xl transition-opacity cursor-pointer' />
+
+            <div className='absolute left-3 bottom-16'>
+              <EmojiPicker open={showEmoji} onEmojiClick={handleEmogiClick} />
+            </div>
             <TbSend2 className={`absolute right-20 bottom-6 text-2xl transition-opacity cursor-pointer ${!text.length ? 'opacity-0' : 'opacity-100'}`}
             />
             <TbSend onClick={addToMessages} className={`absolute right-20 bottom-6 text-2xl transition-opacity cursor-pointer ${text.length ? 'opacity-0' : 'opacity-100'}`}
