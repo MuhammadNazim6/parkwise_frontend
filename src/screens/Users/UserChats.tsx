@@ -16,7 +16,7 @@ import {
 import { IoChevronBackSharp } from "react-icons/io5";
 import { IoMdCall } from "react-icons/io";
 import { FaVideo } from "react-icons/fa";
-import { socket } from '@/App';
+// import { socket } from '@/App';
 import { RootState } from '@/redux/store';
 import { useSelector } from 'react-redux';
 import { TbSend } from "react-icons/tb";
@@ -25,6 +25,7 @@ import { useFetchConnectionsMutation, useFetchMessagesMutation, useSendSaveMessa
 import { useGetLotDetailsMutation } from '@/redux/slices/userApiSlice';
 import EmojiPicker from 'emoji-picker-react';
 import { BsEmojiSmile } from "react-icons/bs";
+import { useSocket } from '@/context/SocketProvider';
 
 
 function UserChats() {
@@ -81,8 +82,10 @@ function UserChats() {
 
   const isFullScreen = useBreakpointValue({ base: true, md: false });
   const { isOpen: isOpenDrawer, onOpen: openDrawer, onClose: closeDrawer } = useDisclosure()
+  const socket = useSocket()
 
   useEffect(() => {
+
     socket.on('chatMessage', handleChatMessage);
 
     socket.emit('register', userInfo.id);

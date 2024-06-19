@@ -16,7 +16,7 @@ import {
 import { IoChevronBackSharp } from "react-icons/io5";
 import { IoMdCall } from "react-icons/io";
 import { FaVideo } from "react-icons/fa";
-import { socket } from '@/App';
+// import { socket } from '@/App';
 import { RootState } from '@/redux/store';
 import { useSelector } from 'react-redux';
 import { TbSend } from "react-icons/tb";
@@ -25,6 +25,7 @@ import { useFetchConnectionsMutation, useFetchMessagesMutation, useSendSaveMessa
 import { useGetUserDetailsMutation } from '@/redux/slices/userApiSlice';
 import EmojiPicker from 'emoji-picker-react';
 import { BsEmojiSmile } from "react-icons/bs";
+import { useSocket } from '@/context/SocketProvider';
 
 
 function ProvChats() {
@@ -45,6 +46,7 @@ function ProvChats() {
   const [searchText, setSearchText] = useState('');
   const [text, setText] = useState('')
   const [showEmoji, setShowEmoji] = useState(false)
+  const [isOnline,setIsOnline] = useState(false)
 
 
   const SenderReceiverType = Object.freeze({
@@ -79,7 +81,7 @@ function ProvChats() {
     setSearchText(e.target.value)
   }
   // Filter function end
-
+  const socket = useSocket()
 
   useEffect(() => {
     socket.on('chatMessage', handleChatMessage);
@@ -274,8 +276,8 @@ function ProvChats() {
                 <div className='flex-grow'>
                   <p className='text-md font-semibold'>{receiverDetails.name}</p>
                   <p className='text-xs text-gray-700 flex items-center'>
-                    Active now
-                    <span className='h-2 w-2 ml-2 mt-[1px] rounded-full bg-[#5cb63e]'></span>
+                    {isOnline ? 'Online' : 'Offline'}
+                    <span className={`h-2 w-2 ml-2 mt-[4px] rounded-full ${isOnline ? 'bg-[#5cb63e]':'bg-[#b3b4b3]'}`}></span>
                   </p>
                 </div>
 

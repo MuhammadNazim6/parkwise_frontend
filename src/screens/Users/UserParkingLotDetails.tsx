@@ -121,7 +121,7 @@ function UserParkingLotDetails() {
                 <p className="text-gray-900">{lotDetails.address.city}</p>
                 <p className="text-gray-900">{lotDetails.address.state}</p>
               </div>
-            
+
               <div className="flex flex-col space-y-2 text">
                 {lotDetails.evChargeFacilityPrice && (
                   <div className="flex items-center space-x-2 bg-blue-50 p-1 rounded-md_dis shadow-sm hover:bg-blue-100 transition duration-300">
@@ -144,15 +144,24 @@ function UserParkingLotDetails() {
               </div>
             </div>
 
-            <div className="transition duration-300 ease-in-out transform hover:scale-102 bg-blue-200 rounded-b-md hover:scale-[1.01] hover:bg-blue-300">
-      <Link 
-        to={`/user/chats?ID=${id}`} 
-        className="flex justify-center items-center space-x-2 text-md  p-3 cursor-pointer rounded-md w-full   active:bg-blue-400"
-      >
-        <span>Chat now</span>
-        <HiOutlineChatBubbleLeftRight />
-      </Link>
-    </div>
+            <div className="transition duration-300 ease-in-out transform hover:scale-102 bg-blue-200 hover:scale-[1.01] hover:bg-blue-300">
+              <Link
+                to={`/user/chats?ID=${id}`}
+                className="flex justify-center items-center space-x-2 text-md  p-3 cursor-pointer rounded-md w-full   active:bg-blue-400"
+              >
+                <span>Chat now</span>
+                <HiOutlineChatBubbleLeftRight />
+              </Link>
+            </div>
+            <div className="transition duration-300 ease-in-out transform hover:scale-102 bg-gray-200 rounded-b-md hover:scale-[1.01] hover:bg-gray-300">
+              <Link
+                to={`/user/find/lotDetails/directions?end=${lotDetails.location.coordinates}`}
+                className="flex justify-center items-center space-x-2 text-md  p-3 cursor-pointer rounded-md w-full   active:bg-blue-400"
+              >
+                <span>Get directions</span>
+                <HiOutlineChatBubbleLeftRight />
+              </Link>
+            </div>
 
           </div>
         ) : null}
