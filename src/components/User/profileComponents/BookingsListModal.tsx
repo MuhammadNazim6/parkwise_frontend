@@ -327,7 +327,7 @@ function BookingsListModal({ isOpen, onClose, userId, page, setPage }) {
                               <div className="text-gray-700 font-semibold p-1 w-1/4 md:w-1/4 text-sm text-center">{booking.selectedSlots.length}</div>
                               <div className="text-gray-700 font-semibold p-1 w-1/4 md:w-1/4 text-sm text-center">{booking.amount}</div>
                               <div className={`text-gray-700 font-semibold p-1 w-1/4 md:w-1/4 text-sm text-center ${booking.bookingStatus === 'cancelled' ? `text-red-800` : null} `}>{booking.bookingStatus}</div>
-                              <div className="text-sm text-gray-700 font-semibold p-1 w-1/4 md:w-1/4 transition-transform hover:text-gray-500 hover:scale-[1.007] ease-in-out duration-300 hidden md:block text-center" onClick={() => { handleGetBookingDetails(booking._id) }}>View</div>
+                              <div className="text-sm text-gray-700 font-semibold p-1 w-1/4 md:w-1/4 transition-transform  hover:scale-[1.007] ease-in-out duration-300 hidden md:block text-center" ><span onClick={() => { handleGetBookingDetails(booking._id) }} className='hover:text-gray-500 bg-white p-3 w-28 outline outline-1 rounded-md'>View</span></div>
 
                             </div>
                           </div>

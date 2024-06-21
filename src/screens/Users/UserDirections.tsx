@@ -25,50 +25,51 @@ function UserDirections() {
   const [duration, setDuration] = useState()
 
   // Dragging
-  const [dragging, setDragging] = useState(false);
-  const [position, setPosition] = useState({ x: 40, y: 150 });
+  // const [dragging, setDragging] = useState(false);
+  const [position, setPosition] = useState({ x: 20, y: 120 });
   const dragRef = useRef();
-  const handleMouseDown = (e) => {
-    setDragging(true);
-    dragRef.current = {
-      x: e.clientX - position.x,
-      y: e.clientY - position.y,
-    };
-  };
 
-  const handleMouseMove = (e) => {
-    if (dragging) {
-      const newX = e.clientX - dragRef.current.x
-      const newY = e.clientY - dragRef.current.y
+  // const handleMouseDown = (e) => {
+  //   setDragging(true);
+  //   dragRef.current = {
+  //     x: e.clientX - position.x,
+  //     y: e.clientY - position.y,
+  //   };
+  // };
 
-      const screenWidth = window.innerWidth;
-      const screenHeight = window.innerHeight;
+  // const handleMouseMove = (e) => {
+  //   if (dragging) {
+  //     const newX = e.clientX - dragRef.current.x
+  //     const newY = e.clientY - dragRef.current.y
 
-      const divWidth = 384;
-      const divHeight = 384;
+  //     const screenWidth = window.innerWidth;
+  //     const screenHeight = window.innerHeight;
 
-      const clampedX = Math.max(0, Math.min(newX, screenWidth - divWidth))
-      const clampedY = Math.max(0, Math.min(newY, screenHeight - divHeight))
+  //     const divWidth = 384;
+  //     const divHeight = 384;
 
-      setPosition({
-        x: clampedX,
-        y: clampedY,
-      });
-    }
-  };
+  //     const clampedX = Math.max(0, Math.min(newX, screenWidth - divWidth))
+  //     const clampedY = Math.max(0, Math.min(newY, screenHeight - divHeight))
 
-  const handleMouseUp = () => {
-    setDragging(false);
-  };
+  //     setPosition({
+  //       x: clampedX,
+  //       y: clampedY,
+  //     });
+  //   }
+  // };
 
-  useEffect(() => {
-    window.addEventListener('mousemove', handleMouseMove);
-    window.addEventListener('mouseup', handleMouseUp);
-    return () => {
-      window.removeEventListener('mousemove', handleMouseMove);
-      window.removeEventListener('mouseup', handleMouseUp);
-    };
-  }, [dragging]);
+  // const handleMouseUp = () => {
+  //   setDragging(false);
+  // };
+
+  // useEffect(() => {
+  //   window.addEventListener('mousemove', handleMouseMove);
+  //   window.addEventListener('mouseup', handleMouseUp);
+  //   return () => {
+  //     window.removeEventListener('mousemove', handleMouseMove);
+  //     window.removeEventListener('mouseup', handleMouseUp);
+  //   };
+  // }, [dragging]);
 
 
 
@@ -88,7 +89,8 @@ function UserDirections() {
     const steps = response.data.routes[0].legs[0].steps
     const distance = response.data.routes[0].distance
     const duration = response.data.routes[0].duration
-    console.log(response.data);
+    console.log(distance);
+    console.log(duration);
 
     setSteps(steps)
     setDistance(distance)
@@ -175,12 +177,14 @@ function UserDirections() {
         </Map>
       </div>
       <div
-        className="w-96 h-96 bg-gray-700 rounded-lg shadow-lg absolute cursor-move p-6 overflow-y-scroll hide-scrollbar"
+        className="w-72 md:w-96 h-40 md:h-96 bg-gray-700 rounded-lg shadow-lg absolute p-4 md:p-6 overflow-y-scroll hide-scrollbar"
         style={{ top: `${position.y}px`, left: `${position.x}px` }}
-        onMouseDown={handleMouseDown}
+        // onMouseDown={handleMouseDown}
       >
-        <button className='pb-10 btn-link text-white' onClick={() => { GeoLocateControlRef ? GeoLocateControlRef.current.trigger() : null }}>Navigate from current location</button>
-        <h2 className="text-xl text-white font-semibold mb-4">Directions</h2>
+        <button className='mb-3 text- sticky top-0 bg-white rounded p-3 transition-transform hover:scale-[1.02] ease-in-out' onClick={() => { GeoLocateControlRef ? GeoLocateControlRef.current.trigger() : null }}>Navigate from current location</button>
+
+        <h2 className="text-xl text-white font-semibold mb-4">Distance: &nbsp;{(distance/1000).toFixed(2)} Kms</h2>
+        <h2 className="text-xl text-white font-semibold mb-1">Directions</h2>
         <article>
 
           {steps.map((item, i) => (

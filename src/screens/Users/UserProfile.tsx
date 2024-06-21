@@ -6,15 +6,14 @@ import Lottie from 'lottie-react'
 import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '@/redux/store';
-import { useUpdateProfileMutation, useFetchUserProfilePicMutation, useGetUserDetailsMutation } from '@/redux/slices/userApiSlice';
+import { useUpdateProfileMutation, useFetchUserProfilePicMutation, useGetUserDetailsMutation, useFetchUserBookingsCountMutation } from '@/redux/slices/userApiSlice';
 import { setCredentials } from '@/redux/slices/authSlice';
 import boxLoader from '../../assets/Animation/boxLoader.json'
 import profile_icon from '../../assets/Images/profile-icon.jpg'
 import { useToast } from "@/components/ui/use-toast"
 import BookingsListModal from '@/components/User/profileComponents/BookingsListModal';
 import { useDisclosure } from '@chakra-ui/react'
-import { useProviderVerificationMutation } from '@/redux/slices/providerSlice';
-import { useProviderCheckOtpMutation } from '@/redux/slices/providerSlice';
+import { useProviderVerificationMutation, useProviderCheckOtpMutation } from '@/redux/slices/providerSlice';
 import OtpModal from '@/components/User/profileComponents/userProfileOtpModal';
 import { MdOutlinePassword } from "react-icons/md";
 import UserChangePassModal from '@/components/User/profileComponents/UserChangePassModal';
@@ -35,6 +34,7 @@ function UserProfile() {
 
   const [getProfilePic] = useFetchUserProfilePicMutation()
   const [getUserDetails] = useGetUserDetailsMutation()
+  const [getUserBookingsCount] = useFetchUserBookingsCountMutation()
   const { toast } = useToast()
   const { isOpen: isBookingsModalOpen, onOpen: openBookingsModal, onClose: closeBookingsModal } = useDisclosure()
   const { isOpen: isOtpModalOpen, onOpen: openOtpModal, onClose: closeOtpModal } = useDisclosure()
@@ -48,13 +48,15 @@ function UserProfile() {
   const [emailVerified, setEmailVerified] = useState(false)
   const [changedEmail, setChangedEmail] = useState('')
   const [otpErr, setOtpErr] = useState('')
-  const [bookingListOpen, setBookingListOpen] = useState(true)
+  const [bookingCount, setBookingCount] = useState(0)
+  // const [bookingListOpen, setBookingListOpen] = useState(true)
 
   const [bookingsPage, setBookingsPage] = useState(1)
 
   useEffect(() => {
-    fetchUserProfilePic()
     fetchUserDetails()
+    fetchBookingsCount()
+    fetchUserProfilePic()
   }, [userInfo])
 
   const fetchUserProfilePic = async () => {
@@ -67,6 +69,13 @@ function UserProfile() {
     const response = await getUserDetails(userInfo.id).unwrap()
     if (response.success) {
       setUserDetails(response.data)
+    }
+  }
+
+  const fetchBookingsCount = async () => {
+    const response = await getUserBookingsCount(userInfo.id).unwrap()
+    if (response.success) {
+      setBookingCount(response.data)
     }
   }
 
@@ -256,7 +265,7 @@ function UserProfile() {
               <div className='mt-1 text-lg text-gray-800'>{userInfo.mobile}</div>
             </div>
             <div className="flex bg-primary-blue justify-between m-4 p-2 rounded-lg shadow-xl">
-              <div onClick={openBookingsModal} className='w-1/3 font-extrabold text-center p-4 m-2 rounded-lg hover:text-black text-gray-700'><span className='text-2xl cursor-pointer'>2</span><p className='text-sm cursor-pointer text-nowrap' >Bookings</p> </div>
+              <div onClick={openBookingsModal} className='w-1/3 font-extrabold text-center p-4 m-2 rounded-lg hover:text-black text-gray-700'><span className='text-2xl cursor-pointer'>{bookingCount}</span><p className='text-sm cursor-pointer text-nowrap' >Bookings</p> </div>
               <div onClick={openWalletModal} className='w-1/3 font-extrabold text-center p-4 m-2 rounded-lg hover:text-black text-gray-700'><span className='md:text-2xl text-sm cursor-pointer'>Rs {userDetails && userDetails.wallet.balance}</span><p className='text-sm cursor-pointer text-nowrap'>Wallet</p> </div>
               <Link to='/user/chats' className='w-1/3 font-extrabold text-center p-4 m-2 rounded-lg hover:text-black text-gray-700'><span className='text-2xl cursor-pointer'>33</span><p className='text-sm cursor-pointer text-nowrap'>Messages</p> </Link>
             </div>
@@ -269,7 +278,7 @@ function UserProfile() {
           </div>
         </div>)}
 
-      {bookingListOpen && (<BookingsListModal isOpen={isBookingsModalOpen} onClose={closeBookingsModal} userId={userInfo.id} page={bookingsPage} setPage={setBookingsPage} />)}
+      {(<BookingsListModal isOpen={isBookingsModalOpen} onClose={closeBookingsModal} userId={userInfo.id} page={bookingsPage} setPage={setBookingsPage} />)}
       <OtpModal isOpen={isOtpModalOpen} onClose={closeOtpModal} userEnteredOtp={userEnteredOtp} setUserEnteredOtp={setUserEnteredOtp} checkOtpFn={checkOtpFn} otpErr={otpErr} isLoadingOtpSent={isLoadingOtpSent} />
       <UserChangePassModal isOpen={isOpenChangePassModal} onClose={closeChangePassModal} userId={userInfo.id} userEmail={userInfo.email} />
       {userDetails && <UserWalletModal isOpen={isOpenWalletModal} onClose={closeWalletModal} wallet={userDetails.wallet} />}

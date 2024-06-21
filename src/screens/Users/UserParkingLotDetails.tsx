@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Link, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import { useGetLotDetailsMutation, useGetBookedSlotsMutation } from '@/redux/slices/userApiSlice';
 import { Calendar } from "@/components/ui/calendar"
 import { Popover, PopoverContent, PopoverTrigger, } from "@/components/ui/popover"
@@ -17,10 +17,18 @@ import UserBookingModal from '@/components/User/UserBookingModal';
 import { SlotSkeleton } from '@/components/User/SlotSkeleton';
 import Lottie from 'lottie-react';
 import checkAvalblAnim from '../../assets/Animation/checkAvalblAnim.json'
-import { HiOutlineChatBubbleLeftRight } from "react-icons/hi2";
+import { IoMdChatbubbles } from "react-icons/io";
+import { FaDirections } from "react-icons/fa";
+import UserLoginModal from './UserLoginModal';
+import { useDisclosure } from '@chakra-ui/react';
+import { RootState } from '@/redux/store';
+import { useSelector } from 'react-redux';
 
 
 function UserParkingLotDetails() {
+
+  const { uLoggedIn } = useSelector((state: RootState) => state.auth);
+
   const { id } = useParams();
   const [lotDetails, setLotDetails] = useState(null)
   const [date, setDate] = useState(null);
@@ -30,6 +38,11 @@ function UserParkingLotDetails() {
   const startingSlotTime = parseInt(selectedTime.slice(0, 2))
   const [selectedSlots, setSelectedSlots] = useState(new Set());
   const [bookingModalOpen, setBookingModalOpen] = useState(false)
+
+  const [urlToNavigate, setUrlToNavigate] = useState('')
+  const { isOpen: isLoginModalOpen, onOpen: openLoginModal, onClose: closeLoginModal } = useDisclosure()
+
+  const navigate = useNavigate()
 
   const { toast } = useToast()
   const [getDetails] = useGetLotDetailsMutation()
@@ -80,9 +93,11 @@ function UserParkingLotDetails() {
       })
       return
     }
-    if (!startingSlotTime || startingSlotTime < lotDetails.startTime) {
+    if (!startingSlotTime) {
       setSelectedTime(lotDetails.startTime)
     }
+
+    
     const bookedData = await getBookedSlots({ date, id }).unwrap()
     const data = bookedData.data
 
@@ -100,6 +115,33 @@ function UserParkingLotDetails() {
   const clearAllSelection = () => {
     const clearedSet = new Set()
     setSelectedSlots(clearedSet)
+  }
+
+  const handleGoToChats = () => {
+    if (!uLoggedIn) {
+      setUrlToNavigate(`/user/chats?ID=${id}`)
+      openLoginModal()
+    } else {
+      navigate(`/user/chats?ID=${id}`)
+    }
+  }
+
+  const handleGoToDirections = (url) => {
+    if (!uLoggedIn) {
+      setUrlToNavigate(url)
+      openLoginModal()
+    } else {
+      navigate(url)
+    }
+  }
+
+  const handleBookNow = () => {
+    if (!uLoggedIn) {
+      setUrlToNavigate('')
+      openLoginModal()
+    } else {
+      setBookingModalOpen(true)
+    }
   }
 
   return (
@@ -145,22 +187,23 @@ function UserParkingLotDetails() {
             </div>
 
             <div className="transition duration-300 ease-in-out transform hover:scale-102 bg-blue-200 hover:scale-[1.01] hover:bg-blue-300">
-              <Link
-                to={`/user/chats?ID=${id}`}
-                className="flex justify-center items-center space-x-2 text-md  p-3 cursor-pointer rounded-md w-full   active:bg-blue-400"
+              <p
+                onClick={handleGoToChats}
+                className="flex justify-center items-center space-x-2 text-md p-3 cursor-pointer rounded-md w-full"
               >
-                <span>Chat now</span>
-                <HiOutlineChatBubbleLeftRight />
-              </Link>
+                <span className='text-sm'>Chat now</span>
+                {/* <IoMdChatbubbles /> */}
+              </p>
             </div>
             <div className="transition duration-300 ease-in-out transform hover:scale-102 bg-gray-200 rounded-b-md hover:scale-[1.01] hover:bg-gray-300">
-              <Link
-                to={`/user/find/lotDetails/directions?end=${lotDetails.location.coordinates}`}
+              <p
+              onClick={()=>handleGoToDirections(`/user/find/lotDetails/directions?end=${lotDetails.location.coordinates}`)}
                 className="flex justify-center items-center space-x-2 text-md  p-3 cursor-pointer rounded-md w-full   active:bg-blue-400"
               >
-                <span>Get directions</span>
-                <HiOutlineChatBubbleLeftRight />
-              </Link>
+                <span className='text-sm'>Get directions</span>
+                {/* <FaDirections /> */}
+
+              </p>
             </div>
 
           </div>
@@ -271,8 +314,8 @@ function UserParkingLotDetails() {
         ) : (
           <div className="flex justify-center items-center h-96">
             <div className="">
-              <Lottie animationData={checkAvalblAnim} className='h-44' />
-              <p className='text-center text-gray-800'>Check for available slots now</p>
+              {/* <Lottie animationData={checkAvalblAnim} className='h-44' /> */}
+              <p className='text-center text-sm text-gray-600'>Check for available slots now</p>
             </div>
           </div>
         )}
@@ -282,7 +325,7 @@ function UserParkingLotDetails() {
           <p className='p-3 flex items-center space-x-3 text-lg font-medium'> <LiaRupeeSignSolid />
             <span>{lotDetails.pricePerHour * selectedSlots.size}.00</span></p>
           <button className="btn border-1 border-secondary-blue bg-white text-black hover:bg-primary-blue"
-            onClick={() => setBookingModalOpen(true)}>
+            onClick={handleBookNow}>
             Book now
           </button>
         </div>
@@ -290,6 +333,8 @@ function UserParkingLotDetails() {
       {lotDetails && (
         <UserBookingModal isOpen={bookingModalOpen} setBookingModalOpen={setBookingModalOpen} lotDetails={lotDetails} selectedSlots={selectedSlots} date={date} checkAvailabilty={checkAvailabilty} />
       )}
+
+      <UserLoginModal isOpen={isLoginModalOpen} onClose={closeLoginModal} url={urlToNavigate} />
     </div>
 
   )

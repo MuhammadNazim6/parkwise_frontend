@@ -29,7 +29,6 @@ export default function LoginForm(props) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-
   const [commonLogin, { isLoading }] = useCommonLoginMutation();
   const [sign] = useUserSignGoogleMutation()
 
@@ -42,9 +41,9 @@ export default function LoginForm(props) {
     if (uLoggedIn) {
       navigate("/");
     } else if (pLoggedIn) {
-      navigate('/provider')
+      navigate('/provider/parking-lot')
     } else if (aLoggedIn) {
-      navigate('/admin')
+      navigate('/admin/requests')
     }
   }, [navigate, uLoggedIn, pLoggedIn]);
 
@@ -131,11 +130,11 @@ export default function LoginForm(props) {
           } else if (res.data.role === 'provider') {
             dispatch(setProviderCredentials({ ...res.data }));
             localStorage.setItem('token', res.token)
-            navigate("/provider", { replace: true });
+            navigate("/provider/parking-lot", { replace: true });
           } else if (res.data.role === 'admin') {
             dispatch(setAdminCredentials({ ...res.data }));
             localStorage.setItem('token', res.token)
-            navigate("/admin", { replace: true });
+            navigate("/admin/requests", { replace: true });
 
             // WHEN ADMIN LOGINS
           } else {
@@ -143,11 +142,6 @@ export default function LoginForm(props) {
           }
         } else {
           setCommonError('Incorrect username or password')
-          // toast({
-          //   variant: "destructive",
-          //   title: "Incorrect username or password",
-          //   description: "Incorrect username or password",
-          // })
         }
       }
     } catch (err) {

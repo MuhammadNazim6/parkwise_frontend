@@ -1,12 +1,14 @@
 import { apiSlice } from "./apiSlice";
-import { onQueryStartedErrorToast } from "../ErrorHandling/ErrorHandling";
+import { onQueryStartedErrorToast } from "../../ErrorHandling/ErrorHandling";
+import { ApiEndpoints } from "@/constants/apiEnums";
+
 
 interface LogoutResponse {
   status: number;
   success: boolean;
   message: string;
 }
-const PROVIDER_URL = '/api/provider';
+const PROVIDER_URL = ApiEndpoints.PROVIDER_URL;
 
 export const providerApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
@@ -106,6 +108,16 @@ export const providerApiSlice = apiSlice.injectEndpoints({
       }),
     }),
 
+    updateParkingLot: builder.mutation({
+      query: (formData) => ({
+        url: `${PROVIDER_URL}/updateParkingLot`,
+        method: 'PATCH',
+        data: formData,
+        params: {},
+        headers: {},
+        formData: true
+      }),
+    }),
   })
 })
 
@@ -118,7 +130,8 @@ export const {
   useGetProviderDetailsMutation,
   useUpdateProvProfileDetailsMutation,
   useFetchParkingLotsBookingsMutation,
-  useCheckProvPasswordMutation
+  useCheckProvPasswordMutation,
+  useUpdateParkingLotMutation
   
 } = providerApiSlice
 

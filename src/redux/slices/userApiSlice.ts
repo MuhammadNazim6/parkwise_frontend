@@ -1,7 +1,8 @@
 import { apiSlice } from "./apiSlice";
-import { onQueryStartedErrorToast } from "../ErrorHandling/ErrorHandling";
+import { onQueryStartedErrorToast } from "../../ErrorHandling/ErrorHandling";
+import { ApiEndpoints } from "@/constants/apiEnums";
 
-const USER_URL = "/api/user";
+const USER_URL = ApiEndpoints.USER_URL
 
 export const userApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
@@ -102,7 +103,7 @@ export const userApiSlice = apiSlice.injectEndpoints({
         params: {},
         headers: {}
       }),
-      onQueryStarted: onQueryStartedErrorToast
+      onQueryStarted: onQueryStartedErrorToast  
     }),
 
     getBookedSlots: builder.mutation({
@@ -227,6 +228,17 @@ export const userApiSlice = apiSlice.injectEndpoints({
       onQueryStarted: onQueryStartedErrorToast
     }),
 
+    fetchUserBookingsCount: builder.mutation({
+      query: (userId) => ({
+        url: `${USER_URL}/bookingCount/${userId}`,
+        method: "GET",
+        data: {},
+        params: {},
+        headers: {},
+      }),
+      onQueryStarted: onQueryStartedErrorToast
+    }),
+
 
   }),
 });
@@ -251,5 +263,6 @@ export const {
   useConfirmSlotAvailabilityMutation,
   useGetFilledSlotsMutation,
   useRescheduleSlotsMutation,
-  useGetUserDetailsMutation
+  useGetUserDetailsMutation,
+  useFetchUserBookingsCountMutation
 } = userApiSlice;

@@ -186,10 +186,17 @@ function UserChats() {
       setMessages(response.data)
     }
     scrollToBottomChat()
+    setTimeout(() => {
+      scrollToBottomPage()
+    }, 200);
   }
 
   const scrollToBottomChat = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  const scrollToBottomPage = () => {
+    pageEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
   const enterButtonSend = (e) => {

@@ -1,8 +1,8 @@
 import React from 'react'
 import UserNavbar from '../../components/User/UserNavbar';
-import Hero from '../../components/User/Hero';
-import Hero_second from '../../components/User/Hero_second';
-import Hero_third from '../../components/User/Hero_third';
+import Hero from '../../components/User/Banner1';
+import Hero_second from '../../components/User/Banner2';
+import Hero_third from '../../components/User/Banner3';
 import Footer from '../../components/User/Footer';
 
 

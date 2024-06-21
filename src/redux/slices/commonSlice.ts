@@ -1,8 +1,9 @@
 import { apiSlice } from "./apiSlice";
-import { onQueryStartedErrorToast } from "../ErrorHandling/ErrorHandling";
+import { onQueryStartedErrorToast } from "../../ErrorHandling/ErrorHandling";
+import { ApiEndpoints } from "@/constants/apiEnums";
 
 
-const COMMON_URL = '/api/common';
+const COMMON_URL = ApiEndpoints.COMMON_URL;
 
 
 export const commonApiSLice = apiSlice.injectEndpoints({

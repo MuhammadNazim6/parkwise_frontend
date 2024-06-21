@@ -7,13 +7,15 @@ import UserLandingPage from '../screens/Users/UserLandingPage';
 import UserEmailVerify from '../screens/Users/UserEmailVerify';
 import UserFindLots from '../screens/Users/UserFindLots';
 import CommonForgotPassword from '../screens/Common/CommonForgotPassword';
-import UserProtect from '@/components/User/protected/UserProtect';
+import UserProtect from '@/routes/protected/UserProtect';
 import CommonLeftSideLayout from '@/screens/Common/CommonLeftSideLayout';
 import CommonChangePassword from '@/screens/Common/CommonChangePassword';
 import UserParkingLotDetails from '@/screens/Users/UserParkingLotDetails';
 import UserProfile from '@/screens/Users/UserProfile';
 import UserChats from '@/screens/Users/UserChats';
 import UserDirections from '@/screens/Users/UserDirections';
+import NotFoundPage from '@/screens/Common/NotFoundPage';
+import VideoCallRoom from '@/screens/Common/VideoCallRoom';
 
 function UserRoutes() {
   return (
@@ -37,10 +39,8 @@ function UserRoutes() {
         </Route>
 
       </Route>
-
-
-      {/* protected start */}
-
+      <Route path="/user/video/:roomId" element={<VideoCallRoom />} /> 
+      <Route path="*" element={<NotFoundPage />} /> 
     </Routes>
   )
 }

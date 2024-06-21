@@ -9,7 +9,7 @@ interface iType {
 }
 
 
-function UserProtect() {
+function ProviderProtect() {
 
   const {pLoggedIn}=useSelector((state: iType)=>state.auth)
 
@@ -18,4 +18,4 @@ function UserProtect() {
   )
 }
 
-export default UserProtect
+export default ProviderProtect

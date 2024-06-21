@@ -24,6 +24,7 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination"
+import { debounce } from "lodash";
 
 
 function UserFindLots() {
@@ -57,12 +58,22 @@ function UserFindLots() {
     }
   }, [])
 
+  // 
+  const fetchLots = () => {
+    fetchParkingLots()
+    console.log("Fetching data with params:", { price, coordinates, services, page });
+  }
+  const debouncedFetchParkingLots = useCallback(debounce(fetchLots, 300), [coordinates, price, services, page]);
+
+  
   useEffect(() => {
     if (coordinates.length === 2) {
       console.log('In useEffect (Not on initial render)');
-      fetchParkingLots()
+      debouncedFetchParkingLots()
+      // 
     }
-  }, [coordinates, price, services, page])
+  }, [coordinates, price, services, page, debouncedFetchParkingLots])
+// 
 
   const handlePriceChange = (value) => {
     setPrice(value)
@@ -125,7 +136,7 @@ function UserFindLots() {
               <UserSearchAddress setCoordinates={setCoordinates} />
             </div>
           </div>
-          <button className="flex justify-center items-center w-1/12 glass bg-white text-black hover:bg-slate-300 active:scale-[.98] active:duration-75 transition-all rounded-sm p-1 text-xs h-9" onClick={getCurrentCoordinatesAndFetchParkingLots}><BiCurrentLocation className="text-3xl"/>Current location</button>
+          <button className="flex justify-center items-center w-1/12 glass bg-white text-black hover:bg-slate-300 active:scale-[.98] active:duration-75 transition-all rounded-sm p-1 text-xs h-9" onClick={getCurrentCoordinatesAndFetchParkingLots}><BiCurrentLocation className="text-3xl" />Current location</button>
         </div>
       </div>
 

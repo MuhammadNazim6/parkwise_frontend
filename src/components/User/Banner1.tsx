@@ -3,7 +3,7 @@ import heroImage from '../../assets/Images/heroImage.jpg'
 import { useNavigate } from 'react-router-dom'
 
 
-function Hero() {
+function Banner1() {
   const navigate = useNavigate()
   return (
     <div className='text-black bg-primary-blue'>
@@ -25,4 +25,4 @@ function Hero() {
   )
 }
 
-export default Hero
+export default Banner1
