@@ -32,10 +32,10 @@ const UserCarousel = ({ carouselArr, lotDetails }) => {
           />
         </div>
       <div className="absolute flex justify-between transform -translate-y-1/2 left-5 right-5 top-1/2">
-        <button onClick={prevSlide} className="btn btn-circle btn-outline">
+        <button onClick={prevSlide} className="btn btn-outline outline outline-1 text-slate-200 glass">
           ❮
         </button>
-        <button onClick={nextSlide} className="btn btn-circle btn-outline">
+        <button onClick={nextSlide} className="btn btn-outline outline outline-1 text-slate-200 glass">
           ❯
         </button>
       </div>

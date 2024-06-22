@@ -39,7 +39,7 @@ function UserRoutes() {
         </Route>
 
       </Route>
-      <Route path="/user/video/:roomId" element={<VideoCallRoom />} /> 
+      <Route path="/user/chats/video-call/:roomId" element={<VideoCallRoom />} /> 
       <Route path="*" element={<NotFoundPage />} /> 
     </Routes>
   )

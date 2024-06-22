@@ -23,6 +23,7 @@ import UserLoginModal from './UserLoginModal';
 import { useDisclosure } from '@chakra-ui/react';
 import { RootState } from '@/redux/store';
 import { useSelector } from 'react-redux';
+import Footer from '@/components/User/Footer';
 
 
 function UserParkingLotDetails() {
@@ -145,6 +146,8 @@ function UserParkingLotDetails() {
   }
 
   return (
+    <>
+
     <div className='min-h-screen flex flex-col md:flex-row bg-blue-50 px-4 xl:px-40 '>
       <div className="w-full md:w-1/2 pt-10 md:flex h-full">
         {lotDetails ? (
@@ -153,32 +156,32 @@ function UserParkingLotDetails() {
               <UserCarousel carouselArr={lotDetails.images} lotDetails={lotDetails} />
             </div>
             <div className="flex m-6 justify-between text-[13px]">
-              <div className="flex flex-col">
+              <div className="">
                 <p className="text-gray-900">{lotDetails.address.buildingOrAreaName}</p>
-                <p className="text-gray-900">{lotDetails.address.street}</p>
+                {/* <p className="text-gray-900">{lotDetails.address.street}</p> */}
                 {lotDetails.address.landmark && (
                   <p className="text-gray-900">{lotDetails.address.landmark}</p>
                 )}
-                <p className="text-gray-900">{lotDetails.address.pinNumber}</p>
-                <p className="text-gray-900">{lotDetails.address.city}</p>
+                <span className="text-gray-900">{lotDetails.address.pinNumber}, </span>
+                <span className="text-gray-900">{lotDetails.address.city}</span>
                 <p className="text-gray-900">{lotDetails.address.state}</p>
               </div>
 
               <div className="flex flex-col space-y-2 text">
-                {lotDetails.evChargeFacilityPrice && (
+                {!lotDetails.evChargeFacilityPrice && (
                   <div className="flex items-center space-x-2 bg-blue-50 p-1 rounded-md_dis shadow-sm hover:bg-blue-100 transition duration-300">
                     <IoMdBatteryCharging className="" />
                     <p className="text-gray-700 font-medium">EV Charging</p>
                   </div>
                 )}
                 {lotDetails.waterServicePrice && (
-                  <div className="flex items-center space-x-2 bg-green-50 p-1 rounded-md shadow-sm hover:bg-green-100 transition duration-300">
+                  <div className="flex items-center space-x-2 bg-blue-50 p-1 rounded-md_dis shadow-sm hover:bg-blue-100 transition duration-300">
                     <MdLocalCarWash className=" " />
                     <p className="text-gray-700 font-medium">Water Service</p>
                   </div>
                 )}
-                {lotDetails.airPressureCheckPrice && (
-                  <div className="flex items-center space-x-2 bg-yellow-50 p-1 rounded-md shadow-sm hover:bg-yellow-100 transition duration-300">
+                {!lotDetails.airPressureCheckPrice && (
+                  <div className="flex items-center space-x-2 bg-blue-50 p-1 rounded-md_dis shadow-sm hover:bg-blue-100 transition duration-300">
                     <GiCartwheel className=" " />
                     <p className="text-gray-700 font-medium">Air Filling</p>
                   </div>
@@ -336,6 +339,9 @@ function UserParkingLotDetails() {
 
       <UserLoginModal isOpen={isLoginModalOpen} onClose={closeLoginModal} url={urlToNavigate} />
     </div>
+    <Footer/>
+
+    </>
 
   )
 }

@@ -5,10 +5,13 @@ import { Provider } from 'react-redux'
 import { store } from './redux/store'
 import { ThemeProvider } from "@material-tailwind/react";
 import { SocketProvider } from './context/SocketProvider'
+import { BrowserRouter, useNavigate } from 'react-router-dom';
+
 
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   // <React.StrictMode>
+  <BrowserRouter>
   <Provider store={store}>
     <ThemeProvider>
       <SocketProvider>
@@ -16,5 +19,6 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
       </SocketProvider>
     </ThemeProvider>
   </Provider>
+  </BrowserRouter>
   // </React.StrictMode>,
 )

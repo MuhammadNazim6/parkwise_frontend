@@ -16,7 +16,6 @@ import {
 import { IoChevronBackSharp } from "react-icons/io5";
 import { IoMdCall } from "react-icons/io";
 import { FaVideo } from "react-icons/fa";
-// import { socket } from '@/App';
 import { RootState } from '@/redux/store';
 import { useSelector } from 'react-redux';
 import { TbSend } from "react-icons/tb";
@@ -26,11 +25,13 @@ import { useGetLotDetailsMutation } from '@/redux/slices/userApiSlice';
 import EmojiPicker from 'emoji-picker-react';
 import { BsEmojiSmile } from "react-icons/bs";
 import { useSocket } from '@/context/SocketProvider';
-
+import ShortUniqueId from 'short-unique-id';
+import { useNavigate } from 'react-router-dom';
 
 function UserChats() {
   const [searchParams] = useSearchParams();
   const ID = searchParams.get('ID');
+  const navigate = useNavigate()
 
   const SenderReceiverType = Object.freeze({
     USER: 'User',
@@ -59,6 +60,8 @@ function UserChats() {
   const messagesEndRef = useRef(null);
   const pageEndRef = useRef(null);
   const btnRef = useRef()
+
+  const uid = new ShortUniqueId();
 
   // Filter function start
   useEffect(() => {
@@ -237,6 +240,12 @@ function UserChats() {
   }
 
 
+  const handleVideoCall = async () => {
+    const roomId = uid.rnd()
+    socket.emit('startVideoCall', {callerId:userInfo.id, receiverId, roomId});
+    navigate(`/user/chats/video-call/${roomId}`)
+  }
+
   return (
     <div className='flex h-screen w-full md:px-8 lg:px-10 xl:px-20 pt-2'>
       <div className='w-full md:w-5/12 overflow-y-scroll hide-scrollbar rounded-l-xl'>
@@ -319,8 +328,8 @@ function UserChats() {
               </div>
 
               <div className='flex space-x-9 justify-end'>
-                <IoMdCall className='text-2xl cursor-pointer' />
-                <FaVideo className='text-2xl cursor-pointer' />
+                {/* <IoMdCall className='text-2xl cursor-pointer' /> */}
+                <FaVideo onClick={handleVideoCall} className='text-2xl cursor-pointer' />
               </div>
             </DrawerHeader>
             <Divider orientation='horizontal' />
@@ -339,8 +348,13 @@ function UserChats() {
             </DrawerBody>
             <div className="fixed bottom-0 right-0 bg-white h-14 rounded-md w-full">
               <form className='w-full ml-7 relative' onSubmit={enterButtonSend}>
-                <input type='text' value={text} onChange={(e) => setText(e.target.value)} className='w-11/12 rounded-lg shadow-xl ' />
+                <input type='text' value={text} onChange={(e) => setText(e.target.value)} className='w-11/12 rounded-lg shadow-xl px-12' />
               </form>
+              <BsEmojiSmile onClick={toggleEmojiModal} className='absolute left-10 bottom-6 hover:text-gray-500 active:scale-[1.08] text-2xl transition-opacity cursor-pointer' />
+
+              <div className='absolute left-7 bottom-16'>
+                <EmojiPicker open={showEmoji} onEmojiClick={handleEmogiClick} />
+              </div>
               <TbSend2 className={`absolute right-10 bottom-6 text-2xl transition-opacity cursor-pointer ${!text.length ? 'opacity-0' : 'opacity-100'}`}
               />
               <TbSend onClick={addToMessages} className={`absolute right-10  bottom-6 text-2xl transition-opacity cursor-pointer ${text.length ? 'opacity-0' : 'opacity-100'}`}
@@ -372,8 +386,8 @@ function UserChats() {
               </div>
 
               <div className='flex space-x-9 justify-end'>
-                <IoMdCall className='text-2xl cursor-pointer' />
-                <FaVideo className='text-2xl cursor-pointer' />
+                {/* <IoMdCall className='text-2xl cursor-pointer hover:text-gray-600' /> */}
+                <FaVideo onClick={handleVideoCall} className='text-2xl cursor-pointer hover:text-gray-600' />
               </div>
             </div>
           </div>

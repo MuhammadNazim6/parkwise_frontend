@@ -25,6 +25,7 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination"
 import { debounce } from "lodash";
+import Footer from "@/components/User/Footer";
 
 
 function UserFindLots() {
@@ -45,7 +46,7 @@ function UserFindLots() {
   const WATER_SERVICE = 'waterService'
   const EV_CHARGING = 'evCharging'
   const AIR_PRESSURE = 'airPressure'
-  const limit = 4;
+  const limit = 2;
   const [getParkingLots, { isLoading }] = useGetParkingLotsMutation()
   const dispatch = useDispatch()
 
@@ -65,7 +66,7 @@ function UserFindLots() {
   }
   const debouncedFetchParkingLots = useCallback(debounce(fetchLots, 300), [coordinates, price, services, page]);
 
-  
+
   useEffect(() => {
     if (coordinates.length === 2) {
       console.log('In useEffect (Not on initial render)');
@@ -73,7 +74,7 @@ function UserFindLots() {
       // 
     }
   }, [coordinates, price, services, page, debouncedFetchParkingLots])
-// 
+  // 
 
   const handlePriceChange = (value) => {
     setPrice(value)
@@ -140,42 +141,49 @@ function UserFindLots() {
         </div>
       </div>
 
-      <div className="md:block hidden w-1/6 fixed border-xl text-sm pt-4 ">
-        <div className="flex justify-start px-8 py-3 text-lg text-gray-500 font-medium tracking-widest shadow-2xl rounded-t-2xl bg-blue-100">
+      <div className="md:block hidden w-1/6 fixed text-sm pt-4 bg-blue-300 rounded-tr-2xl glass mt-3">
+        <div className="flex justify-start px-8 text-xl text-gray-700 font-semibold tracking-widest rounded-t-2xl">
           Filters
         </div>
-        <div className="p-7 shadow-md  bg-blue-100">
-          <div className="text-md p-2 text-gray-500 tracking-wider flex justify-start mb-3">
-            Slot Price: {price}
+        <div className="p-6 pb-1 mt-4">
+          <div className="text-[15px] p-1 text-gray-800 tracking-wider flex justify-start mb-3 ml-1">
+            Slot Price: <span className="ml-2 text-[16px]">Rs {price}</span>
           </div>
-          <div className="text-lg text-black tracking-wider flex justify-center cursor-pointer">
-            <Slider defaultValue={[price]} max={400} step={20} onValueChange={handlePriceChange} />
+          <div className="text-lg text-black tracking-wider flex justify-center items-center cursor-pointer ml-1">
+            <Slider
+              defaultValue={[price]}
+              max={400}
+              step={20}
+              onValueChange={handlePriceChange}
+              className="w-full"
+            />
           </div>
         </div>
 
+
         {/* SERVICES CHECKBOX */}
-        <div className="text-md text-gray-600 tracking-wider lg:p-12 p-3 shadow-xl rounded-b-xl bg-blue-100 h-screen">
-          <label className="flex items-center cursor-pointer mb-4" htmlFor="airPressure">
+        <div className="text-md text-gray-800 tracking-wider lg:p-12 p-6 shadow-xl rounded-b-xl h-screen ">
+          <label className="flex text-[14px] items-center cursor-pointer mb-4 hover:bg-gray-100 p-2 rounded transition-colors duration-300" htmlFor="airPressure">
             <Checkbox
               id={AIR_PRESSURE}
               onClick={() => handleServiceChange(AIR_PRESSURE)}
-              className="mr-2 cursor-pointer"
+              className="mr-3 cursor-pointer"
             />
             Air Pressure
           </label>
-          <label className="flex items-center cursor-pointer mb-4">
+          <label className="flex items-center cursor-pointer mb-4 text-[14px] hover:bg-gray-100 p-2 rounded transition-colors duration-300">
             <Checkbox
               id={WATER_SERVICE}
               onClick={() => handleServiceChange(WATER_SERVICE)}
-              className="mr-2 cursor-pointer"
+              className="mr-3 cursor-pointer"
             />
             Water Service
           </label>
-          <label className="flex items-center mb-2 cursor-pointer">
+          <label className="flex items-center mb-4 cursor-pointer text-[14px] hover:bg-gray-100 p-2 rounded transition-colors duration-300">
             <Checkbox
               id={EV_CHARGING}
               onClick={() => handleServiceChange(EV_CHARGING)}
-              className="mr-2 cursor-pointer"
+              className="mr-3 cursor-pointer"
             />
             EV Charging
           </label>
@@ -188,17 +196,16 @@ function UserFindLots() {
             <div className="">
               <SkeletonCard />
               <SkeletonCard />
-              {/* <SkeletonCard /> */}
             </div>
           </div>
         ) : (parkingLots.length > 0 ? (
-          <div className="md:px-16 md:w-5/6 h-screen ml-auto bg-white relative">
+          <div className="md:px-16 md:w-5/6 h-screen ml-auto bg-white">
             <ul className="p-4">
               {/* Parking lot list */}
               {parkingLots.map((lot) => (
                 <Link to={`/user/find/lotDetails/${lot._id}`}
                   key={lot._id}
-                  className="bg-blue-100 md:hover:bg-blue-50 m-5 rounded-b-xl flex md:flex-row justify-between hover:scale-[1.001] transition-all ease-in-out cursor-pointer p-4 h-28"
+                  className="bg-[#cbe2fc] glass md:hover:bg-[#bddcfe] m-5 rounded-b-xl flex md:flex-row justify-between hover:scale-[1.001] transition-all ease-in-out cursor-pointer p-4 h-28"
                 >
                   <div className="flex flex-col justify-between w-3/4 px-5">
                     <div>
@@ -235,13 +242,12 @@ function UserFindLots() {
                 </Link>
               ))}
             </ul>
-            <div className="fixed inset-x-0 bottom-5 flex justify-center">
+            <div className="fixed inset-x-0 left-60 bottom-5 flex justify-center">
               <Pagination className="">
-                <PaginationContent className="bg p-1 glass rounded-lg">
+                <PaginationContent className="bg p-1 glass rounded-lg bg-gray-200">
                   <PaginationItem className="cursor-pointer">
                     <PaginationPrevious onClick={handlePrevPageClick} />
                   </PaginationItem>
-
                   <Pagination>
                     {Array.from({ length: totalPages }, (_, index) => (
                       <PaginationItem key={index} className="cursor-pointer">
@@ -249,11 +255,6 @@ function UserFindLots() {
                       </PaginationItem>
                     ))}
                   </Pagination>
-
-                  <PaginationItem>
-                    <PaginationEllipsis />
-                  </PaginationItem>
-
                   <PaginationItem className="cursor-pointer">
                     <PaginationNext onClick={handleNextPageClick} />
                   </PaginationItem>
@@ -269,6 +270,7 @@ function UserFindLots() {
             </div>
           </div>
         ))
+
       }
     </>
   );
