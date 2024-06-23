@@ -1,11 +1,15 @@
 import React from 'react'
 import mapImg from '../../assets/Images/mapImg.jpg'
-import overlapImg from '../../assets/Images/overlapImg.avif'
+import { motion } from "framer-motion"
 
 
 function Banner3() {
   return (
-    <div className='text-black bg-white'>
+    <motion.div initial={{ opacity: 0 }}
+    animate={{
+      opacity: 1,
+      transition: { delay: 0.2, duration: 0.4, ease: 'easeIn' }
+    }} className='text-black bg-white'>
     <div className="max-w-6xl mx-auto px-4 py-8 md:flex md:items-center md:justify-between md:py-16">
       <div className="md:w-1/2 md:pr-8">
         <h1 className='font-bold text-4xl md:text-3xl p-5 mt-5'>Features and benefits</h1>
@@ -16,7 +20,7 @@ function Banner3() {
       </div>
 
     </div>
-  </div>
+  </motion.div>
   )
 }
 

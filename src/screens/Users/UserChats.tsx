@@ -27,6 +27,8 @@ import { BsEmojiSmile } from "react-icons/bs";
 import { useSocket } from '@/context/SocketProvider';
 import ShortUniqueId from 'short-unique-id';
 import { useNavigate } from 'react-router-dom';
+import { motion } from "framer-motion"
+
 
 function UserChats() {
   const [searchParams] = useSearchParams();
@@ -247,7 +249,11 @@ function UserChats() {
   }
 
   return (
-    <div className='flex h-screen w-full md:px-8 lg:px-10 xl:px-20 pt-2'>
+    <motion.div initial={{ opacity: 0 }}
+    animate={{
+      opacity: 1,
+      transition: { delay: 0.2, duration: 0.4, ease: 'easeIn' }
+    }} className='flex h-screen w-full md:px-8 lg:px-10 xl:px-20 pt-2'>
       <div className='w-full md:w-5/12 overflow-y-scroll hide-scrollbar rounded-l-xl'>
         <div className="flex w-full sticky top-0 z-10">
           <div className="flex justify-between p-3 w-full bg--200 glass z-10 md:w-full">
@@ -431,7 +437,7 @@ function UserChats() {
           </div>
         )
       }
-    </div>
+    </motion.div>
 
   )
 }

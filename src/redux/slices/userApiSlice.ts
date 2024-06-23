@@ -239,6 +239,28 @@ export const userApiSlice = apiSlice.injectEndpoints({
       onQueryStarted: onQueryStartedErrorToast
     }),
 
+    fetchFeedbacks: builder.mutation({
+      query: (lotId) => ({
+        url: `${USER_URL}/getLotFeedbacks/${lotId}`,
+        method: "GET",
+        data: {},
+        params: {},
+        headers: {},
+      }),
+      onQueryStarted: onQueryStartedErrorToast
+    }),
+
+    addFeedback: builder.mutation({
+      query: (data) => ({
+        url: `${USER_URL}/addFeedback`,
+        method: "POST",
+        data: data,
+        params: {},
+        headers: {},
+      }),
+      onQueryStarted: onQueryStartedErrorToast
+    }),
+
 
   }),
 });
@@ -264,5 +286,7 @@ export const {
   useGetFilledSlotsMutation,
   useRescheduleSlotsMutation,
   useGetUserDetailsMutation,
-  useFetchUserBookingsCountMutation
+  useFetchUserBookingsCountMutation,
+  useFetchFeedbacksMutation,
+  useAddFeedbackMutation
 } = userApiSlice;

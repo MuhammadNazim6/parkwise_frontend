@@ -3,6 +3,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 import Map, { FullscreenControl, GeolocateControl, Marker, Source, Layer, NavigationControl, } from 'react-map-gl';
 import Instructions from '@/components/User/Instructions';
+import {motion} from 'framer-motion'
+
 
 function UserDirections() {
   const location = useLocation()
@@ -153,7 +155,11 @@ function UserDirections() {
     setEnd((prev) => [...prev])
   }
   return (
-    <>
+    <motion.div initial={{ opacity: 0 }}
+    animate={{
+      opacity: 1,
+      transition: { delay: 0.2, duration: 0.4, ease: 'easeIn' }
+    }}>
       <div className="absolute w-full h-screen">
         <Map
           {...viewState}
@@ -194,7 +200,7 @@ function UserDirections() {
           ))}
         </article>
       </div>
-    </>
+    </motion.div>
   );
 }
 

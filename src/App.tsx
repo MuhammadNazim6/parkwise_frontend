@@ -6,11 +6,13 @@ import AppRouter from './routes/AppRouter';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import toast, { Toaster as HotToast } from 'react-hot-toast';
 import { Toaster } from "@/components/ui/toaster"
-import { Button, Box, ChakraProvider } from '@chakra-ui/react';
+import { Button, Box, ChakraProvider, position } from '@chakra-ui/react';
 import { useSelector } from 'react-redux';
 import { RootState } from './redux/store';
 import { useGetSenderNameMutation } from './redux/slices/commonSlice';
 import { useSocket } from './context/SocketProvider';
+import Feedback from '@betahuhn/feedback-js'
+import { color } from 'framer-motion';
 
 
 
@@ -21,7 +23,15 @@ function App() {
   const navigate = useNavigate()
 
   useEffect(() => {
-    userInfo ? socket.emit('register', userInfo.id) : socket.emit('register', providerInfo.id)
+    new Feedback({ endpoint: 'http://localhost:3000/api/user/suggestions', color: '#000000', primary: '#7ea4f8', position: 'left' ,btnTitle:'Let us know'}).renderButton()
+  }, [])
+
+  useEffect(() => {
+    if (userInfo) {
+      socket.emit('register', userInfo.id)
+    } else if (providerInfo) {
+      socket.emit('register', providerInfo.id)
+    }
 
     socket.on('notification', async (data) => {
       const sender = await getSenderName(data.sender).unwrap()
@@ -96,12 +106,12 @@ function App() {
     <ChakraProvider>
       <GoogleOAuthProvider clientId={clientId}>
         {/* <BrowserRouter> */}
-          <HotToast
-            position="top-right"
-            reverseOrder={false}
-          />
-          <AppRouter />
-          <Toaster />
+        <HotToast
+          position="top-right"
+          reverseOrder={false}
+        />
+        <AppRouter />
+        <Toaster />
         {/* </BrowserRouter> */}
       </GoogleOAuthProvider>
     </ChakraProvider>

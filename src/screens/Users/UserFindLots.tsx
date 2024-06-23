@@ -12,8 +12,6 @@ import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { setSearchData } from "@/redux/slices/searchSlice";
 import { RootState } from "@/redux/store";
-import noResultsAnim from '../../assets/Animation/noResultsAnim.json'
-import Lottie from "lottie-react";
 import { BiCurrentLocation } from "react-icons/bi";
 import {
   Pagination,
@@ -25,7 +23,7 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination"
 import { debounce } from "lodash";
-import Footer from "@/components/User/Footer";
+import { motion } from "framer-motion"
 
 
 function UserFindLots() {
@@ -125,9 +123,12 @@ function UserFindLots() {
   }
 
   return (
-    <>
-      <div
-        className="hero h-20 sticky top-0 z-10"
+    <motion.div initial={{ opacity: 0 }}
+    animate={{
+      opacity: 1,
+      transition: { delay: 0.2, duration: 0.4, ease: 'easeIn' }
+    }}>
+      <div className="hero h-20 sticky top-0 z-10"
         style={{ backgroundImage: `url(${HeroImage})` }}
       >
         <div className="hero-overlay bg-opacity-70"></div>
@@ -265,14 +266,13 @@ function UserFindLots() {
         ) : (
           <div className="text-center w-full mt-24 text-xl md:text-3xl text-gray-700 bg-white min-h-screen">
             <div className="flex justify-center items-center h-72">
-              {/* <Lottie animationData={noResultsAnim} className='h-64' /> */}
               No result
             </div>
           </div>
         ))
 
       }
-    </>
+    </motion.div>
   );
 }
 

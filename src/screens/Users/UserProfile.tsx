@@ -18,6 +18,10 @@ import OtpModal from '@/components/User/profileComponents/userProfileOtpModal';
 import { MdOutlinePassword } from "react-icons/md";
 import UserChangePassModal from '@/components/User/profileComponents/UserChangePassModal';
 import UserWalletModal from '@/components/User/profileComponents/UserWalletModal';
+import { motion } from "framer-motion"
+import CountUp from "react-countup"
+
+
 
 
 function UserProfile() {
@@ -49,7 +53,6 @@ function UserProfile() {
   const [changedEmail, setChangedEmail] = useState('')
   const [otpErr, setOtpErr] = useState('')
   const [bookingCount, setBookingCount] = useState(0)
-  // const [bookingListOpen, setBookingListOpen] = useState(true)
 
   const [bookingsPage, setBookingsPage] = useState(1)
 
@@ -131,10 +134,14 @@ function UserProfile() {
   }
 
   return (
-    <div>
+    <motion.div initial={{ opacity: 0 }}
+      animate={{
+        opacity: 1,
+        transition: { delay: 0.2, duration: 0.4, ease: 'easeIn' }
+      }}>
       <div className="flex justify-center text-2xl font-semibold text-gray-800"><p>My Profile</p></div>
       <div className="flex justify-center mt-8 relative ">
-        <img src={changedImage ? changedImage : profileImage} alt="Profile" className='object-cover rounded-full absolute z-10 w-28 h-28' />
+        <img src={changedImage ? changedImage : profileImage} alt="" className='object-cover rounded-full absolute z-10 w-28 h-28' />
         <div className='relative h-28 w-28 bg-blue-200 rounded-full shadow-xl'>
           {editProfile ? (<div className='absolute z-20 bottom-1 right-3 transform bg-white p-1 rounded-full'>
             <RiImageEditLine className="text-blue-500 text-xl cursor-pointer hover:filter hover:text-gray-600 transition duration-300" onClick={handleProfilePicInput} />
@@ -265,9 +272,39 @@ function UserProfile() {
               <div className='mt-1 text-lg text-gray-800'>{userInfo.mobile}</div>
             </div>
             <div className="flex bg-primary-blue justify-between m-4 p-2 rounded-lg shadow-xl">
-              <div onClick={openBookingsModal} className='w-1/3 font-extrabold text-center p-4 m-2 rounded-lg hover:text-black text-gray-700'><span className='text-2xl cursor-pointer'>{bookingCount}</span><p className='text-sm cursor-pointer text-nowrap' >Bookings</p> </div>
-              <div onClick={openWalletModal} className='w-1/3 font-extrabold text-center p-4 m-2 rounded-lg hover:text-black text-gray-700'><span className='md:text-2xl text-sm cursor-pointer'>Rs {userDetails && userDetails.wallet.balance}</span><p className='text-sm cursor-pointer text-nowrap'>Wallet</p> </div>
-              <Link to='/user/chats' className='w-1/3 font-extrabold text-center p-4 m-2 rounded-lg hover:text-black text-gray-700'><span className='text-2xl cursor-pointer'>33</span><p className='text-sm cursor-pointer text-nowrap'>Messages</p> </Link>
+              <div onClick={openBookingsModal} className='w-1/3 font-extrabold text-center p-4 m-2 rounded-lg hover:text-black text-gray-700'>
+                <span className='text-2xl cursor-pointer'>
+                  <CountUp
+                    end={bookingCount}
+                    duration={5}
+                    delay={2}
+                  />
+                </span>
+                <p className='text-sm cursor-pointer text-nowrap' >Bookings</p>
+              </div>
+
+              <div onClick={openWalletModal} className='w-1/3 font-extrabold text-center p-4 m-2 rounded-lg hover:text-black text-gray-700'>
+                <span className='md:text-2xl text-sm cursor-pointer'>
+                  Rs
+                  <CountUp
+                  className='ml-2'
+                    end={userDetails && userDetails.wallet.balance}
+                    duration={2}
+                    delay={1}
+                  />
+                </span>
+                <p className='text-sm cursor-pointer text-nowrap'>Wallet</p>
+              </div>
+              <Link to='/user/chats' className='w-1/3 font-extrabold text-center p-4 m-2 rounded-lg hover:text-black text-gray-700'>
+              <span className='text-2xl cursor-pointer'>
+              <CountUp
+                  end={33}
+                  duration={5}
+                  delay={2}
+                />
+                </span>
+              <p className='text-sm cursor-pointer text-nowrap'>Messages</p> 
+              </Link>
             </div>
             <div className="flex bg-gray-100 justify-between m-5 rounded-lg shadow-md transition-transform hover:scale-[1.01] ease-in-out duration-300">
               <div className='w-full text-black flex justify-center items-center space-x-1 p-1 m-2 rounded-lg cursor-pointer' onClick={handleSetEditProfile}><RiImageEditLine /><span className='text-md' >Edit profile</span></div>
@@ -282,7 +319,7 @@ function UserProfile() {
       <OtpModal isOpen={isOtpModalOpen} onClose={closeOtpModal} userEnteredOtp={userEnteredOtp} setUserEnteredOtp={setUserEnteredOtp} checkOtpFn={checkOtpFn} otpErr={otpErr} isLoadingOtpSent={isLoadingOtpSent} />
       <UserChangePassModal isOpen={isOpenChangePassModal} onClose={closeChangePassModal} userId={userInfo.id} userEmail={userInfo.email} />
       {userDetails && <UserWalletModal isOpen={isOpenWalletModal} onClose={closeWalletModal} wallet={userDetails.wallet} />}
-    </div>
+    </motion.div>
   )
 }
 
