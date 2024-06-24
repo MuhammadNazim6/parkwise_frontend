@@ -25,20 +25,21 @@ import {
   TableCaption,
   TableContainer,
 } from '@chakra-ui/react'
+import no_transactionsImg from '../../../assets/Images/no_transactions.png'
+
 
 
 const UserWalletModal = ({ isOpen, onClose, wallet }) => {
   const { toast } = useToast()
   const { isOpen: isCollapseOpen, onToggle } = useDisclosure()
 
-  console.log(wallet);
 
   return (
     <Modal closeOnOverlayClick={false} isOpen={isOpen} onClose={onClose} size={'2xl'}>
       <ModalOverlay />
       <ModalContent>
         <ModalHeader>My wallet</ModalHeader>
-        <ModalCloseButton />
+        {/* <ModalCloseButton /> */}
         <ModalBody p={9}>
           <div className="flex justify-center font-mono">
             <div className="h-48 bg-black glass rounded-lg w-80 relative shadow-3xl">
@@ -66,7 +67,7 @@ const UserWalletModal = ({ isOpen, onClose, wallet }) => {
             <Button className='flex justify-center items-center space-x-2' onClick={onToggle}><span>View history</span><RiHistoryLine /></Button>
           </div>
           <Collapse in={isCollapseOpen} animateOpacity>
-            <Box
+            {wallet.history.length ? (<Box
               p='40px'
               color='white'
               mt='4'
@@ -94,11 +95,16 @@ const UserWalletModal = ({ isOpen, onClose, wallet }) => {
               </TableContainer>
 
 
-            </Box>
+            </Box>) :
+              (<div className="flex justify-center items-center">
+                <img src={no_transactionsImg} className='h-24 mt-16 opacity-75' />
+              </div>)}
           </Collapse>
         </ModalBody>
         <ModalFooter>
+        <Button onClick={onClose}>Close</Button>
         </ModalFooter>
+
       </ModalContent>
     </Modal>
   )

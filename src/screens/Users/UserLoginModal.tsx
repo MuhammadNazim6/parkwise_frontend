@@ -89,6 +89,7 @@ function UserLoginModal({ isOpen, onClose , url}) {
       <ModalContent className='ml-10'>
         <ModalBody p={8} my={20}>
           <form onSubmit={submitHandler}>
+         <p className='mb-2'> Login to continue</p>
             <div className="h-24">
               <label className="text-lg font-medium tracking-wide">Email</label>
               <input

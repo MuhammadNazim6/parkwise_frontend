@@ -33,11 +33,12 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination"
+import noBookingsIng from '../../../assets/Images/noBookingsIng.png'
 
 
 function BookingsListModal({ isOpen, onClose, userId, page, setPage }) {
   const [isSmallScreen, setIsSmallScreen] = useState(window.innerWidth <= 770);
-  const [bookings, setBookings] = useState(null);
+  const [bookings, setBookings] = useState([]);
   const [bookingDetails, setBookingDetails] = useState(null);
   const [error, setError] = useState('')
   const [fetchBookings, { isLoading }] = useFetchUserBookingsMutation()
@@ -179,7 +180,6 @@ function BookingsListModal({ isOpen, onClose, userId, page, setPage }) {
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>{bookingDetails ? 'Booking details' : 'Booking history'}</ModalHeader>
-          <ModalCloseButton />
           <ModalBody className='min-h-96'>
             {bookingDetails ? (
               <div className="min-h-80 md:flex mt-8 items-center">
@@ -315,7 +315,7 @@ function BookingsListModal({ isOpen, onClose, userId, page, setPage }) {
                     <div className="text-gray-700 font-semibold  w-1/4 md:w-1/4 p-1 text-center hidden md:block">Details</div>
                   </div>
 
-                  {bookings && (
+                  {bookings.length ? (
                     bookings.map((booking) => (
                       <div key={booking._id} className="flex bg-gray-100 w-full">
                         <div className="flex-grow">
@@ -334,9 +334,15 @@ function BookingsListModal({ isOpen, onClose, userId, page, setPage }) {
                         </div>
                       </div>
                     ))
-                  )}
+                  ):
+                  (
+                    <div className="flex justify-center items-center">
+                    <img src={noBookingsIng} className='h-60 mb-16' />
+                  </div>
+                  )
+                  }
                 </div>
-                <Pagination className="mt-3">
+                {bookings.length ? (<Pagination className="mt-3">
                   <PaginationContent className="bg p-1 glass rounded-lg">
                     <PaginationItem className="cursor-pointer">
                       <PaginationPrevious onClick={handlePrevPageClick} />
@@ -358,7 +364,7 @@ function BookingsListModal({ isOpen, onClose, userId, page, setPage }) {
                       <PaginationNext onClick={handleNextPageClick} />
                     </PaginationItem>
                   </PaginationContent>
-                </Pagination>
+                </Pagination>):null}
               </>
             )}
           </ModalBody>
@@ -366,7 +372,7 @@ function BookingsListModal({ isOpen, onClose, userId, page, setPage }) {
             <div className="">
               {bookingDetails && <Button onClick={manageGoBack}>Go back</Button>}
             </div>
-            <Button onClick={manageCloseOfModal}>Cancel</Button>
+            <Button onClick={manageCloseOfModal}>Close</Button>
           </div>
         </ModalContent>
       </Modal>

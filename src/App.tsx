@@ -12,7 +12,6 @@ import { RootState } from './redux/store';
 import { useGetSenderNameMutation } from './redux/slices/commonSlice';
 import { useSocket } from './context/SocketProvider';
 import Feedback from '@betahuhn/feedback-js'
-import { color } from 'framer-motion';
 
 
 
@@ -23,7 +22,17 @@ function App() {
   const navigate = useNavigate()
 
   useEffect(() => {
-    new Feedback({ endpoint: 'http://localhost:3000/api/user/suggestions', color: '#000000', primary: '#7ea4f8', position: 'left' ,btnTitle:'Let us know'}).renderButton()
+    const options = {
+      endpoint: 'http://localhost:3000/api/user/suggestions',
+      color: '#000000',
+      primary: '#7ea4f8',
+      position: 'left',
+      btnTitle: '',
+      emailField: true,
+      id: userInfo ? userInfo.id : 'guest',
+    
+    }
+    new Feedback(options).renderButton()
   }, [])
 
   useEffect(() => {

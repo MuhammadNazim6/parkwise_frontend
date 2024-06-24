@@ -9,12 +9,15 @@ import { useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
 import Lottie from 'lottie-react'
 import boxLoader from '../../assets/Animation/boxLoader.json'
+import UserLoginModal from '@/screens/Users/UserLoginModal';
+
 
 
 
 function Feedbacks({ lotId }) {
   const { userInfo } = useSelector((state: RootState) => state.auth)
 
+  const { isOpen: isLoginModalOpen, onOpen: openLoginModal, onClose: closeLoginModal } = useDisclosure()
   const { isOpen: reviewModalIsOpen, onOpen: openReviewModal, onClose: closeReviewModal } = useDisclosure()
   // const [feedbacks, setFeedbacks] = useState([{
   //   parkingLotId: '60af884f4d1a4b8f8b8d1234',
@@ -62,11 +65,7 @@ function Feedbacks({ lotId }) {
   const [ratingToEdit, setRatingToEdit] = useState(0)
   const [reviewToEdit, setReviewToEdit] = useState('')
 
-
-
-
   const [fetchFeedbacks, { isLoading: isLoadingFeedbacks }] = useFetchFeedbacksMutation()
-
 
   useEffect(() => {
     handleFetchFeedback()
@@ -75,16 +74,27 @@ function Feedbacks({ lotId }) {
   const handleFetchFeedback = async () => {
     const res = await fetchFeedbacks(lotId).unwrap()
     if (res.success) {
-      setFeedbacks(() => [...res.data])
-      console.log(res.data);
-      calculateAvgRating()
-      res.data.forEach((feedback) => {
-        if (feedback.userId._id === userInfo.id) {
-          setRatingToEdit(feedback.rating)
-          setReviewToEdit(feedback.review)
-        }
-      })
+      setFeedbacks([...res.data]);
+
+      if (userInfo) {
+        res.data.forEach((feedback) => {
+          if (feedback.userId._id === userInfo.id) {
+            setRatingToEdit(feedback.rating)
+            setReviewToEdit(feedback.review)
+          }
+        })
+      }
     }
+  }
+
+  useEffect(() => {
+    calculateAvgRating();
+  }, [feedbacks]);
+
+  const calculateAvgRating = () => {
+    const total = feedbacks.reduce((a, c) => a + c.rating, 0);
+    const avg = total / feedbacks.length;
+    setAvgRating(avg)
   }
 
   const closeAndUpdate = async () => {
@@ -92,20 +102,13 @@ function Feedbacks({ lotId }) {
     closeReviewModal()
   }
 
-  const calculateAvgRating = () => {
-    const total = feedbacks.reduce((a, c) => {
-      return a.rating + c.rating
-    })
-    const avg = total / feedbacks.length
-    setAvgRating(avg)
-  }
 
   return (
     <>
-      {isLoadingFeedbacks ? 
-      (<div className="flex justify-center items-center mt-5 min-h-96">
-        <Lottie animationData={boxLoader} className='w-28' />
-      </div>) :
+      {isLoadingFeedbacks ?
+        (<div className="flex justify-center items-center mt-5 min-h-96">
+          <Lottie animationData={boxLoader} className='w-28' />
+        </div>) :
         (
           <div>
             <div className="flex p-4 rounded space-x-4 mt-24">
@@ -120,10 +123,10 @@ function Feedbacks({ lotId }) {
 
                     />
                   </div>
-                  <p className='text-center text-sm mt-2 text-slate-500'>{avgRating} Stars • 16 users have rated</p>
+                  <p className='text-center text-sm mt-2 text-slate-500'>{avgRating} Stars • {feedbacks.length} {feedbacks.length === 1 ? 'user' : 'users'} have rated</p>
 
                   {/* Should give conditioning here if user have alredy booked and visited */}
-                  <div className='text-center text-lg mt-4 text-slate-800 cursor-pointer hover:text-[19px] transition-all ease-in-out' onClick={openReviewModal}>
+                  <div className='text-center text-lg mt-4 text-slate-800 cursor-pointer hover:text-[19px] transition-all ease-in-out' onClick={userInfo ? openReviewModal : openLoginModal}>
                     <button className='btn rounded-none btn-outline hover:bg-slate-100 hover:text-gray-400 transition-all'>
                       Add Review
                     </button>
@@ -142,7 +145,9 @@ function Feedbacks({ lotId }) {
                   <div key={index} className="border-b-2 h-36 p-4 text-black rounded relative">
                     <div className="flex justify-between">
                       <h1 className="font-semibold text-slate-700 text-[17px]">{feedback.userId.name}</h1>
-                      {feedback.userId._id === userInfo.id && (<button className="text-slate-700" onClick={openReviewModal}>edit</button>)}
+                      {
+                        userInfo && (feedback.userId._id === userInfo.id && (<button className="text-slate-700" onClick={openReviewModal}>edit</button>))
+                      }
                     </div>
                     <Rating
                       style={{ maxWidth: 65 }}
@@ -152,7 +157,7 @@ function Feedbacks({ lotId }) {
                     <p className="mt-1 text-slate-600 md:text-md text-sm">{feedback.review}</p>
 
                     {/* Helpful text and buttons */}
-                    <div className="absolute bottom-2 left-4 mt-2 mr-2 flex items-center">
+                    {/* <div className="absolute bottom-2 left-4 mt-2 mr-2 flex items-center">
                       <p className="text-gray-500 md:text-sm text-xs mr-2">Helpful?</p>
                       <button
                         // onClick={() => handleThumbUp(review._id)} // Assuming review has an _id field
@@ -166,7 +171,7 @@ function Feedbacks({ lotId }) {
                       >
                         <FaRegThumbsDown className='text-xs text-slate-600' />
                       </button>
-                    </div>
+                    </div> */}
                   </div>
                 ))}
               </div>
@@ -176,6 +181,8 @@ function Feedbacks({ lotId }) {
               </div>
             )
             }
+            <UserLoginModal isOpen={isLoginModalOpen} onClose={closeLoginModal} url={`/user/find/lotDetails/${lotId}`} />
+
           </div>
 
         )}

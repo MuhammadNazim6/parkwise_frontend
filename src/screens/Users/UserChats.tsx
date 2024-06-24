@@ -28,6 +28,8 @@ import { useSocket } from '@/context/SocketProvider';
 import ShortUniqueId from 'short-unique-id';
 import { useNavigate } from 'react-router-dom';
 import { motion } from "framer-motion"
+import no_messagesImg from '../../assets/Images/no_messagesImg.png'
+
 
 
 function UserChats() {
@@ -73,6 +75,7 @@ function UserChats() {
   useEffect(() => {
     filterFunction(searchText);
   }, [searchText, connections]);
+
   const filterFunction = (searchText) => {
     const tempConn = connections.filter((c) => {
       return c.secondPersonId.parkingName.toLowerCase().includes(searchText.toLowerCase())
@@ -168,6 +171,8 @@ function UserChats() {
     } else {
       const response = await getConnections(userInfo.id).unwrap()
       if (response.success) setConnections(response.data)
+      console.log('HEY');
+      console.log(response.data);
     }
   }
 
@@ -244,19 +249,31 @@ function UserChats() {
 
   const handleVideoCall = async () => {
     const roomId = uid.rnd()
-    socket.emit('startVideoCall', {callerId:userInfo.id, receiverId, roomId});
+    socket.emit('startVideoCall', { callerId: userInfo.id, receiverId, roomId });
     navigate(`/user/chats/video-call/${roomId}`)
+  }
+
+  const calculateTime = (time) => {
+    const today = new Date()
+    const dateToCheck = new Date(time)
+    if (dateToCheck.getFullYear() === today.getFullYear() &&
+      dateToCheck.getMonth() === today.getMonth() &&
+      dateToCheck.getDate() === today.getDate()) {
+      return (dateToCheck.toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit' }));
+    } else {
+      return dateToCheck.toLocaleDateString()
+    }
   }
 
   return (
     <motion.div initial={{ opacity: 0 }}
-    animate={{
-      opacity: 1,
-      transition: { delay: 0.2, duration: 0.4, ease: 'easeIn' }
-    }} className='flex h-screen w-full md:px-8 lg:px-10 xl:px-20 pt-2'>
-      <div className='w-full md:w-5/12 overflow-y-scroll hide-scrollbar rounded-l-xl'>
+      animate={{
+        opacity: 1,
+        transition: { delay: 0.2, duration: 0.4, ease: 'easeIn' }
+      }} className='flex h-screen w-full md:px-8 lg:px-10 xl:px-20 pt-2'>
+      <div className='w-full md:w-5/12 overflow-y-scroll hide-scrollbar rounded-l-xl border border-gray-100'>
         <div className="flex w-full sticky top-0 z-10">
-          <div className="flex justify-between p-3 w-full bg--200 glass z-10 md:w-full">
+          <div className="flex justify-between p-3 w-full z-10 md:w-full">
             <div className="flex w-2/3 space-x-2">
               <Wrap>
                 <WrapItem>
@@ -264,7 +281,7 @@ function UserChats() {
                 </WrapItem>
               </Wrap>
 
-              <div className="w-2/3 font-medium">Welcome Back,<p className='text-[16px] font-semibold'> {userInfo.name}!</p></div>
+              <div className="w-2/3">Welcome Back,<p className='font-semibold text-sm md:text-[16px]'> {userInfo.name}!</p></div>
             </div>
             <div className="" onClick={onToggle}>
               <div className="rounded-full bg-primary-blue h-11 w-11 flex justify-center items-center text-xl cursor-pointer">
@@ -277,16 +294,16 @@ function UserChats() {
             </div>
           </div>
         </div>
-        <Collapse in={isOpen} animateOpacity className='sticky bg--200 glass top-0 z-10 md:w-full'>
-          <div className="flex justify-between p-5 w-full glass shadow-lg space-x-3">
-            <input type='text' value={searchText} onChange={handleSearchTextChange} className='w-full h-9 rounded-2xl' placeholder='Search your chat..' />
+        <Collapse in={isOpen} animateOpacity className='sticky bg--200 glass bg-blue-50 top-0 z-10 md:w-full'>
+          <div className="flex justify-between p-5 w-full shadow-lg space-x-3">
+            <input type='text' value={searchText} onChange={handleSearchTextChange} className='w-full h-9 rounded-2xl border-gray-400' placeholder='Search your chat..' />
           </div>
         </Collapse>
 
-        {filteredConnections.map((user, index) => {
+        {filteredConnections.length ? (filteredConnections.map((user, index) => {
           return (
 
-            <div key={user.secondPersonId._id} className={`flex w-full ${user.secondPersonId._id === receiverId ? 'bg-slate-200' : ''}`} onClick={openDrawer}>
+            <div key={user.secondPersonId._id} className={`flex w-full border-b border-slate-100 ${user.secondPersonId._id === receiverId ? 'bg-slate-200' : ''}`} onClick={openDrawer}>
               <div className="flex p-3 w-full cursor-pointer" onClick={() => handleFetchMessages(user.secondPersonId._id)}>
                 <div className="flex w-full space-x-2">
                   <Wrap>
@@ -294,13 +311,27 @@ function UserChats() {
                       <Avatar name={user.secondPersonId.parkingName} src='https://bit.ly/tioluwani-kolawole' />
                     </WrapItem>
                   </Wrap>
-                  <div className="w-full text-sm font-semibold mt-2">{user.secondPersonId.parkingName}<p className='text-[11px] font-normal'> {user.lastMessage}</p></div>
+                  <div className="w-full text-sm font-semibold mt-2 capitalize">
+                    <div className="flex justify-between">
+                      <p>{user.secondPersonId.parkingName}</p>
+                    </div>
+                    <p className='text-[12px] font-normal text-gray-700'> {user.lastMessage}</p>
+                  </div>
                 </div>
               </div>
-              <Divider orientation='horizontal' />
+              <div className="flex justify-start bg-grady-500 p-4">
+                <p className='text-[12px] font-normal text-gray-600'> {calculateTime(user.updatedAt)}</p>
+              </div>
             </div>
           )
-        })}
+        })) :
+        (
+          <div className="flex justify-center items-start mt-24">
+                <img src={no_messagesImg} className='h-60 opacity-75' />
+              </div>
+        )
+      
+      }
 
         {/* DRAWER */}
         {isFullScreen && <Drawer
@@ -317,7 +348,7 @@ function UserChats() {
           >
 
             <DrawerHeader className='flex items-center space-x-3'>
-              <IoChevronBackSharp onClick={closeDrawer} className='text-2xl text-gray-600 cursor-pointer' />
+              <IoChevronBackSharp onClick={closeDrawer} className='text-2xl text-gray-500 cursor-pointer' />
 
               <Wrap>
                 <WrapItem>
@@ -326,7 +357,7 @@ function UserChats() {
               </Wrap>
 
               <div className='flex-grow'>
-                <p className='text-md font-semibold'>{receiverDetails.parkingName}</p>
+                <p className='text-sm font-semibold capitalize'>{receiverDetails.parkingName}</p>
                 <p className='text-xs text-gray-700 flex items-center'>
                   Active now
                   <span className='h-2 w-2 ml-2 mt-[1px] rounded-full bg-[#5cb63e]'></span>
@@ -335,7 +366,7 @@ function UserChats() {
 
               <div className='flex space-x-9 justify-end'>
                 {/* <IoMdCall className='text-2xl cursor-pointer' /> */}
-                <FaVideo onClick={handleVideoCall} className='text-2xl cursor-pointer' />
+                <FaVideo onClick={handleVideoCall} className='text-xl cursor-pointer' />
               </div>
             </DrawerHeader>
             <Divider orientation='horizontal' />
@@ -343,8 +374,8 @@ function UserChats() {
               {messages.map((msg) => {
                 return (
                   <>
-                    <div className={`chat ${msg.senderId === userInfo.id ? 'chat-end' : 'chat-start'} mt-2 `}>
-                      <div className={`chat-bubble rounded-lg shadow-xl text-sm  text-white ${msg.senderId === userInfo.id ? 'bg-blue-500' : 'bg-blue-800'}`}>{msg.message}</div>
+                    <div className={`chat ${msg.senderId === userInfo.id ? 'chat-end' : 'chat-start'}`}>
+                      <div className={`chat-bubble rounded-lg shadow-xl text-sm text-white ${msg.senderId === userInfo.id ? 'bg-blue-500' : 'bg-blue-800'}`}>{msg.message}</div>
                     </div>
                   </>
                 )
@@ -384,7 +415,7 @@ function UserChats() {
               </Wrap>
 
               <div className='flex-grow'>
-                <p className='text-md font-semibold'>{receiverDetails.parkingName}</p>
+                <p className='text-md font-semibold capitalize'>{receiverDetails.parkingName}</p>
                 <p className='text-xs text-gray-700 flex items-center'>
                   Active now
                   <span className='h-2 w-2 ml-2 mt-[1px] rounded-full bg-[#5cb63e]'></span>
@@ -403,7 +434,11 @@ function UserChats() {
               return (
                 <>
                   <div className={`chat ${msg.senderId === userInfo.id ? 'chat-end' : 'chat-start'} mt-2 `}>
-                    <div className={`chat-bubble rounded-lg  shadow-xl text-sm  text-white ${msg.senderId === userInfo.id ? 'bg-blue-500' : 'bg-blue-800'}`}>{msg.message}</div>
+                    {/* <div className="chat-header">
+                      Anakin
+                    </div> */}
+                    <time className="text-xs opacity-50">{calculateTime(msg.updatedAt)}</time>
+                    <div className={`chat-bubble rounded-lg  shadow-xl text-sm text-white ${msg.senderId === userInfo.id ? 'bg-blue-500' : 'bg-blue-800'}`}>{msg.message}</div>
                   </div>
                 </>
               )
@@ -427,11 +462,11 @@ function UserChats() {
           <div ref={pageEndRef} />
         </div>) :
         (
-          <div className="w-7/12 hidden md:block overflow-y-scroll hide-scrollbar outline outline-slate-300 outline-1 rounded-r-xl max-h-[700px]">
-            <div className="flex justify-center items-center bg-gray-100 h-full">
+          <div className="w-7/12 hidden md:block overflow-y-scroll hide-scrollbar outline outline-slate-200 outline-1 rounded-r-xl max-h-[700px]">
+            <div className="flex justify-center items-center bg-gray-50 h-full">
               <div className="">
-                <p className='text-center text-2xl text-gray-800'>Chat for Parkwise </p>
-                <p className='text-center text-lg text-gray-500'> Get in contact with the parking providers </p>
+                <p className='text-center text-2xl text-gray-500 font-sans'>Chat for Parkwise </p>
+                <p className='text-center text-md text-gray-500 font-sans'> Get in contact with the parking providers </p>
               </div>
             </div>
           </div>

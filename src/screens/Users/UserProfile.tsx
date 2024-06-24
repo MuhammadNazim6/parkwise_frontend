@@ -276,8 +276,8 @@ function UserProfile() {
                 <span className='text-2xl cursor-pointer'>
                   <CountUp
                     end={bookingCount}
-                    duration={5}
-                    delay={2}
+                    duration={3}
+                    delay={1}
                   />
                 </span>
                 <p className='text-sm cursor-pointer text-nowrap' >Bookings</p>
@@ -299,8 +299,8 @@ function UserProfile() {
               <span className='text-2xl cursor-pointer'>
               <CountUp
                   end={33}
-                  duration={5}
-                  delay={2}
+                  duration={4}
+                  delay={1}
                 />
                 </span>
               <p className='text-sm cursor-pointer text-nowrap'>Messages</p> 
