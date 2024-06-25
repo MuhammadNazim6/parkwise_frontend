@@ -118,6 +118,17 @@ export const providerApiSlice = apiSlice.injectEndpoints({
         formData: true
       }),
     }),
+
+    fetchFeedbacks: builder.mutation({
+      query: (lotId) => ({
+        url: `${PROVIDER_URL}/getLotFeedbacks/${lotId}`,
+        method: "GET",
+        data: {},
+        params: {},
+        headers: {},
+      }),
+      onQueryStarted: onQueryStartedErrorToast
+    }),
   })
 })
 
@@ -131,7 +142,8 @@ export const {
   useUpdateProvProfileDetailsMutation,
   useFetchParkingLotsBookingsMutation,
   useCheckProvPasswordMutation,
-  useUpdateParkingLotMutation
+  useUpdateParkingLotMutation,
+  useFetchFeedbacksMutation
   
 } = providerApiSlice
 

@@ -19,46 +19,6 @@ function Feedbacks({ lotId }) {
 
   const { isOpen: isLoginModalOpen, onOpen: openLoginModal, onClose: closeLoginModal } = useDisclosure()
   const { isOpen: reviewModalIsOpen, onOpen: openReviewModal, onClose: closeReviewModal } = useDisclosure()
-  // const [feedbacks, setFeedbacks] = useState([{
-  //   parkingLotId: '60af884f4d1a4b8f8b8d1234',
-  //   userId: '60af884f4d1a4b8f8b8d5678',
-  //   rating: 4.5,
-  //   review: 'Great parking space with easy access and plenty of room.',
-  //   name: 'John Doe',
-  //   time: new Date('2023-06-01')  // Example date
-  // },
-  // {
-  //   parkingLotId: '60af884f4d1a4b8f8b8d2345',
-  //   userId: '60af884f4d1a4b8f8b8d6789',
-  //   rating: 3.8,
-  //   review: 'Decent parking lot, but a bit crowded during peak hours.',
-  //   name: 'Jane Smith',
-  //   time: new Date('2023-06-02')  // Example date
-  // },
-  // {
-  //   parkingLotId: '60af884f4d1a4b8f8b8d3456',
-  //   userId: '60af884f4d1a4b8f8b8d7890',
-  //   rating: 5.0,
-  //   review: 'Excellent parking facilities with top-notch security.',
-  //   name: 'Alice Johnson',
-  //   time: new Date('2023-06-03')  // Example date
-  // },
-  // {
-  //   parkingLotId: '60af884f4d1a4b8f8b8d4567',
-  //   userId: '60af884f4d1a4b8f8b8d8901',
-  //   rating: 2.5,
-  //   review: 'Parking lot needs better lighting and more spaces.',
-  //   name: 'Bob Brown',
-  //   time: new Date('2023-06-04')  // Example date
-  // },
-  // {
-  //   parkingLotId: '60af884f4d1a4b8f8b8d5678',
-  //   userId: '60af884f4d1a4b8f8b8d9012',
-  //   rating: 4.0,
-  //   review: 'Good location, reasonable pricing, and clean environment.',
-  //   name: 'Emily Wilson',
-  //   time: new Date('2023-06-05')  // Example date
-  // }])
 
   const [feedbacks, setFeedbacks] = useState([])
   const [avgRating, setAvgRating] = useState(2)

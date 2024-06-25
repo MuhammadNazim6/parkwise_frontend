@@ -1,22 +1,20 @@
 import React, { useState, useRef, useEffect } from 'react'
 import { IoSearchOutline } from "react-icons/io5";
 import { IoMdClose } from "react-icons/io";
-import { useSearchParams } from 'react-router-dom';
 import { Avatar, AvatarBadge, AvatarGroup, Wrap, WrapItem, Divider, Center, useDisclosure, Collapse, Badge, Button, Input } from '@chakra-ui/react'
 import {
   Drawer,
   DrawerBody,
   DrawerFooter,
   DrawerHeader,
-  DrawerOverlay,
   DrawerContent,
-  DrawerCloseButton,
   useBreakpointValue
 } from '@chakra-ui/react'
+import { useSearchParams } from 'react-router-dom';
 import { IoChevronBackSharp } from "react-icons/io5";
 import { IoMdCall } from "react-icons/io";
 import { FaVideo } from "react-icons/fa";
-// import { socket } from '@/App';
+import { motion } from "framer-motion"
 import { RootState } from '@/redux/store';
 import { useSelector } from 'react-redux';
 import { TbSend } from "react-icons/tb";
@@ -26,13 +24,22 @@ import { useGetUserDetailsMutation } from '@/redux/slices/userApiSlice';
 import EmojiPicker from 'emoji-picker-react';
 import { BsEmojiSmile } from "react-icons/bs";
 import { useSocket } from '@/context/SocketProvider';
+import no_messagesImg from '../../assets/Images/no_messagesImg.png'
+import { MdChatBubbleOutline } from "react-icons/md";
+
+
 
 
 function ProvChats() {
   const { providerInfo } = useSelector((state: RootState) => state.auth)
+  const [searchParams] = useSearchParams();
+  const userParamsId = searchParams.get('ID');
+
+
   const { isOpen, onToggle } = useDisclosure()
   const [receiverId, setReceiverId] = useState('')
   const [receiverDetails, setReceiverDetails] = useState({})
+
 
   const { isOpen: isOpenDrawer, onOpen: openDrawer, onClose: closeDrawer } = useDisclosure()
   const btnRef = useRef()
@@ -46,7 +53,7 @@ function ProvChats() {
   const [searchText, setSearchText] = useState('');
   const [text, setText] = useState('')
   const [showEmoji, setShowEmoji] = useState(false)
-  const [isOnline,setIsOnline] = useState(false)
+  const [isOnline, setIsOnline] = useState(false)
 
 
   const SenderReceiverType = Object.freeze({
@@ -142,8 +149,25 @@ function ProvChats() {
   };
 
   const loadConnections = async () => {
-    const response = await getConnections(providerInfo.id).unwrap()
-    if (response.success) setConnections(response.data)
+    if (userParamsId) {
+      setReceiverId(userParamsId)
+      handleFetchMessages(userParamsId)
+      const receiverUser = await getUserDetails(userParamsId).unwrap()
+      setReceiverDetails(receiverUser.data)
+      openDrawer()
+      const response = await getConnections(providerInfo.id).unwrap()
+      if (response.success) {
+        const connectionExists = response.data.some((user) => user.secondPersonId._id === userParamsId)
+        if (!connectionExists) {
+          setConnections([{ secondPersonId: { _id: userParamsId, name: receiverUser.data.name }, secondPersonType: 'User', lastMessage: '', updatedAt:new Date() }, ...response.data])
+        } else {
+          setConnections(response.data)
+        }
+      }
+    } else {
+      const response = await getConnections(providerInfo.id).unwrap()
+      if (response.success) setConnections(response.data)
+    }
   }
 
   const scrollToBottomChat = () => {
@@ -202,11 +226,26 @@ function ProvChats() {
     setShowEmoji(!showEmoji)
   }
 
+  const calculateTime = (time) => {
+    const today = new Date()
+    const dateToCheck = new Date(time)
+    if (dateToCheck.getFullYear() === today.getFullYear() &&
+      dateToCheck.getMonth() === today.getMonth() &&
+      dateToCheck.getDate() === today.getDate()) {
+      return (dateToCheck.toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit' }));
+    } else {
+      return dateToCheck.toLocaleDateString()
+    }
+  }
 
   return (
-    <div className="sm:ml-64">
-      <div className="p-4 border-2 border-gray-200 border-dashed rounded-lg dark:border-gray-700 h-screen">
-        <div className='w-full sm:w-full md:w-full lg:w-1/2 xl:w-1/3 rounded-l-xl overflow-y-scroll scroll-smooth hide-scrollbar h-screen'>
+    <motion.div initial={{ opacity: 0 }}
+      animate={{
+        opacity: 1,
+        transition: { delay: 0.2, duration: 0.4, ease: 'easeIn' }
+      }} className="sm:ml-64">
+      <div className="p-4 mb-8 rounded-lgborder-gray-700 h-screen flex">
+        <div className='w-full lg:w-1/2 xl:w-1/3 rounded-xl overflow-y-scroll scroll-smooth hide-scrollbar h-screen border'>
           <div className="flex w-full sticky top-0 z-10">
             <div className="flex justify-between p-3 w-full bg--200 glass z-10 md:w-full">
               <div className="flex w-2/3 space-x-2">
@@ -228,29 +267,41 @@ function ProvChats() {
               </div>
             </div>
           </div>
-          <Collapse in={isOpen} animateOpacity className='sticky bg--200 glass top-0 z-10 md:w-full'>
+          <Collapse in={isOpen} animateOpacity className='sticky top-0 z-10 md:w-full'>
             <div className="flex justify-between p-5 w-full glass shadow-lg space-x-3">
-              <input value={searchText} onChange={handleSearchTextChange} type='text' className='w-full h-9 rounded-2xl' placeholder='Search your chat..' />
+              <input value={searchText} onChange={handleSearchTextChange} type='text' className='w-full h-9 rounded-2xl text-sm' placeholder='Search your chat..' />
             </div>
           </Collapse>
 
-          {filteredConnections.map((user, index) => {
+          {filteredConnections.length ? (filteredConnections.map((user, index) => {
             return (
               <div key={'user.secondPersonId._id'} className={`flex w-full rounded-lg cursor-pointer ${user.secondPersonId._id === receiverId ? 'bg-blue-100' : ''}`} onClick={openDrawer}  >
-                <div className="flex p-3 w-full md:w-full cursor-pointer" onClick={() => handleFetchMessages(user.secondPersonId._id)}>
+                <div className="flex p-3 w-full cursor-pointer" onClick={() => handleFetchMessages(user.secondPersonId._id)}>
                   <div className="flex w-full space-x-2">
                     <Wrap>
                       <WrapItem>
                         <Avatar name={user.secondPersonId.name} src='https://bit.ly/tioluwani-kolawole' />
                       </WrapItem>
                     </Wrap>
-                    <div className="w-full text-sm font-semibold mt-2 text-nowrap">{user.secondPersonId.name}<p className='text-[11px] w-64 truncate'> {user.lastMessage}</p></div>
+                    <div className="w-full text-sm font-semibold mt-2 capitalize">
+                      <div className="flex justify-between">
+                        <p>{user.secondPersonId.name}</p>
+                      </div>
+                      <p className='text-[12px] font-normal text-gray-700'> {user.lastMessage}</p>
+                    </div>
                   </div>
                 </div>
-                <Divider orientation='horizontal' />
+                <div className="flex justify-start bg-grady-500 p-4">
+                  <p className='text-[12px] font-normal text-gray-600'> {calculateTime(user.updatedAt)}</p>
+                </div>
               </div>
+
             )
-          })}
+          })) :
+            (<div className="flex justify-center items-start mt-24">
+              <img src={no_messagesImg} className='h-60 opacity-75' />
+            </div>)}
+
 
           {/* DRAWER */}
           {isMdAndBelow && <Drawer
@@ -277,13 +328,13 @@ function ProvChats() {
                   <p className='text-md font-semibold'>{receiverDetails.name}</p>
                   <p className='text-xs text-gray-700 flex items-center'>
                     {isOnline ? 'Online' : 'Offline'}
-                    <span className={`h-2 w-2 ml-2 mt-[4px] rounded-full ${isOnline ? 'bg-[#5cb63e]':'bg-[#b3b4b3]'}`}></span>
+                    <span className={`h-2 w-2 ml-2 mt-[4px] rounded-full ${isOnline ? 'bg-[#5cb63e]' : 'bg-[#b3b4b3]'}`}></span>
                   </p>
                 </div>
 
                 <div className='flex space-x-9 justify-end'>
-                  <IoMdCall className='text-2xl cursor-pointer' />
-                  <FaVideo className='text-2xl cursor-pointer' />
+                  {/* <IoMdCall className='text-2xl cursor-pointer' /> */}
+                  <FaVideo className='text-xl cursor-pointer' />
                 </div>
               </DrawerHeader>
               <Divider orientation='horizontal' />
@@ -319,8 +370,13 @@ function ProvChats() {
             </DrawerContent>}
           </Drawer>}
         </div>
+
+        <div className="lg:w-1/2 xl:w-2/3 flex flex-col justify-center items-center">
+          <MdChatBubbleOutline className='text-6xl text-gray-500' />
+          <p className='text-sm text-gray-500'> No conversation selected</p>
+        </div>
       </div>
-    </div>
+    </motion.div>
 
   )
 }

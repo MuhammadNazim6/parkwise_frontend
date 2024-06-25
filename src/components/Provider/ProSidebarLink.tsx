@@ -12,7 +12,7 @@ function ProSidebarLink(props) {
   return (
     <>
       <li>
-        <NavLink to={props.link} end className="flex items-center p-5 text-[#d1cdcd] rounded-lg dark:text-[#5F7093]  dark:hover:bg-gray-700 group"
+        <NavLink to={props.link} end className="flex items-center p-5 text-[#d1cdcd] rounded-lg hover:bg-gray-700 group transition duration-200 ease-in-out"
           style={({ isActive }) => (isActive ? activeStyle : undefined)}>
           {props.Icon}
           <span className="ms-3">{props.title}</span>

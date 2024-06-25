@@ -210,7 +210,7 @@ function UserFindLots() {
                 >
                   <div className="flex flex-col justify-between w-3/4 px-5">
                     <div>
-                      <p className="text-lg">{lot.address?.buildingOrAreaName}</p>
+                      <p className="text-lg">{lot.parkingName}</p>
                       <p className="text-sm md:text-sm line-clamp-1 text-gray-600">
                         {`${lot.address.landmark}, ${lot.address.street}, ${lot.address.pinNumber}, ${lot.address.city}`}
                       </p>

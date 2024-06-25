@@ -3,7 +3,6 @@ import {
   Modal,
   ModalOverlay,
   ModalContent,
-  ModalHeader,
   ModalFooter,
   ModalBody,
   ModalCloseButton,
@@ -18,6 +17,8 @@ import { RootState } from '@/redux/store'
 import { useFetchParkingLotsBookingsMutation } from '@/redux/slices/providerSlice'
 import ProvBookingDetailsAnim from '../../assets/Animation/ProvBookingDetailsAnim.json'
 import noBookingsIng from '../../assets/Images/noBookingsIng.png'
+import { motion } from "framer-motion"
+
 
 function ProvBookings() {
 
@@ -65,7 +66,11 @@ function ProvBookings() {
 
   return (
     <>
-      <div className="p-4 sm:ml-64">
+      <motion.div initial={{ opacity: 0 }}
+      animate={{
+        opacity: 1,
+        transition: { delay: 0.2, duration: 0.4, ease: 'easeIn' }
+      }}  className="p-4 sm:ml-64">
         <div className="p-4 border-2 border-gray-200 border-dashed rounded-lg dark:border-gray-700 h-screen">
           <div className="flex items-center p-5 w-full h-12 text-sm">
             <div className="text-gray-700 font-semibold  w-1/3 md:w-1/4 lg:w-1/5 p-1 text-center">Date</div>
@@ -84,15 +89,17 @@ function ProvBookings() {
                     <div className="text-gray-700 font-semibold p-1 w-1/3 md:w-1/4 lg:w-1/5 text-sm text-center">{booking.selectedSlots.length}</div>
                     <div className="text-gray-700 font-semibold p-1 w-1/3 md:w-1/4 lg:w-1/5 text-sm text-center">{booking.amount}</div>
                     <div className="text-md text-gray-700 font-semibold p-1 w-1/5 hidden lg:block text-center">{booking.user.name}</div>
-                    <div className="text-sm text-gray-700 font-semibold p-1 md:w-1/4 lg:w-1/5 transition-transform hover:text-gray-500 hover:scale-[1.007] ease-in-out duration-300 hidden md:block text-center" onClick={() => { handleDetailsModal(booking._id) }}>View</div>
+                    <div className="text-sm text-gray-700 p-1 md:w-1/4 lg:w-1/5 transition-transform hover:text-gray-500 hover:scale-[1.007] ease-in-out duration-300 hidden md:block text-center" onClick={() => { handleDetailsModal(booking._id) }}>
+                    <span className='bg-blue-400 p-2 rounded-md text-white cursor-pointer'>View</span>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           ))
           ) : (
-            <div className="flex justify-center items-start h-full">
-              <img src={noBookingsIng} className='h-1/2 mt-20' />
+            <div className="flex justify-center items-center h-full">
+              <img src={noBookingsIng} className='md:h-1/3 h-1/3 mt-[-200px]' />
             </div>
           )}
         </div>
@@ -158,7 +165,7 @@ function ProvBookings() {
             </ModalFooter>
           </ModalContent>
         </Modal>)}
-      </div>
+      </motion.div>
     </>
   )
 }

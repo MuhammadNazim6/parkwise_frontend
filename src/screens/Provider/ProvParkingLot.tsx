@@ -4,6 +4,8 @@ import { useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
 import { useToast } from "@/components/ui/use-toast"
 import { useUpdateParkingLotMutation } from '@/redux/slices/providerSlice';
+import { motion } from "framer-motion"
+
 
 
 function ProvParkingLot() {
@@ -15,6 +17,12 @@ function ProvParkingLot() {
   const [formValues, setFormValues] = useState<FormValues>({ ...initialFormValues });
   const [changedImages, setChangedImages] = useState({});
   const [hoveredImageIndex, setHoveredImageIndex] = useState(null);
+
+  const [enabledService, setEnabledServices] = useState({
+    air: false,
+    water: false,
+    ev: false
+  })
 
 
   const [updateLot] = useUpdateParkingLotMutation()
@@ -34,30 +42,30 @@ function ProvParkingLot() {
       }
 
       // check if it will be ok to change slot size or reduce it API CALL
-      if (!formValues.airPressureCheckPrice && providerDetails.airPressureCheckPrice) {
-        toast({
-          variant: "destructive",
-          title: 'Unable to save',
-          description: 'The air pressure checking cannot be removed now'
-        })
-        return
-      }
-      if (!formValues.evChargeFacilityPrice && providerDetails.evChargeFacilityPrice) {
-        toast({
-          variant: "destructive",
-          title: 'Unable to save',
-          description: 'The Ev charging facility cannot be removed now'
-        })
-        return
-      }
-      if (!formValues.waterServicePrice && providerDetails.waterServicePrice) {
-        toast({
-          variant: "destructive",
-          title: 'Unable to save',
-          description: 'The water service cannot be removed now'
-        })
-        return
-      }
+      // if (!formValues.airPressureCheckPrice && providerDetails.airPressureCheckPrice) {
+      //   toast({
+      //     variant: "destructive",
+      //     title: 'Unable to save',
+      //     description: 'The air pressure checking cannot be removed now'
+      //   })
+      //   return
+      // }
+      // if (!formValues.evChargeFacilityPrice && providerDetails.evChargeFacilityPrice) {
+      //   toast({
+      //     variant: "destructive",
+      //     title: 'Unable to save',
+      //     description: 'The Ev charging facility cannot be removed now'
+      //   })
+      //   return
+      // }
+      // if (!formValues.waterServicePrice && providerDetails.waterServicePrice) {
+      //   toast({
+      //     variant: "destructive",
+      //     title: 'Unable to save',
+      //     description: 'The water service cannot be removed now'
+      //   })
+      //   return
+      // }
       if (parseInt(formValues.pricePerHour) < 20) {
         toast({
           variant: "destructive",
@@ -69,15 +77,19 @@ function ProvParkingLot() {
       console.log(formValues);
       const formData = new FormData();
       formData.append('availableSpace', formValues.availableSpace)
+      formData.append('email', providerInfo.email)
       formData.append('pricePerHour', formValues.pricePerHour)
       formData.append('airPressureCheckPrice', formValues.airPressureCheckPrice)
       formData.append('evChargeFacilityPrice', formValues.evChargeFacilityPrice)
       formData.append('waterServicePrice', formValues.waterServicePrice)
-      formData.append('images', formValues.images)
-
 
       Object.keys(changedImages).forEach(index => {
+        console.log('index');
+        console.log(index);
+        console.log(changedImages[index]);
+
         formData.append(`images`, changedImages[index]);
+        formData.append('indexes', index);
       });
 
       console.log(formData);
@@ -93,6 +105,7 @@ function ProvParkingLot() {
       setIsEditable(false);
     }
   };
+
 
 
 
@@ -120,6 +133,8 @@ function ProvParkingLot() {
   const handleImageChange = (e, index) => {
     const file = e.target.files[0];
     if (file) {
+      console.log(file);
+
       const reader = new FileReader();
       reader.onload = () => {
         const updatedImages = [...formValues.images];
@@ -135,18 +150,27 @@ function ProvParkingLot() {
   };
 
 
+  const disableServices = (e) => {
+    let name = e.target.id
+    setFormValues({ ...formValues, [name]: '' });
+  }
+
 
   return (
     <>
 
       {providerDetails && providerDetails.approvalStatus === 'true' ? (
-        <div className="p-4 sm:ml-64 h-full">
-          <div className="p-2 border-2 min-h-screen border-gray-200 border-dashed rounded-lg dark:border-gray-700 flex justify-center items-center">
-            <div className="h-auto bg-gray-100 w-full max-w-3xl m-16 shadow-2xl rounded-lg relative flex items-center justify-center p-8">
+        <motion.div initial={{ opacity: 0 }}
+          animate={{
+            opacity: 1,
+            transition: { delay: 0.2, duration: 0.4, ease: 'easeIn' }
+          }} className="p-4 sm:ml-64 h-full">
+          <div className="p-2 min-h-screen rounded-lg dark:border-gray-700 flex justify-center items-center">
+            <div className="h-auto bg-gray-100 w-full max-w-3xl m-16 shadow-xl rounded-lg relative flex items-center justify-center p-8">
               <div className="space-y-6 mt-8 w-full">
                 <div className="flex flex-col sm:flex-row items-start justify-between space-y-2 sm:space-y-0 sm:space-x-4">
-                  <span className="block text-gray-700 font-medium">Address:</span>
-                  <div className="block text-gray-900 p-2 rounded-md w-full sm:w-3/4 bg-gray-50">
+                  <span className="block text-gray-700 font-medium ">Address:</span>
+                  <div className="block text-gray-900 p-2 text-sm rounded-md w-full sm:w-3/4 bg-gray-50 capitalize">
                     {(
                       <>
                         <p>{formValues.address.buildingOrAreaName}</p>
@@ -177,14 +201,19 @@ function ProvParkingLot() {
                   <span className="block text-gray-700 font-medium">Air pressure check:</span>
                   <span className="block text-gray-900 p-2 rounded-md w-full sm:w-3/4 bg-gray-50">
                     {isEditable ? (
-                      <input
-                        type="number"
-                        name="airPressureCheckPrice"
-                        value={formValues.airPressureCheckPrice}
-                        onChange={handleChange}
-                        className="block w-full border-none focus:outline-none h-8" />
+                      <>
+                        <input
+                          type="number"
+                          name="airPressureCheckPrice"
+                          value={formValues.airPressureCheckPrice}
+                          onChange={handleChange}
+                          className="block w-full border-none focus:outline-none h-8" />
+                        <div className='flex justify-end'>
+                          <p onClick={disableServices} id='airPressureCheckPrice' className='border border-black p-1 mt-1 text-gray-500 cursor-pointer rounded-sm'>Disable</p>
+                        </div>
+                      </>
                     ) : (
-                      formValues.airPressureCheckPrice ? formValues.airPressureCheckPrice : 'nil'
+                      formValues.airPressureCheckPrice ? formValues.airPressureCheckPrice : 'Not enabled'
                     )}
                   </span>
                 </div>
@@ -192,12 +221,17 @@ function ProvParkingLot() {
                   <span className="block text-gray-700 font-medium">Water service:</span>
                   <span className="block text-gray-900 p-2 rounded-md w-full sm:w-3/4 bg-gray-50">
                     {isEditable ? (
-                      <input
-                        type="number"
-                        name="waterServicePrice"
-                        value={formValues.waterServicePrice}
-                        onChange={handleChange}
-                        className="block w-full border-none focus:outline-none h-8" />
+                      <>
+                        <input
+                          type="number"
+                          name="waterServicePrice"
+                          value={formValues.waterServicePrice}
+                          onChange={handleChange}
+                          className="block w-full border-none focus:outline-none h-8" />
+                        <div className='flex justify-end'>
+                          <p onClick={disableServices} id='waterServicePrice' className='border border-black p-1 mt-1 text-gray-500 cursor-pointer rounded-sm'>Disable</p>
+                        </div>
+                      </>
                     ) : (
                       formValues.waterServicePrice ? formValues.waterServicePrice : 'nil'
                     )}
@@ -207,12 +241,18 @@ function ProvParkingLot() {
                   <span className="block text-gray-700 font-medium">EV charging:</span>
                   <span className="block text-gray-900 p-2 rounded-md w-full sm:w-3/4 bg-gray-50">
                     {isEditable ? (
-                      <input
-                        type="number"
-                        name="evChargeFacilityPrice"
-                        value={formValues.evChargeFacilityPrice}
-                        onChange={handleChange}
-                        className="block w-full border-none focus:outline-none h-8" />
+                      <>
+                        <input
+                          type="number"
+                          name="evChargeFacilityPrice"
+                          value={formValues.evChargeFacilityPrice}
+                          onChange={handleChange}
+                          className="block w-full border-none focus:outline-none h-8" />
+                        <div className='flex justify-end'>
+                          <p onClick={disableServices} id='evChargeFacilityPrice' className='border border-black p-1 mt-1 text-gray-500 cursor-pointer rounded-sm'>Disable</p>
+                        </div>
+                      </>
+
                     ) : (
                       formValues.evChargeFacilityPrice ? formValues.evChargeFacilityPrice : 'nil'
                     )}
@@ -270,18 +310,27 @@ function ProvParkingLot() {
                 </div>
 
                 <div className="flex justify-center mt-4">
+                  {isEditable && <button
+                    type="button"
+                    onClick={() => setIsEditable(false)}
+                    className="bg-secondary-provider hover:text-gray-200 text-sm text-white font-semibold p-2 m-2 w-32 rounded flex items-center justify-around duration-300 transition-all active:scale-[.98] active:duration-75  hover:scale-[1.02] ease-in-out"
+                  >
+                    Cancel
+                  </button>}
+
                   <button
                     type="button"
                     onClick={handleEditClick}
-                    className="bg-primary-provider hover:bg-secondary-provider text-sm text-white font-semibold p-2 m-2 w-32 rounded flex items-center justify-around duration-300 transition-all"
+                    className="bg-primary-provider hover:bg-secondary-provider text-sm text-white font-semibold p-2 m-2 w-32 rounded flex items-center justify-around duration-300 transition-all active:scale-[.98] active:duration-75  hover:scale-[1.02] ease-in-out"
                   >
                     {isEditable ? 'Save' : 'Edit'}
                   </button>
+                  
                 </div>
               </div>
             </div>
           </div>
-        </div>
+        </motion.div>
       ) : null}
     </>
   )
@@ -299,7 +348,7 @@ interface FormValues {
     state: string;
     country: string;
   };
-  availableSpace: number;
+  availableSpace: string;
   pricePerHour: string;
   airPressureCheckPrice?: string;
   waterServicePrice?: string;
@@ -317,7 +366,7 @@ const initialFormValues: FormValues = {
     state: '',
     country: '',
   },
-  availableSpace: 0,
+  availableSpace: '',
   pricePerHour: '',
   airPressureCheckPrice: '',
   waterServicePrice: '',

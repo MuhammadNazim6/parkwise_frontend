@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react'
 import { IoSearchOutline } from "react-icons/io5";
 import { IoMdClose } from "react-icons/io";
 import { useSearchParams } from 'react-router-dom';
-import { Avatar, AvatarBadge, AvatarGroup, Wrap, WrapItem, Divider, Center, useDisclosure, Collapse, Badge, Button, Input } from '@chakra-ui/react'
+import { Avatar, AvatarBadge, AvatarGroup, Wrap, WrapItem, Divider, useDisclosure, Collapse } from '@chakra-ui/react'
 import {
   Drawer,
   DrawerBody,
@@ -171,7 +171,6 @@ function UserChats() {
     } else {
       const response = await getConnections(userInfo.id).unwrap()
       if (response.success) setConnections(response.data)
-      console.log('HEY');
       console.log(response.data);
     }
   }
@@ -325,13 +324,13 @@ function UserChats() {
             </div>
           )
         })) :
-        (
-          <div className="flex justify-center items-start mt-24">
-                <img src={no_messagesImg} className='h-60 opacity-75' />
-              </div>
-        )
-      
-      }
+          (
+            <div className="flex justify-center items-start mt-24">
+              <img src={no_messagesImg} className='h-60 opacity-75' />
+            </div>
+          )
+
+        }
 
         {/* DRAWER */}
         {isFullScreen && <Drawer
@@ -437,7 +436,7 @@ function UserChats() {
                     {/* <div className="chat-header">
                       Anakin
                     </div> */}
-                    <time className="text-xs opacity-50">{calculateTime(msg.updatedAt)}</time>
+                    {msg.senderId === userInfo.id && (<time className="text-xs opacity-50">{calculateTime(msg.updatedAt)}</time>)}
                     <div className={`chat-bubble rounded-lg  shadow-xl text-sm text-white ${msg.senderId === userInfo.id ? 'bg-blue-500' : 'bg-blue-800'}`}>{msg.message}</div>
                   </div>
                 </>

@@ -41,7 +41,7 @@ const ProvNavbar = () => {
           
           <AlertDialog>
               <AlertDialogTrigger>
-              <Button className='bg-black rounded-none'>Logout <FaPowerOff className='ml-2 ' /></Button>
+              <Button className='bg-black rounded-md active:scale-[.98] active:duration-75 transition-all hover:scale-[1.025] ease-in-out'>Logout <FaPowerOff className='ml-2 ' /></Button>
               </AlertDialogTrigger>
               <AlertDialogContent>
                 <AlertDialogHeader>
