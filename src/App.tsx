@@ -23,7 +23,7 @@ function App() {
 
   useEffect(() => {
     const options = {
-      endpoint: 'http://localhost:3000/api/user/suggestions',
+      endpoint: 'https://thriftkicks.store/api/user/suggestions',
       color: '#000000',
       primary: '#7ea4f8',
       position: 'left',

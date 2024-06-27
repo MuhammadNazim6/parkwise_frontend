@@ -3,7 +3,7 @@ import {io} from 'socket.io-client'
 const SocketContext = createContext(null)
 
 export const SocketProvider = ({children}) => {
-  const socket = useMemo(()=> io('http://localhost:3000'),[])
+  const socket = useMemo(()=> io('https://thriftkicks.store'),[])
 
   return (
     <SocketContext.Provider value={socket}>
