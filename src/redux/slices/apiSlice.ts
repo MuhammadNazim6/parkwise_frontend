@@ -36,7 +36,7 @@ const axiosBaseQuery =
 export const apiSlice = createApi({
   baseQuery:axiosBaseQuery({
     // baseUrl:'http://localhost:3000',
-    baseUrl:'https://thriftkicks.store/',
+    baseUrl:'https://thriftkicks.store',
   }),
   tagTypes: ['User'],
   endpoints: (builder) => ({
