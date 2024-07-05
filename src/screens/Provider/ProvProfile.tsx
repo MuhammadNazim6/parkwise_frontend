@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { useGetProviderDetailsMutation } from '@/redux/slices/providerSlice';
+import { useGetProviderDetailsMutation, useGetProviderProfileMutation } from '@/redux/slices/providerSlice';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
 import { Loader } from '@/components/Common/BootstrapElems';
@@ -11,19 +11,26 @@ import { motion } from "framer-motion"
 
 function ProvProfile() {
   const { providerInfo } = useSelector((state: RootState) => state.auth);
-  const [providerDetails, setProviderDetails] = useState(null)
+  console.log(providerInfo);
+
+  const [providerDetails, setProviderDetails] = useState()
+  console.log(providerDetails);
+
   const [isEditProfileModalOpen, setIsEditProfileModalOpen] = useState(false)
   const { isOpen: isPassChangeModalOpen, onOpen: openPassChangeModal, onClose: closePassChangeModal } = useDisclosure()
 
-  const [getDetails,{isLoading}] = useGetProviderDetailsMutation()
+  // const [getDetails] = useGetProviderDetailsMutation()
+  const [getProfileDetails, { isLoading }] = useGetProviderProfileMutation()
   useEffect(() => {
     fetchPRoviderDetails();
   }, [])
 
   const fetchPRoviderDetails = async () => {
-    const response = await getDetails(providerInfo.id).unwrap()
+    const response = await getProfileDetails(providerInfo.id).unwrap()
     if (response.success) {
       setProviderDetails(response.data)
+      console.log(response.data);
+
     }
   }
 
@@ -34,14 +41,14 @@ function ProvProfile() {
   return (
     <>
       <motion.div initial={{ opacity: 0 }}
-      animate={{
-        opacity: 1,
-        transition: { delay: 0.1, duration: 0.2, ease: 'easeIn' }
-      }}  className="p-4 sm:ml-64 h-full rounded-sm ">
-        <div className="p-2 h-full rounded-lg dark:border-gray-700 flex justify-center items-center">
+        animate={{
+          opacity: 1,
+          transition: { delay: 0.1, duration: 0.2, ease: 'easeIn' }
+        }} className="p-4 sm:ml-64 h-full rounded-sm ">
+        <div className="p-2 h-full rounded-lg flex justify-center items-center">
           <div className="h-auto bg-gray-100 w-full max-w-3xl m-16 shadow-lg rounded-lg relative flex items-center justify-center p-8">
             {!isLoading ? (
-              providerDetails && ( <>
+              providerDetails && providerDetails.name ? (<>
                 <div className="absolute right-5 top-3 h-12 overflow-hidden transition duration-300 ease-in-out cursor-pointer active:scale-[.98] active:duration-75  hover:scale-[1.02]">
                   <p className='text-black hover:text-gray-900 bg-blue-700/20 p-1.5 rounded-sm text-sm ' onClick={openPassChangeModal}>Change password</p>
 
@@ -67,14 +74,14 @@ function ProvProfile() {
                     </button>
                   </div>
                 </div>
-              </>)
+              </>) : null
             ) : <Loader />}
           </div>
         </div>
       </motion.div>
 
       <ProEditProfileModal isOpen={isEditProfileModalOpen} onClose={toggleEditProfileModal} profileDetails={providerDetails} setProviderDetails={setProviderDetails} />
-      <ProvChangePassModal isOpen={isPassChangeModalOpen} onClose={closePassChangeModal} providerId={providerInfo.id} provEmail={providerInfo.email}/>
+      <ProvChangePassModal isOpen={isPassChangeModalOpen} onClose={closePassChangeModal} providerId={providerInfo.id} provEmail={providerInfo.email} />
     </>
   )
 }

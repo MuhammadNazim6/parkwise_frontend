@@ -180,6 +180,16 @@ export const providerApiSlice = apiSlice.injectEndpoints({
         headers: {},
       }),
     }),
+
+    getProviderProfile: builder.mutation({
+      query: (lotId) => ({
+        url: `${PROVIDER_URL}/provProfile/${lotId}`,
+        method: "GET",
+        data: {},
+        params: {},
+        headers: {},
+      }),
+    }),
   })
 })
 
@@ -199,7 +209,8 @@ export const {
   useFetchMontlyBookingsMutation,
   useFetchWeeklyBookingsMutation,
   useFetchDailyBookingsMutation,
-  useFetchTotalBookingsTodayProvMutation
+  useFetchTotalBookingsTodayProvMutation,
+  useGetProviderProfileMutation
   
 } = providerApiSlice
 
