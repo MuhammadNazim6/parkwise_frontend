@@ -188,7 +188,7 @@ function ProvAddSlot() {
                     pinNumber: '',
                     latitude: '',
                     longitude: '',
-                    startEndTime: '',
+                    startEndTime: 'FULL',
                     email: '',
 
                   }}
@@ -312,7 +312,6 @@ function ProvAddSlot() {
                       }
                       return true;
                     }),
-                    startEndTime: Yup.string().required('Select an availability time'),
                   })}
                 >
                     {(props) => {
