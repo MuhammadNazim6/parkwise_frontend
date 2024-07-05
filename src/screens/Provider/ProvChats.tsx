@@ -242,7 +242,7 @@ function ProvChats() {
     <motion.div initial={{ opacity: 0 }}
       animate={{
         opacity: 1,
-        transition: { delay: 0.2, duration: 0.4, ease: 'easeIn' }
+        transition: { delay: 0.1, duration: 0.2, ease: 'easeIn' }
       }} className="sm:ml-64">
       <div className="p-4 mb-8 rounded-lgborder-gray-700 h-screen flex">
         <div className='w-full lg:w-1/2 xl:w-1/3 rounded-xl overflow-y-scroll scroll-smooth hide-scrollbar h-screen border'>

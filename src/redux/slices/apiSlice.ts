@@ -26,17 +26,9 @@ const axiosBaseQuery =
   }
 
 
-// use this if normal
-// const baseQuery = fetchBaseQuery({
-//   baseUrl: 'http://localhost:3000',
-//   credentials: "include",
-// })
-
-
 export const apiSlice = createApi({
   baseQuery:axiosBaseQuery({
-    // baseUrl:'http://localhost:3000',
-    baseUrl:'https://thriftkicks.store',
+    baseUrl:import.meta.env.VITE_BACKEND_BASEURL,
   }),
   tagTypes: ['User'],
   endpoints: (builder) => ({

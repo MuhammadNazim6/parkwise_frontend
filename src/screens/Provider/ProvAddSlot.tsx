@@ -495,7 +495,7 @@ function ProvAddSlot() {
                               <div className="text-red-500 text-sm mt-1">{errors.oneHourParkingAmount}</div>
                             )}
                           </div>
-                          <div className="mt-6 md:w-1/2 ml-5">
+                          {/* <div className="mt-6 md:w-1/2 ml-5">
                             <label htmlFor="airPressureCheckPrice" className="block font-bold my-2 text-sm">
                               Choose time range
                             </label>
@@ -507,7 +507,7 @@ function ProvAddSlot() {
                             {errors.startEndTime && touched.startEndTime && (
                               <div className="text-red-500 text-sm mt-1">{errors.startEndTime}</div>
                             )}
-                          </div>
+                          </div> */}
                         </div>
 
                         {/* Address */}

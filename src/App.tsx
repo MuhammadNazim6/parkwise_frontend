@@ -23,7 +23,7 @@ function App() {
 
   useEffect(() => {
     const options = {
-      endpoint: 'https://thriftkicks.store/api/user/suggestions',
+      endpoint: `${import.meta.env.VITE_BACKEND_BASEURL}/api/user/suggestions`,
       color: '#000000',
       primary: '#7ea4f8',
       position: 'left',

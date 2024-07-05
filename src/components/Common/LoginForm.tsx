@@ -41,7 +41,7 @@ export default function LoginForm(props) {
     if (uLoggedIn) {
       navigate("/");
     } else if (pLoggedIn) {
-      navigate('/provider/parking-lot')
+      navigate('/provider')
     } else if (aLoggedIn) {
       navigate('/admin/requests')
     }

@@ -1,10 +1,6 @@
 import axios from "axios";
 const axiosInstance = axios.create({
-  baseURL: 'https://thriftkicks.store',
-  // headers: {
-  // //   // "Content-Type": 'application/json',
-  //   "Content-Type": "multipart/form-data",
-  // }
+  baseURL: import.meta.env.VITE_BACKEND_BASEURL,
 });
 
 axiosInstance.interceptors.request.use((config) => {
@@ -28,7 +24,7 @@ axiosInstance.interceptors.response.use((response) => {
   if (error.response.status === 401 && !originalRequest.retry) {
     originalRequest.retry = true;
     try {
-      const { data } = await axios.post('https://thriftkicks.store/api/common/refreshToken', {}, { withCredentials: true });
+      const { data } = await axios.post(`${import.meta.env.VITE_BACKEND_BASEURL}/api/common/refreshToken`, {}, { withCredentials: true });
       const accessToken = data.accessToken;
       originalRequest.headers.Authorization = `Bearer ${accessToken}`;
       localStorage.setItem('token', accessToken)

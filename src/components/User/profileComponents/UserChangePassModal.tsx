@@ -30,8 +30,7 @@ const UserChangePassModal = ({ isOpen, onClose, userId, userEmail }) => {
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>Change your password</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody pb={6}>
+          <ModalBody pb={3}>
             <Formik
               initialValues={{
                 currentPass: '',
@@ -54,7 +53,6 @@ const UserChangePassModal = ({ isOpen, onClose, userId, userEmail }) => {
                   })
                   return
                 }
-                console.log('password correct');
 
                 const formData = {
                   email: userEmail,

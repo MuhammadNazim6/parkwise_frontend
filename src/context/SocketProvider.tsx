@@ -3,7 +3,7 @@ import {io} from 'socket.io-client'
 const SocketContext = createContext(null)
 
 export const SocketProvider = ({children}) => {
-  const socket = useMemo(()=> io('https://thriftkicks.store'),[])
+  const socket = useMemo(()=> io(import.meta.env.VITE_BACKEND_BASEURL),[])
 
   return (
     <SocketContext.Provider value={socket}>

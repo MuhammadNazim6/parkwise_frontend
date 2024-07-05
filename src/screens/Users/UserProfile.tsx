@@ -139,7 +139,7 @@ function UserProfile() {
         opacity: 1,
         transition: { delay: 0.2, duration: 0.4, ease: 'easeIn' }
       }}>
-      <div className="flex justify-center text-2xl font-semibold text-gray-800"><p>My Profile</p></div>
+      <div className="flex justify-center text-lg md:text-2xl font-semibold text-gray-800"><p>My Profile</p></div>
       <div className="flex justify-center mt-8 relative ">
         <img src={changedImage ? changedImage : profileImage} alt="" className='object-cover rounded-full absolute z-10 w-28 h-28' />
         <div className='relative h-28 w-28 bg-blue-200 rounded-full shadow-xl'>
@@ -263,18 +263,19 @@ function UserProfile() {
         : (<div className='flex justify-center'>
           <div className="lg:w-2/3 w-full">
             <div className="flex justify-center mt-8">
-              <div className='font-bold text-3xl text-gray-800'>{userInfo.name}</div>
+              <div className='font-bold md:text-3xl text-xl text-gray-800'>{userInfo.name}</div>
             </div>
             <div className="flex justify-center">
-              <div className='mt-1 text-xl text-gray-800'>{userInfo.email}</div>
+              <div className='mt-1 md:text-xl text-gray-800'>{userInfo.email}</div>
             </div>
             <div className="flex justify-center">
-              <div className='mt-1 text-lg text-gray-800'>{userInfo.mobile}</div>
+              <div className='mt-1 text-lg text-gray-800'>{userInfo.mobile != 0 ? userInfo.mobile : null}</div>
             </div>
             <div className="flex bg-primary-blue justify-between m-4 p-2 rounded-lg shadow-xl">
               <div onClick={openBookingsModal} className='w-1/3 font-extrabold text-center p-4 m-2 rounded-lg hover:text-black text-gray-700'>
-                <span className='text-2xl cursor-pointer'>
+                <span className='md:text-2xl cursor-pointer'>
                   <CountUp
+                  className='md:text-2xl'
                     end={bookingCount}
                     duration={3}
                     delay={1}
@@ -284,10 +285,10 @@ function UserProfile() {
               </div>
 
               <div onClick={openWalletModal} className='w-1/3 font-extrabold text-center p-4 m-2 rounded-lg hover:text-black text-gray-700'>
-                <span className='md:text-2xl text-sm cursor-pointer'>
+              <span className='md:text-2xl cursor-pointer'>
                   Rs
                   <CountUp
-                  className='ml-2'
+                  className='ml-1 md:text-2xl'
                     end={userDetails && userDetails.wallet.balance}
                     duration={2}
                     delay={1}
@@ -296,8 +297,9 @@ function UserProfile() {
                 <p className='text-sm cursor-pointer text-nowrap'>Wallet</p>
               </div>
               <Link to='/user/chats' className='w-1/3 font-extrabold text-center p-4 m-2 rounded-lg hover:text-black text-gray-700'>
-              <span className='text-2xl cursor-pointer'>
+              <span className='cursor-pointer'>
               <CountUp
+              className ='md:text-2xl'
                   end={33}
                   duration={4}
                   delay={1}

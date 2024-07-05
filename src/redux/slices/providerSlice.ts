@@ -129,6 +129,57 @@ export const providerApiSlice = apiSlice.injectEndpoints({
       }),
       onQueryStarted: onQueryStartedErrorToast
     }),
+
+    useFetchServicesUsedProvider: builder.mutation({
+      query: (lotId) => ({
+        url: `${PROVIDER_URL}/getServicesCount/${lotId}`,
+        method: "GET",
+        data: {},
+        params: {},
+        headers: {},
+      }),
+      onQueryStarted: onQueryStartedErrorToast
+    }),
+
+    fetchMontlyBookings: builder.mutation({
+      query: (lotId) => ({
+        url: `${PROVIDER_URL}/fetchMonthly/${lotId}`,
+        method: "GET",
+        data: {},
+        params: {},
+        headers: {},
+      }),
+    }),
+
+    fetchWeeklyBookings: builder.mutation({
+      query: (lotId) => ({
+        url: `${PROVIDER_URL}/fetchWeekly/${lotId}`,
+        method: "GET",
+        data: {},
+        params: {},
+        headers: {},
+      }),
+    }),
+
+    fetchDailyBookings: builder.mutation({
+      query: (lotId) => ({
+        url: `${PROVIDER_URL}/fetchDaily/${lotId}`,
+        method: "GET",
+        data: {},
+        params: {},
+        headers: {},
+      }),
+    }),
+
+    fetchTotalBookingsTodayProv: builder.mutation({
+      query: (lotId) => ({
+        url: `${PROVIDER_URL}/fetchTodaysBookingCountProv/${lotId}`,
+        method: "GET",
+        data: {},
+        params: {},
+        headers: {},
+      }),
+    }),
   })
 })
 
@@ -143,7 +194,12 @@ export const {
   useFetchParkingLotsBookingsMutation,
   useCheckProvPasswordMutation,
   useUpdateParkingLotMutation,
-  useFetchFeedbacksMutation
+  useFetchFeedbacksMutation,
+  useUseFetchServicesUsedProviderMutation,
+  useFetchMontlyBookingsMutation,
+  useFetchWeeklyBookingsMutation,
+  useFetchDailyBookingsMutation,
+  useFetchTotalBookingsTodayProvMutation
   
 } = providerApiSlice
 

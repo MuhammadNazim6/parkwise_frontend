@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react'
 import { useGetProvidersMutation, useBlockUnblockProviderMutation } from '@/redux/slices/adminSlice';
 import { useToast } from "@/components/ui/use-toast"
+import Lottie from 'lottie-react'
+import adminLoader from '../../assets/Animation/adminLoader.json'
 
 
 function AdminProviders() {
-  const [getProviders] = useGetProvidersMutation()
+  const [getProviders, { isLoading }] = useGetProvidersMutation()
   const [blockUnblock] = useBlockUnblockProviderMutation()
   const [providers, setProviders] = useState([]);
   const { toast } = useToast()
@@ -15,7 +17,7 @@ function AdminProviders() {
       try {
         const providersData = await getProviders().unwrap();
         console.log(providersData);
-        
+
         setProviders(providersData.data);
       } catch (error) {
         console.error('Error fetching requests:', error);
@@ -37,10 +39,10 @@ function AdminProviders() {
   }
 
   return (
-    <div className="flex items-center justify-center bg-gray-100 min-h-screen py-10">
+    <div className="flex justify-center bg-gray-100 min-h-screen ">
       <div className="h-full sm:w-2/3 w-full">
         <p className='sm:text-2xl md:text-3xl text-lg text-center md:m-4 text-black font-bold p-3'>Providers list</p>
-        {providers.length > 0 ?
+        {!isLoading ? (providers.length > 0 ?
           (providers.map((provider) => (
             <div key={provider._id} className="flex bg-gray-100">
               <div className="flex-grow md:w-2/3">
@@ -65,9 +67,16 @@ function AdminProviders() {
               </div>
             </div>
           ))
-          ) : (<div className="flex bg-gray-100 justify-center items-center h-64">
+          ) : (
+          <div className="flex bg-gray-100 justify-center items-center h-64">
             <div className="text-gray-700 text-lg">No providers found</div>
-          </div>)
+          </div>
+          ))
+          : (
+            <div className="flex justify-center items-center mt-14">
+              <Lottie animationData={adminLoader} className='w-[450px]' />
+            </div>
+          )
         }
       </div>
     </div>

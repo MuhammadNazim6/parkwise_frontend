@@ -15,8 +15,7 @@ function ProvProfile() {
   const [isEditProfileModalOpen, setIsEditProfileModalOpen] = useState(false)
   const { isOpen: isPassChangeModalOpen, onOpen: openPassChangeModal, onClose: closePassChangeModal } = useDisclosure()
 
-
-  const [getDetails] = useGetProviderDetailsMutation()
+  const [getDetails,{isLoading}] = useGetProviderDetailsMutation()
   useEffect(() => {
     fetchPRoviderDetails();
   }, [])
@@ -37,12 +36,12 @@ function ProvProfile() {
       <motion.div initial={{ opacity: 0 }}
       animate={{
         opacity: 1,
-        transition: { delay: 0.2, duration: 0.4, ease: 'easeIn' }
+        transition: { delay: 0.1, duration: 0.2, ease: 'easeIn' }
       }}  className="p-4 sm:ml-64 h-full rounded-sm ">
         <div className="p-2 h-full rounded-lg dark:border-gray-700 flex justify-center items-center">
           <div className="h-auto bg-gray-100 w-full max-w-3xl m-16 shadow-lg rounded-lg relative flex items-center justify-center p-8">
-            {providerDetails ? (
-              <>
+            {!isLoading ? (
+              providerDetails && ( <>
                 <div className="absolute right-5 top-3 h-12 overflow-hidden transition duration-300 ease-in-out cursor-pointer active:scale-[.98] active:duration-75  hover:scale-[1.02]">
                   <p className='text-black hover:text-gray-900 bg-blue-700/20 p-1.5 rounded-sm text-sm ' onClick={openPassChangeModal}>Change password</p>
 
@@ -68,7 +67,7 @@ function ProvProfile() {
                     </button>
                   </div>
                 </div>
-              </>
+              </>)
             ) : <Loader />}
           </div>
         </div>

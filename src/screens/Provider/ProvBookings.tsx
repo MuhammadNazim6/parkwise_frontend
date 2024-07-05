@@ -69,7 +69,7 @@ function ProvBookings() {
       <motion.div initial={{ opacity: 0 }}
       animate={{
         opacity: 1,
-        transition: { delay: 0.2, duration: 0.4, ease: 'easeIn' }
+        transition: { delay: 0.1, duration: 0.2, ease: 'easeIn' }
       }}  className="p-4 sm:ml-64">
         <div className="p-4 border-2 border-gray-200 border-dashed rounded-lg dark:border-gray-700 h-screen">
           <div className="flex items-center p-5 w-full h-12 text-sm">

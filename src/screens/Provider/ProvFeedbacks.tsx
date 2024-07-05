@@ -33,7 +33,7 @@ function ProvFeedbacks() {
       <motion.div initial={{ opacity: 0 }}
         animate={{
           opacity: 1,
-          transition: { delay: 0.2, duration: 0.4, ease: 'easeIn' }
+          transition: { delay: 0.1, duration: 0.2, ease: 'easeIn' }
         }}
         className="p-4 sm:ml-64">
         <div className="p-4 rounded-lg dark:border-gray-700 h-screen">
@@ -68,7 +68,9 @@ function ProvFeedbacks() {
                   ))}
                 </div>
               ) : (
-                'No feedbacks'
+               <div className="flex justify-center items-center h-96">
+                 No feedbacks
+               </div>
               )
             )}
           </div>

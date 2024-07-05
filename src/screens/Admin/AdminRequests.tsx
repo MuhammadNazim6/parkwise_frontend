@@ -4,10 +4,12 @@ import AdminRequestModal from '@/components/Admin/AdminRequestModal';
 import toast from 'react-hot-toast';
 import { FaSortAmountDown } from "react-icons/fa";
 import { FaSortAmountUp } from "react-icons/fa";
+import Lottie from 'lottie-react'
+import adminLoader from '../../assets/Animation/adminLoader.json'
 
 
 function AdminRequests() {
-  const [getRequests] = useGetRequestsMutation()
+  const [getRequests, { isLoading }] = useGetRequestsMutation()
   const [acceptRequest] = useAcceptReqMutation()
   const [rejectRequest] = useRejectReqMutation()
   const [requests, setRequests] = useState([]);
@@ -78,8 +80,8 @@ function AdminRequests() {
 
 
   return (
-    <div className=" flex items-center justify-center bg-gray-100  pt-4">
-      <div className="h-full md:w-2/3 w-full">
+    <div className=" flex items-center justify-center bg-gray-100 pt-4">
+      <div className="h-full md:w-2/3 w-full p-5">
         <p className='sm:text-2xl md:text-3xl text-lg text-center md:m-4 text-black font-bold p-3'>Parking Provider Requests</p>
         <div className="flex bg-gray-100 min-h-screen">
           <div className="flex-grow md:w-2/3">
@@ -90,7 +92,7 @@ function AdminRequests() {
               <div onClick={() => setShowLatest((prev) => !prev)} className="flex justify-end items-center cursor-pointer hover:scale-[1.0003] hover:text-gray-800"><FaSortAmountUp /> <span className='ml-2'>Show latest</span></div>
             )}
 
-            {reversedRequests.length > 0 ? (reversedRequests.map((lot) => (
+            {!isLoading ? (reversedRequests.length > 0 ? (reversedRequests.map((lot) => (
               <div>
                 <div key={lot._id} onClick={() => openModal(lot)}
                   className="bg-white shadow-lg rounded-md p-4 mt-4 cursor-pointer transition-transform hover:scale-[1.003] ease-in-out duration-300">
@@ -116,9 +118,14 @@ function AdminRequests() {
 
 
               </div>
-            ))) : (<div className="flex bg-gray-100 justify-center items-center h-64">
-              <div className="text-gray-700 text-lg">No Requests found</div>
-            </div>)}
+            ))) : (<div className="flex bg-gray-100 justify-center items-center h-96">
+              <div className="text-gray-400 text-xl">No Requests found</div>
+            </div>)) :
+              (
+                <div className="flex justify-center items-center mt-14">
+                  <Lottie animationData={adminLoader} className='w-[450px]'/>
+                </div>
+              )}
             <AdminRequestModal
               isOpen={isModalOpen}
               onClose={closeModal}

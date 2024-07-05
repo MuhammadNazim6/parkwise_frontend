@@ -163,7 +163,7 @@ function ProvParkingLot() {
         <motion.div initial={{ opacity: 0 }}
           animate={{
             opacity: 1,
-            transition: { delay: 0.2, duration: 0.4, ease: 'easeIn' }
+            transition: { delay: 0.1, duration: 0.2, ease: 'easeIn' }
           }} className="p-4 sm:ml-64 h-full">
           <div className="p-2 min-h-screen rounded-lg dark:border-gray-700 flex justify-center items-center">
             <div className="h-auto bg-gray-100 w-full max-w-3xl m-16 shadow-xl rounded-lg relative flex items-center justify-center p-8">

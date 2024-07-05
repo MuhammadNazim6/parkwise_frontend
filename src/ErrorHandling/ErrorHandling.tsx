@@ -7,7 +7,9 @@ export const onQueryStartedErrorToast = async (args, { queryFulfilled }) => {
     if (error.error.data) {
       const status = error.error.status;
       const errorResponse = error.error.data;
-      toast.error(errorResponse.message)
+      // toast.error(errorResponse.message)
+      console.log(errorResponse);
+      
       // Perform error handling based on the status code
       switch (status) {
         case 400:

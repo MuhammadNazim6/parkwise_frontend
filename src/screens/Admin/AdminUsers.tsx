@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useGetUsersMutation, useBlockUnblockUserMutation } from "@/redux/slices/adminSlice";
 import { useToast } from "@/components/ui/use-toast"
+import Lottie from 'lottie-react'
+import adminLoader from '../../assets/Animation/adminLoader.json'
+
 
 function AdminUsers() {
-  const [getUsers] = useGetUsersMutation();
+  const [getUsers, { isLoading }] = useGetUsersMutation();
   const [blockUnblock] = useBlockUnblockUserMutation();
   const [users, setUsers] = useState([]);
   const { toast } = useToast()
@@ -40,7 +43,7 @@ function AdminUsers() {
         <p className="sm:text-2xl md:text-3xl text-lg text-center md:m-4 text-black font-bold p-3">
           Registered users
         </p>
-        {users.length > 0 ? (
+        {!isLoading ? (users.length > 0 ? (
           users.map((user) => (
             <div key={user._id} className="flex bg-gray-100">
               <div className="flex-grow md:w-2/3">
@@ -65,10 +68,15 @@ function AdminUsers() {
               </div>
             </div>
           ))
-          ) : (<div className="flex bg-gray-100 justify-center items-center h-64">
+        ) : (<div className="flex bg-gray-100 justify-center items-center h-64">
           <div className="text-gray-700 text-lg">No Users found</div>
-        </div>)
-      }
+        </div>)) :
+          (
+            <div className="flex justify-center items-center mt-14">
+            <Lottie animationData={adminLoader} className='w-[450px]'/>
+          </div>
+          )
+        }
       </div>
     </div>
   );
