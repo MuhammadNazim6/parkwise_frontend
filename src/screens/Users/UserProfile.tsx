@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { RiImageEditLine } from "react-icons/ri";
-import { Formik, Field, FieldArray, ErrorMessage } from "formik";
+import { Formik } from "formik";
 import * as Yup from "yup";
 import Lottie from 'lottie-react'
 import { Link } from 'react-router-dom';
@@ -53,13 +53,12 @@ function UserProfile() {
   const [changedEmail, setChangedEmail] = useState('')
   const [otpErr, setOtpErr] = useState('')
   const [bookingCount, setBookingCount] = useState(0)
-
   const [bookingsPage, setBookingsPage] = useState(1)
 
   useEffect(() => {
+    fetchUserProfilePic()
     fetchUserDetails()
     fetchBookingsCount()
-    fetchUserProfilePic()
   }, [userInfo])
 
   const fetchUserProfilePic = async () => {
@@ -275,7 +274,7 @@ function UserProfile() {
               <div onClick={openBookingsModal} className='w-1/3 font-extrabold text-center p-4 m-2 rounded-lg hover:text-black text-gray-700'>
                 <span className='md:text-2xl cursor-pointer'>
                   <CountUp
-                  className='md:text-2xl'
+                    className='md:text-2xl'
                     end={bookingCount}
                     duration={3}
                     delay={1}
@@ -285,10 +284,10 @@ function UserProfile() {
               </div>
 
               <div onClick={openWalletModal} className='w-1/3 font-extrabold text-center p-4 m-2 rounded-lg hover:text-black text-gray-700'>
-              <span className='md:text-2xl cursor-pointer'>
+                <span className='md:text-2xl cursor-pointer'>
                   Rs
                   <CountUp
-                  className='ml-1 md:text-2xl'
+                    className='ml-1 md:text-2xl'
                     end={userDetails && userDetails.wallet.balance}
                     duration={2}
                     delay={1}
@@ -297,15 +296,15 @@ function UserProfile() {
                 <p className='text-sm cursor-pointer text-nowrap'>Wallet</p>
               </div>
               <Link to='/user/chats' className='w-1/3 font-extrabold text-center p-4 m-2 rounded-lg hover:text-black text-gray-700'>
-              <span className='cursor-pointer'>
-              <CountUp
-              className ='md:text-2xl'
-                  end={33}
-                  duration={4}
-                  delay={1}
-                />
+                <span className='cursor-pointer'>
+                  <CountUp
+                    className='md:text-2xl'
+                    end={33}
+                    duration={4}
+                    delay={1}
+                  />
                 </span>
-              <p className='text-sm cursor-pointer text-nowrap'>Messages</p> 
+                <p className='text-sm cursor-pointer text-nowrap'>Messages</p>
               </Link>
             </div>
             <div className="flex bg-gray-100 justify-between m-5 rounded-lg shadow-md transition-transform hover:scale-[1.01] ease-in-out duration-300">

@@ -56,9 +56,6 @@ export default function SignupForm(props) {
         const res = await axios.get(
           `https://www.googleapis.com/oauth2/v3/userinfo?access_token=${response.access_token}`
         );
-
-        console.log(res.data);
-
         const googleUserData = {
           name: res.data.name,
           email: res.data.email,
@@ -66,12 +63,11 @@ export default function SignupForm(props) {
           password: res.data.sub,
           google: true
         }
-
         const signed = await sign(googleUserData).unwrap()
-
         if (signed.success) {
+          const mobile = signed.data.mobile ? signed.data.mobile : 0
           console.log(googleUserData);
-          dispatch(setCredentials({ ...googleUserData }))
+          dispatch(setCredentials({ ...googleUserData, id: signed.data.id, mobile }))
           navigate('/user/find', { replace: true })
         } else {
           alert('Try another login method')

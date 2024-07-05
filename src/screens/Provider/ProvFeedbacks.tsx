@@ -36,7 +36,7 @@ function ProvFeedbacks() {
           transition: { delay: 0.1, duration: 0.2, ease: 'easeIn' }
         }}
         className="p-4 sm:ml-64">
-        <div className="p-4 rounded-lg dark:border-gray-700 h-screen">
+        <div className="p-4 rounded-lg h-screen">
           <h1 className='text-xl font-semibold text-gray-500'>User Feedbacks: {feedbacks && feedbacks.length}</h1>
           <div className="">
             {feedbacks && (

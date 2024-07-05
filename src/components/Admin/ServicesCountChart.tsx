@@ -1,18 +1,16 @@
 import React, { useEffect, useState } from 'react'
 import { PieChart, Pie } from 'recharts';
-
 import { Tooltip, ResponsiveContainer } from 'recharts';
 import { useFetchServicesUsedCountMutation } from '@/redux/slices/adminSlice';
 
 function ServicesCountChart() {
   const [servicesData, setServicesData] = useState([
-    { name: 'Air pressure', value: 122 },
-    { name: 'Water service', value: 300 },
-    { name: 'ev charging', value: 100 }
+    { name: 'Air pressure', value: 0 },
+    { name: 'Water service', value: 0 },
+    { name: 'ev charging', value: 0 }
   ])
 
   const [fetchServicesCount] = useFetchServicesUsedCountMutation()
-
   useEffect(() => {
     handleFetchServicesCount()
   },[])

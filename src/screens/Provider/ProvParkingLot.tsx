@@ -165,7 +165,7 @@ function ProvParkingLot() {
             opacity: 1,
             transition: { delay: 0.1, duration: 0.2, ease: 'easeIn' }
           }} className="p-4 sm:ml-64 h-full">
-          <div className="p-2 min-h-screen rounded-lg dark:border-gray-700 flex justify-center items-center">
+          <div className="p-2 min-h-screen rounded-lg  flex justify-center items-center">
             <div className="h-auto bg-gray-100 w-full max-w-3xl m-16 shadow-xl rounded-lg relative flex items-center justify-center p-8">
               <div className="space-y-6 mt-8 w-full">
                 <div className="flex flex-col sm:flex-row items-start justify-between space-y-2 sm:space-y-0 sm:space-x-4">
