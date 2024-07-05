@@ -25,6 +25,8 @@ import { useDispatch } from 'react-redux';
 import { MdOutlineRemoveRedEye } from "react-icons/md";
 import { TbReplace } from "react-icons/tb";
 import { RiImageEditLine } from "react-icons/ri";
+import { motion } from "framer-motion"
+
 
 
 function ProvAddSlot() {
@@ -119,7 +121,11 @@ function ProvAddSlot() {
   }
   return (
     <>
-      <div className="p-4 sm:ml-64">
+      <motion.div initial={{ opacity: 0 }}
+      animate={{
+        opacity: 1,
+        transition: { delay: 0.1, duration: 0.2, ease: 'easeIn' }
+      }} className="p-4 sm:ml-64">
         <div className="p-4 rounded-lg  ">
           <div className="app min-h-screen">
 
@@ -739,7 +745,7 @@ function ProvAddSlot() {
             )}
           </div>
         </div>
-      </div >
+      </motion.div >
 
     </>
   )

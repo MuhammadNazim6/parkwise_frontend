@@ -71,7 +71,7 @@ function ProvBookings() {
         opacity: 1,
         transition: { delay: 0.1, duration: 0.2, ease: 'easeIn' }
       }}  className="p-4 sm:ml-64">
-        <div className="p-4 border-2 border-gray-200 border-dashed rounded-lg dark:border-gray-700 h-screen">
+        <div className="p-4 border-2 border-gray-200 border-dashed rounded-lg h-screen">
           <div className="flex items-center p-5 w-full h-12 text-sm">
             <div className="text-gray-700 font-semibold  w-1/3 md:w-1/4 lg:w-1/5 p-1 text-center">Date</div>
             <div className="text-gray-700 font-semibold  w-1/3 md:w-1/4 lg:w-1/5 p-1 text-center">Slots</div>
