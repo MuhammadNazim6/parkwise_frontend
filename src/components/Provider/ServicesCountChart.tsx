@@ -10,9 +10,9 @@ function ServicesCountChart() {
   const { providerInfo } = useSelector((state: RootState) => state.auth)
 
   const [servicesData, setServicesData] = useState([
-    { name: 'Air pressure', value: 122 },
-    { name: 'Water service', value: 300 },
-    { name: 'ev charging', value: 100 }
+    { name: 'Air pressure', value: 0 },
+    { name: 'Water service', value: 0 },
+    { name: 'ev charging', value: 0 }
   ])
 
   const [fetchServicesCount] = useUseFetchServicesUsedProviderMutation()   //MADE

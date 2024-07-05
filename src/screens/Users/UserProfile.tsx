@@ -20,6 +20,7 @@ import UserChangePassModal from '@/components/User/profileComponents/UserChangeP
 import UserWalletModal from '@/components/User/profileComponents/UserWalletModal';
 import { motion } from "framer-motion"
 import CountUp from "react-countup"
+// GET TOTAL MESSAGES COUNT
 
 
 

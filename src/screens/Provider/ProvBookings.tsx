@@ -45,7 +45,6 @@ function ProvBookings() {
   const fetchBookingsOfParkingLot = async () => {
     const response = await fetchBookingsOfLot(providerInfo.id).unwrap()
     if (response.success) {
-      console.log(response.data)
       setBookings(response.data)
     } else {
       toast({

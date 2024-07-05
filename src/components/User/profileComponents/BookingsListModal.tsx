@@ -4,15 +4,12 @@ import {
   ModalOverlay,
   ModalContent,
   ModalHeader,
-  ModalFooter,
   ModalBody,
-  ModalCloseButton,
   Button
 } from '@chakra-ui/react'
 import Lottie from 'lottie-react'
 import { useToast } from "@/components/ui/use-toast"
 import { useFetchUserBookingsMutation, useCancelBookingMutation, useGetFilledSlotsMutation, useRescheduleSlotsMutation } from '@/redux/slices/userApiSlice';
-import resheduleAnim from '../../../assets/Animation/resheduleAnim.json'
 import cancelledAnim from '../../../assets/Animation/cancelledAnim.json'
 import { useFetchBookingDetailsMutation } from '@/redux/slices/commonSlice';
 import {
@@ -199,7 +196,6 @@ function BookingsListModal({ isOpen, onClose, userId, page, setPage }) {
                             <AccordionButton>
                               <Box as='span' flex='1' textAlign='left'>
                                 <div className="h-1/2 rounded-md flex justify-center transition duration-300 ease-in-out hover:bg-[#f5f4f48a] cursor-pointer">
-                                  {/* <Lottie animationData={resheduleAnim} className='h-10' /> */}
                                   <p className='flex justify-center items-center cursor-pointer text-lg'>Reshedule Booking</p>
                                 </div>
                               </Box>

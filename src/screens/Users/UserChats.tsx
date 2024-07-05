@@ -110,7 +110,6 @@ function UserChats() {
 
     setMessages((prevMsgs) => {
       if (data.sender !== receiverId) {
-        console.log('Message is from the current receiver');
         const updatedMessages = [
           ...prevMsgs,
           { senderId: data.sender, receiverId: data.recipient, message: data.message },
@@ -163,7 +162,7 @@ function UserChats() {
       if (response.success) {
         const connectionExists = response.data.some((user) => user.secondPersonId._id === ID)
         if (!connectionExists) {
-          setConnections([{ secondPersonId: { _id: ID, parkingName: recieverProvider.data.parkingName }, secondPersonType: 'Provider', lastMessage: 'dddd', updatedAt: '' }, ...response.data])
+          setConnections([{ secondPersonId: { _id: ID, parkingName: recieverProvider.data.parkingName }, secondPersonType: 'Provider', lastMessage: '', updatedAt: '' }, ...response.data])
         } else {
           setConnections(response.data)
         }
@@ -171,7 +170,6 @@ function UserChats() {
     } else {
       const response = await getConnections(userInfo.id).unwrap()
       if (response.success) setConnections(response.data)
-      console.log(response.data);
     }
   }
 

@@ -14,7 +14,6 @@ function UserSearchAddress({ setCoordinates }) {
     if (res && res.features && res.features.length > 0) {
       const feature = res.features[0];
       const coords = feature.geometry.coordinates;
-      console.log('Coordinates:', coords);
       setCoordinates(coords);
     }
   }

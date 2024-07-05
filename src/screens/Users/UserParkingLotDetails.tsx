@@ -57,7 +57,7 @@ function UserParkingLotDetails() {
         if (details.success) {
           setLotDetails(details.data);
         } else {
-          console.log('Unable to fetch details');
+          console.error('Unable to fetch details');
         }
       } catch (error) {
         console.error('Error fetching details:', error);

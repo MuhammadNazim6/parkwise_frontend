@@ -60,19 +60,15 @@ function UserFindLots() {
   // 
   const fetchLots = () => {
     fetchParkingLots()
-    console.log("Fetching data with params:", { price, coordinates, services, page });
   }
   const debouncedFetchParkingLots = useCallback(debounce(fetchLots, 300), [coordinates, price, services, page]);
 
 
   useEffect(() => {
     if (coordinates.length === 2) {
-      console.log('In useEffect (Not on initial render)');
       debouncedFetchParkingLots()
-      // 
     }
   }, [coordinates, price, services, page, debouncedFetchParkingLots])
-  // 
 
   const handlePriceChange = (value) => {
     setPrice(value)

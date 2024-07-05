@@ -12,8 +12,6 @@ import { useGoogleLogin } from '@react-oauth/google';
 import axios from 'axios'
 import { RootState } from "@/redux/store";
 
-
-// GET TOTAL MESSAGES COUNT
 export default function LoginForm(props) {
 
   const [email, setEmail] = useState("");
@@ -73,7 +71,7 @@ export default function LoginForm(props) {
           alert('Try another login method')
         }
       } catch (error) {
-        console.log(error);
+        console.error(error);
       }
     },
 
@@ -135,7 +133,7 @@ export default function LoginForm(props) {
         }
       }
     } catch (err) {
-      console.log('Error catched while logging in ');
+      console.error('Error catched while logging in ');
 
     }
   };

@@ -34,7 +34,6 @@ function UserEmailVerify(props) {
       const newOTP = [...enteredOtp];
       newOTP[index] = currentInput.value
       setEnteredOtp(newOTP)
-      console.log(newOTP.join(''));
       if (index < inputRefs.current.length - 1) {
         inputRefs.current[index + 1].focus();
       }
@@ -44,7 +43,6 @@ function UserEmailVerify(props) {
       const newOTP = [...enteredOtp];
       setEnteredOtp(newOTP)
       newOTP[index] = ''
-      console.log(newOTP.join(''));
       if (index > 0) {
         inputRefs.current[index - 1].focus();
       }
@@ -93,7 +91,6 @@ function UserEmailVerify(props) {
       clearInterval(otpInterval)
     }, 60000)
     const otpRes = await verify(emailInfo).unwrap()
-    console.log(otpRes);
 
     if (otpRes.success) {
       setCommonError('')

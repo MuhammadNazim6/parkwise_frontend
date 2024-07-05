@@ -76,7 +76,7 @@ function UserLoginModal({ isOpen, onClose , url}) {
         }
       }
     } catch (err) {
-      console.log('Error catched while logging in ');
+      console.error('Error catched while logging in ');
 
     }
   };

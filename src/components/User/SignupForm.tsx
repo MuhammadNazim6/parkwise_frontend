@@ -66,15 +66,13 @@ export default function SignupForm(props) {
         const signed = await sign(googleUserData).unwrap()
         if (signed.success) {
           const mobile = signed.data.mobile ? signed.data.mobile : 0
-          console.log(googleUserData);
           dispatch(setCredentials({ ...googleUserData, id: signed.data.id, mobile }))
           navigate('/user/find', { replace: true })
         } else {
-          alert('Try another login method')
+          console.error('Try another login method');
         }
-
       } catch (error) {
-        console.log(error);
+        console.error(error);
       }
     },
 
@@ -82,7 +80,7 @@ export default function SignupForm(props) {
 
 
   const onFailure = (res) => {
-    console.log('Login failed, ', res);
+    console.error('Login failed, ', res);
   }
 
 

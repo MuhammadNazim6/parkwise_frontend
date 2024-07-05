@@ -124,8 +124,6 @@ export default function SignupForm(props) {
       setLoading(true)
 
       const otpRes = await verify(formData).unwrap()
-      console.log(otpRes.success);
-
       if (otpRes.success) {
         dispatch(setEmailInfo(formData))
         setLoading(false);
@@ -134,7 +132,6 @@ export default function SignupForm(props) {
         setCommonError(otpRes.message);
         setLoading(false)
       }
-
     } catch (error) {
       console.error('Registration failed:', error);
     }

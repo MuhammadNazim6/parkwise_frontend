@@ -91,7 +91,6 @@ function UserEmailVerify(props) {
       clearInterval(otpInterval)
     }, 60000)
     const otpRes = await verify(emailInfo).unwrap()
-    console.log(otpRes);
 
     if (otpRes.success) {
       setCommonError('')

@@ -11,11 +11,7 @@ import { motion } from "framer-motion"
 
 function ProvProfile() {
   const { providerInfo } = useSelector((state: RootState) => state.auth);
-  console.log(providerInfo);
-
   const [providerDetails, setProviderDetails] = useState()
-  console.log(providerDetails);
-
   const [isEditProfileModalOpen, setIsEditProfileModalOpen] = useState(false)
   const { isOpen: isPassChangeModalOpen, onOpen: openPassChangeModal, onClose: closePassChangeModal } = useDisclosure()
 
@@ -29,8 +25,6 @@ function ProvProfile() {
     const response = await getProfileDetails(providerInfo.id).unwrap()
     if (response.success) {
       setProviderDetails(response.data)
-      console.log(response.data);
-
     }
   }
 

@@ -91,8 +91,6 @@ function UserDirections() {
     const steps = response.data.routes[0].legs[0].steps
     const distance = response.data.routes[0].distance
     const duration = response.data.routes[0].duration
-    console.log(distance);
-    console.log(duration);
 
     setSteps(steps)
     setDistance(distance)

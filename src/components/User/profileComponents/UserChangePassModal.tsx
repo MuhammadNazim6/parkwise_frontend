@@ -45,7 +45,6 @@ const UserChangePassModal = ({ isOpen, onClose, userId, userEmail }) => {
                 }
                 const passwordChecked = await checkPassword(form).unwrap()
                 if (!passwordChecked.success) {
-                  console.log('Incorrect password');
                   toast({
                     variant: "destructive",
                     title: "Entered password is incorrect",

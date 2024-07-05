@@ -16,8 +16,6 @@ function AdminProviders() {
     const fetchProviders = async () => {
       try {
         const providersData = await getProviders().unwrap();
-        console.log(providersData);
-
         setProviders(providersData.data);
       } catch (error) {
         console.error('Error fetching requests:', error);

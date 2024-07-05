@@ -110,7 +110,6 @@ function ProvChats() {
 
     setMessages((prevMsgs) => {
       if (data.sender !== receiverId) {
-        console.log('Message is from the current receiver');
         const updatedMessages = [
           ...prevMsgs,
           { senderId: data.sender, receiverId: data.recipient, message: data.message },

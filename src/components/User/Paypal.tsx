@@ -83,14 +83,12 @@ function Paypal({ services, selectedSlots, totalAmount, date, checkAvailabilty, 
           const booking = await bookSlots(bookingDetails).unwrap()
           if (booking.success) {
             dispatch(setBookingData(booking.data))
-            console.log('Created booking success');
             setAfterPayment(true)
             checkAvailabilty()
-
           }
         },
         onError: (err) => {
-          console.log(err);
+          console.error(err);
         }
       })
       setPaypalInstance(newPaypalInstance);

@@ -44,8 +44,6 @@ const styles = StyleSheet.create({
 });
 
 export const ReactPdfTicket = ({ bookingData }) => {
-  console.log(bookingData);
-
   return (
     <Document>
       <Page style={styles.page}>

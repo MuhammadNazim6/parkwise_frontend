@@ -74,7 +74,6 @@ function ProvParkingLot() {
         })
         return
       }
-      console.log(formValues);
       const formData = new FormData();
       formData.append('availableSpace', formValues.availableSpace)
       formData.append('email', providerInfo.email)
@@ -84,15 +83,9 @@ function ProvParkingLot() {
       formData.append('waterServicePrice', formValues.waterServicePrice)
 
       Object.keys(changedImages).forEach(index => {
-        console.log('index');
-        console.log(index);
-        console.log(changedImages[index]);
-
         formData.append(`images`, changedImages[index]);
         formData.append('indexes', index);
       });
-
-      console.log(formData);
 
       const updatedResponse = await updateLot(formData).unwrap()
       if (updatedResponse.success) {
@@ -123,8 +116,6 @@ function ProvParkingLot() {
   const fetchPRoviderDetails = async () => {
     const response = await getDetails(providerInfo.id).unwrap()
     if (response.success) {
-      console.log(response.data);
-
       setProviderDetails(response.data)
       setFormValues({ ...response.data })
     }
@@ -133,8 +124,6 @@ function ProvParkingLot() {
   const handleImageChange = (e, index) => {
     const file = e.target.files[0];
     if (file) {
-      console.log(file);
-
       const reader = new FileReader();
       reader.onload = () => {
         const updatedImages = [...formValues.images];

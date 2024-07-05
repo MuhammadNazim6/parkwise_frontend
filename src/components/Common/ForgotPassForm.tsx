@@ -5,7 +5,6 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Loader } from '../../components/Common/BootstrapElems';
 import { useCommForgotPasswordMutation, useUserCheckOtpMutation } from '@/redux/slices/userApiSlice';
 import { useCommonResendOtpMutation } from '@/redux/slices/commonSlice';
-
 import {
   InputOTP,
   InputOTPGroup,
@@ -53,8 +52,6 @@ function ForgotPassForm(props) {
       email
     }
     const otpSendRes = await resendOtp(formData).unwrap()
-    console.log(otpSendRes);
-
     if (otpSendRes.success) {
       setCommonError('')
       setOtpResendText('Otp sent successfully')
@@ -63,7 +60,6 @@ function ForgotPassForm(props) {
       }, 4000)
     }
   }
-
 
   const verifyOtp = async () => {
     const formData = {
@@ -99,7 +95,6 @@ function ForgotPassForm(props) {
               initialValues={{ email: '' }}
               validationSchema={validationSchema}
               onSubmit={async (values, { setSubmitting }) => {
-                console.log('Form submitted:', values);
                 setEmail(values.email)
                 setSubmitting(false);
                 // sending request to server for sending otp to the user/provider email 
@@ -108,9 +103,8 @@ function ForgotPassForm(props) {
                 if (otpSentResponse.success) {
                   setSendOtpCLicked(true)
                 } else {
-                  console.log('OTP NOT SENT');
+                  console.error('Otp not sent');
                 }
-
               }}
             >
               {({ isSubmitting }) => (
