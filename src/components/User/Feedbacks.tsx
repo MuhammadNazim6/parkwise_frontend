@@ -2,7 +2,6 @@ import { useFetchFeedbacksMutation } from '@/redux/slices/userApiSlice'
 import React, { useEffect, useState } from 'react'
 import '@smastrom/react-rating/style.css'
 import { Rating } from '@smastrom/react-rating'
-import { FaRegThumbsUp, FaRegThumbsDown } from "react-icons/fa";
 import { useDisclosure } from '@chakra-ui/react'
 import AddReviewModal from './AddReviewModal'
 import { useSelector } from 'react-redux'
@@ -11,15 +10,10 @@ import Lottie from 'lottie-react'
 import boxLoader from '../../assets/Animation/boxLoader.json'
 import UserLoginModal from '@/screens/Users/UserLoginModal';
 
-
-
-
 function Feedbacks({ lotId }) {
   const { userInfo } = useSelector((state: RootState) => state.auth)
-
   const { isOpen: isLoginModalOpen, onOpen: openLoginModal, onClose: closeLoginModal } = useDisclosure()
   const { isOpen: reviewModalIsOpen, onOpen: openReviewModal, onClose: closeReviewModal } = useDisclosure()
-
   const [feedbacks, setFeedbacks] = useState([])
   const [avgRating, setAvgRating] = useState(2)
   const [ratingToEdit, setRatingToEdit] = useState(0)
@@ -35,7 +29,6 @@ function Feedbacks({ lotId }) {
     const res = await fetchFeedbacks(lotId).unwrap()
     if (res.success) {
       setFeedbacks([...res.data]);
-
       if (userInfo) {
         res.data.forEach((feedback) => {
           if (feedback.userId._id === userInfo.id) {
@@ -62,7 +55,6 @@ function Feedbacks({ lotId }) {
     closeReviewModal()
   }
 
-
   return (
     <>
       {isLoadingFeedbacks ?
@@ -80,7 +72,6 @@ function Feedbacks({ lotId }) {
                       style={{ maxWidth: 130 }}
                       value={avgRating}
                       readOnly
-
                     />
                   </div>
                   <p className='text-center text-sm mt-2 text-slate-500'>{avgRating} Stars • {feedbacks.length} {feedbacks.length === 1 ? 'user' : 'users'} have rated</p>
@@ -91,11 +82,7 @@ function Feedbacks({ lotId }) {
                       Add Review
                     </button>
                   </div>
-
-
                   <AddReviewModal onClose={closeAndUpdate} isOpen={reviewModalIsOpen} lotId={lotId} reviewToEdit={reviewToEdit} ratingToEdit={ratingToEdit} />
-
-
                 </div>
               </div>
             </div>
@@ -115,23 +102,6 @@ function Feedbacks({ lotId }) {
                       readOnly
                     />
                     <p className="mt-1 text-slate-600 md:text-md text-sm">{feedback.review}</p>
-
-                    {/* Helpful text and buttons */}
-                    {/* <div className="absolute bottom-2 left-4 mt-2 mr-2 flex items-center">
-                      <p className="text-gray-500 md:text-sm text-xs mr-2">Helpful?</p>
-                      <button
-                        // onClick={() => handleThumbUp(review._id)} // Assuming review has an _id field
-                        className="p-1"
-                      >
-                        <FaRegThumbsUp className='text-xs text-slate-600' />
-                      </button>
-                      <button
-                        // onClick={() => handleThumbDown(review._id)} // Assuming review has an _id field
-                        className="p-1 focus:outline-none ml-1"
-                      >
-                        <FaRegThumbsDown className='text-xs text-slate-600' />
-                      </button>
-                    </div> */}
                   </div>
                 ))}
               </div>
@@ -142,7 +112,6 @@ function Feedbacks({ lotId }) {
             )
             }
             <UserLoginModal isOpen={isLoginModalOpen} onClose={closeLoginModal} url={`/user/find/lotDetails/${lotId}`} />
-
           </div>
 
         )}

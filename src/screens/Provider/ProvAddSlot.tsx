@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react'
-import { Formik, Field, FieldArray, ErrorMessage } from "formik";
+import React, { useState } from 'react'
+import { Formik, Field, ErrorMessage } from "formik";
 import ProGetAddressLatLong from '@/components/Provider/ProGetAddressLatLong';
 import * as Yup from "yup";
 import { FcInfo } from "react-icons/fc";
@@ -29,16 +29,15 @@ import { motion } from "framer-motion"
 
 
 
+
 function ProvAddSlot() {
   const [showWaterServicePrice, setShowWaterServicePrice] = useState(false);
   const [showEVChargeFacilityPrice, setShowEVChargeFacilityPrice] = useState(false);
   const [showAirPressureCheckPrice, setShowAirPressureCheckPrice] = useState(false);
   const [provAddedAddressLocation, setProvAddedAddressLocation] = useState(null)
-  const [isVerified, setIsVerified] = useState(true)
   const [images, setImages] = useState(Array(4).fill(null))
   const [imagePreviews, setImagePreviews] = useState(Array(4).fill(null))
-
-  // Clciked from the child
+  // Clicked from the child
   const [clickedCoordinates, setClickedCoordinates] = useState(null);
   // Search location
   const [isLoading, setLoading] = useState(false);
@@ -122,10 +121,10 @@ function ProvAddSlot() {
   return (
     <>
       <motion.div initial={{ opacity: 0 }}
-      animate={{
-        opacity: 1,
-        transition: { delay: 0.1, duration: 0.2, ease: 'easeIn' }
-      }} className="p-4 sm:ml-64">
+        animate={{
+          opacity: 1,
+          transition: { delay: 0.1, duration: 0.2, ease: 'easeIn' }
+        }} className="p-4 sm:ml-64">
         <div className="p-4 rounded-lg  ">
           <div className="app min-h-screen">
 
@@ -244,9 +243,7 @@ function ProvAddSlot() {
                       }
                     }
                     selectedImages.forEach((image, index) => {
-                      console.log(`Appending image: ${image.name}, size: ${image.size}, type: ${image.type}`);
                       formData.append(`images`, image);
-                      console.log(image);
                     });
 
                     const sendForApproval = await addSlot(formData).unwrap();
@@ -314,19 +311,19 @@ function ProvAddSlot() {
                     }),
                   })}
                 >
-                    {(props) => {
-                      const {
-                        values,
-                        touched,
-                        errors,
-                        dirty,
-                        isSubmitting,
-                        handleChange,
-                        handleBlur,
-                        handleSubmit,
-                        handleReset,
-                      } = props;
-                      return (
+                  {(props) => {
+                    const {
+                      values,
+                      touched,
+                      errors,
+                      dirty,
+                      isSubmitting,
+                      handleChange,
+                      handleBlur,
+                      handleSubmit,
+                      handleReset,
+                    } = props;
+                    return (
 
                       <form onSubmit={handleSubmit} className="bg-gray-300 p-6 rounded-lg shadow-md">
                         {/* Parking lot name */}
@@ -644,20 +641,21 @@ function ProvAddSlot() {
                           {Array.from({ length: 4 }).map((_, index) => {
                             return (
                               <div key={index} className='flex flex-col md:flex-row md:items-start md:gap-4'>
-                                <input
-                                  type='file'
-                                  name={`image${index}`}
-                                  accept='image/*'
-                                  className='w-full p-2 border border-gray-300 rounded-md cursor-pointer hover:bg-gray-100 transition duration-150 ease-in-out md:w-auto md:p-1 md:border-none md:rounded-lg md:hover:bg-transparent md:hover:text-blue-500'
-                                  onChange={(event) => {
-                                    const file = event.target.files[0];
-                                    handleFileChange(index, file);
-                                  }}
-                                />
+                               <input
+  type='file'
+  name={`image${index}`}
+  accept='image/*'
+  className='cursor-pointer hover:bg-gray-100 transition duration-150 ease-in-out md:hover:bg-transparent md:hover:text-blue-500'
+  style={{ padding: '4px', fontSize: '12px', width: 'auto', border: 'none', borderRadius: '4px' }}
+  onChange={(event) => {
+    const file = event.target.files[0];
+    handleFileChange(index, file);
+  }}
+/>
                                 <ErrorMessage
                                   name={`images[${index}]`}
                                   component="div"
-                                  className='text-red-500 mt-2 md:mt-0' // Adjusted margin for better spacing
+                                  className='text-red-500 mt-2 md:mt-0'
                                 />
                               </div>
                             );
@@ -670,33 +668,29 @@ function ProvAddSlot() {
                           />
                         </div>
 
-                        <div className="flex flex-wrap mt-9">
+                        <div className="flex flex-wrap mt-9 justify-center space-x-10">
                           {Array.from({ length: 4 }).map((_, index) => {
                             return (
-                              <div key={index} className="flex flex-col md:flex-row place-content-center relative mx-2 mb-4">
+                              <div key={index} className="flex flex-col md:flex-row place-content-center relative mx-2 mb-4 ">
                                 {imagePreviews[index] && (
                                   <>
                                     <img
                                       src={imagePreviews[index]}
                                       alt={`Preview ${index + 1}`}
                                       className='w-full md:w-24 h-auto md:h-32 rounded-b-xl object-cover'
-                                      style={{ width: '100px', height: '100%' }} // Removed fixed dimensions for responsiveness
+                                      style={{ width: '100px', height: '100%' }} 
                                     />
-                                    <div className="absolute inset-0 flex justify-center items-center opacity-0 hover:opacity-100 transition-opacity duration-300">
+                                    {/* <div className="absolute inset-0 flex justify-center items-center opacity-0 hover:opacity-100 transition-opacity duration-300">
                                       <button type='button' className="bg-black text-white px-2 py-1 mr-2 rounded"><MdOutlineRemoveRedEye /></button>
                                       <button type='button' className="bg-blue-800 text-white px-2 py-1 rounded"><TbReplace /></button>
                                       <button type='button' className="bg-gray-600 text-white px-2 py-1 ml-2 rounded"><RiImageEditLine /></button>
-                                    </div>
+                                    </div> */}
                                   </>
                                 )}
                               </div>
                             )
                           })}
                         </div>
-
-
-
-
 
                         <div className="md:flex md:justify-center md:mt-12 w-full">
                           <ProGetAddressLatLong provLocation={provAddedAddressLocation} onCoordinatesClick={handleCoordinatesClick} />
@@ -711,7 +705,6 @@ function ProvAddSlot() {
                               <p className='m-1'>* Choose exact location from the given map.</p>
                             </PopoverContent>
                           </Popover>
-                          {/* Verify address button */}
                           {isLoading ? <div className="p-3 ml-3"> <Loader /></div> :
                             <button type='button' onClick={() => handleSearch(values)} className='p-2 bg-white rounded-sm cursor-pointer hover:bg-gray-100 ease-in-out text-black text-sm'>Verify address</button>
                           }
@@ -719,21 +712,31 @@ function ProvAddSlot() {
 
                         <div className="h-32">
                           <div className="justify-center flex mt-5">
-                            <button
-                              type="button"
-                              className="bg-white text-black border border-black px-4 py-2 rounded-sm m-2 hover:bg-black hover:text-white my-6 cursor-pointer"
-                              onClick={handleReset}
-                              disabled={!dirty || isSubmitting}
-                            >
-                              Reset
-                            </button>
-                            {isVerified ? (<button
-                              type="submit"
-                              className="bg-black text-white px-4 m-6 rounded-sm hover:bg-primary-provider"
-                              disabled={isSubmitting}
-                            >
-                              Submit
-                            </button>) : null}
+
+                            {isSubmitting ? (
+                              <div className="mt-5">
+                                <Loader />
+                              </div>
+                            ) : (
+                              <>
+                                <button
+                                  type="button"
+                                  className="bg-white text-black border border-black px-4 py-2 rounded-sm m-2 hover:bg-black hover:text-white my-6 cursor-pointer"
+                                  onClick={handleReset}
+                                  disabled={!dirty || isSubmitting}
+                                >
+                                  Reset
+                                </button>
+                                <button
+                                  type="submit"
+                                  className="bg-black text-white px-4 m-6 rounded-sm hover:bg-primary-provider"
+                                  disabled={isSubmitting}
+                                >
+                                  Submit
+                                </button>
+                              </>
+                            )}
+
                           </div>
                         </div>
                       </form>
