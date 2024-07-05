@@ -164,8 +164,6 @@ function ForgotPassForm(props) {
           </div>
         </div>
       </div>
-
-
     </div>
   )
 }

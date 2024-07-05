@@ -1,8 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import {
-  useFetchTotalBookingsTodayProvMutation
-} from '@/redux/slices/providerSlice';
-
+import { useFetchTotalBookingsTodayProvMutation } from '@/redux/slices/providerSlice';
 import ServicesCountChart from '@/components/Provider/ServicesCountChart';
 import MonthlyWeeklyDailyGraph from '@/components/Provider/MonthlyWeeklyDailyGraph';    //make prov side
 import { useSelector } from 'react-redux';
@@ -10,12 +7,10 @@ import { RootState } from '@/redux/store';
 import { motion } from "framer-motion"
 
 
-
 function ProDashboardContent() {
   const { providerInfo } = useSelector((state: RootState) => state.auth)
 
   const [todaysBookingCount, setTodaysBookingCount] = useState(0)
-
   const [fetchTodaysBoookingCount] = useFetchTotalBookingsTodayProvMutation()
 
   useEffect(() => {
@@ -28,7 +23,6 @@ function ProDashboardContent() {
       setTodaysBookingCount(res.data)
     }
   }
-
 
   return (
     <>

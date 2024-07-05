@@ -7,7 +7,6 @@ import {
 } from '@/redux/slices/adminSlice';
 
 function MonthlyWeeklyDailyGraph() {
-
   const [isActive, setIsActive] = useState('')
   const [barGraphData, setBarGraphData] = useState([])
 
@@ -57,7 +56,7 @@ function MonthlyWeeklyDailyGraph() {
           barSize={20}
         >
           <XAxis dataKey="name" scale="point" padding={{ left: 40, right: 40 }} />
-          <YAxis padding={{ top:40 }} />
+          <YAxis padding={{ top: 40 }} />
           <Tooltip />
           <Legend />
           <CartesianGrid strokeDasharray="3 3" />

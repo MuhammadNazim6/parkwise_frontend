@@ -16,7 +16,6 @@ import { BiCurrentLocation } from "react-icons/bi";
 import {
   Pagination,
   PaginationContent,
-  PaginationEllipsis,
   PaginationItem,
   PaginationLink,
   PaginationNext,
@@ -57,12 +56,10 @@ function UserFindLots() {
     }
   }, [])
 
-  // 
   const fetchLots = () => {
     fetchParkingLots()
   }
   const debouncedFetchParkingLots = useCallback(debounce(fetchLots, 300), [coordinates, price, services, page]);
-
 
   useEffect(() => {
     if (coordinates.length === 2) {
@@ -105,7 +102,6 @@ function UserFindLots() {
     }
   }
 
-
   const handlePrevPageClick = () => {
     if (page > 1) {
       setPage((prev) => prev - 1)
@@ -120,10 +116,10 @@ function UserFindLots() {
 
   return (
     <motion.div initial={{ opacity: 0 }}
-    animate={{
-      opacity: 1,
-      transition: { delay: 0.2, duration: 0.4, ease: 'easeIn' }
-    }}>
+      animate={{
+        opacity: 1,
+        transition: { delay: 0.2, duration: 0.4, ease: 'easeIn' }
+      }}>
       <div className="hero h-20 sticky top-0 z-10"
         style={{ backgroundImage: `url(${HeroImage})` }}
       >
@@ -134,7 +130,7 @@ function UserFindLots() {
               <UserSearchAddress setCoordinates={setCoordinates} />
             </div>
           </div>
-          <button className="flex justify-center items-center w-1/12 glass bg-white text-black hover:bg-slate-300 active:scale-[.98] active:duration-75 transition-all rounded-sm p-1 text-xs h-9" onClick={getCurrentCoordinatesAndFetchParkingLots}><BiCurrentLocation className="text-3xl" />Current location</button>
+          <button className="flex justify-center items-center w-1/12 glass bg-white text-black hover:bg-slate-300 active:scale-[.98] active:duration-75 transition-all rounded-sm p-1 text-xs h-9" onClick={getCurrentCoordinatesAndFetchParkingLots}><BiCurrentLocation className="text-2xl md:text-3xl" /><span className="hidden sm:block">Current location</span></button>
         </div>
       </div>
 
@@ -156,7 +152,6 @@ function UserFindLots() {
             />
           </div>
         </div>
-
 
         {/* SERVICES CHECKBOX */}
         <div className="text-md text-gray-800 tracking-wider lg:p-12 p-6 shadow-xl rounded-b-xl h-screen ">
@@ -206,32 +201,31 @@ function UserFindLots() {
                 >
                   <div className="flex flex-col justify-between w-3/4 px-5">
                     <div>
-                      <p className="text-lg">{lot.parkingName}</p>
-                      <p className="text-sm md:text-sm line-clamp-1 text-gray-600">
+                      <p className="md:text-lg text-sm">{lot.parkingName}</p>
+                      <p className="text-sm line-clamp-1 text-gray-600">
                         {`${lot.address.landmark}, ${lot.address.street}, ${lot.address.pinNumber}, ${lot.address.city}`}
                       </p>
                     </div>
                     <div className="flex flex-wrap items-center space-x-4 sm:space-x-8 lg:space-x-16 text-sm">
                       {lot.evChargeFacilityPrice && (
-                        <div className="flex items-center space-x-1 mb-2 sm:mb-0">
+                        <div className="flex items-center space-x-1 mb-2 sm:mb-0 text-sm">
                           <IoMdBatteryCharging className="text-green-900" />
-                          <p className="hidden md:block text-gray-700">ev charging</p>
+                          <p className="hidden lg:block text-gray-700">ev charging</p>
                         </div>
                       )}
                       {lot.waterServicePrice && (
                         <div className="flex items-center space-x-1 mb-2 sm:mb-0">
                           <MdLocalCarWash className="text-blue-800" />
-                          <p className="hidden md:block text-gray-700">water service</p>
+                          <p className="hidden lg:block text-gray-700">water service</p>
                         </div>
                       )}
                       {lot.airPressureCheckPrice && (
                         <div className="flex items-center space-x-1 mb-2 sm:mb-0">
                           <GiCartwheel className="text-black" />
-                          <p className="hidden md:block text-gray-700">air filling</p>
+                          <p className="hidden lg:block text-gray-700">air filling</p>
                         </div>
                       )}
                     </div>
-
                   </div>
                   <div className="flex justify-center m-5 rounded-b-lg items-center w-1/4 bg-slate-200 shadow-lg text-xs">
                     <p className="p-2">{`${lot.pricePerHour} / hour`}</p>
@@ -239,7 +233,7 @@ function UserFindLots() {
                 </Link>
               ))}
             </ul>
-            <div className="fixed inset-x-0 left-60 bottom-5 flex justify-center">
+            <div className="fixed inset-x-0 md:left-60 bottom-5 md:flex justify-center">
               <Pagination className="">
                 <PaginationContent className="bg p-1 glass rounded-lg bg-gray-200">
                   <PaginationItem className="cursor-pointer">
@@ -260,8 +254,8 @@ function UserFindLots() {
             </div>
           </div>
         ) : (
-          <div className="text-center w-full mt-24 text-xl md:text-3xl text-gray-700 bg-white min-h-screen">
-            <div className="flex justify-center items-center h-72">
+          <div className="text-center w-full mt-24 text-sm md:text-xl text-gray-700 bg-white min-h-screen">
+            <div className="flex justify-center items-center h-72 font-mono">
               No result
             </div>
           </div>

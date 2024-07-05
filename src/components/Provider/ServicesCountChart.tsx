@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { PieChart, Pie } from 'recharts';
 
 import { Tooltip, ResponsiveContainer } from 'recharts';
-import { useUseFetchServicesUsedProviderMutation } from '@/redux/slices/providerSlice';  //MADE
+import { useUseFetchServicesUsedProviderMutation } from '@/redux/slices/providerSlice';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
 
@@ -15,7 +15,7 @@ function ServicesCountChart() {
     { name: 'ev charging', value: 0 }
   ])
 
-  const [fetchServicesCount] = useUseFetchServicesUsedProviderMutation()   //MADE
+  const [fetchServicesCount] = useUseFetchServicesUsedProviderMutation() 
 
   useEffect(() => {
     handleFetchServicesCount()

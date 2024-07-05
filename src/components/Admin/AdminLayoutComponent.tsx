@@ -20,7 +20,6 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
 
-
 function AdminLayoutComponent() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [logoutAdmin] = useAdminLogoutMutation()
@@ -34,7 +33,6 @@ function AdminLayoutComponent() {
     const response = await logoutAdmin().unwrap();
     dispatch(adminLogout())
     navigate('/')
-
   }
   const activeStyle = {
     backgroundColor: "#272925",
@@ -45,8 +43,6 @@ function AdminLayoutComponent() {
     <div className="drawer sticky top-0 z-10">
       <input id="my-drawer-3" type="checkbox" className="drawer-toggle" checked={isSidebarOpen} />
       <div className="drawer-content flex flex-col">
-        {/* Navbar */}
-        {/* BBC3A4 */}
         <div className="w-full navbar bg-[#574476] text-white ">
           <div className="flex-none">
             <label htmlFor="my-drawer-3" onClick={handleSidebarToggle} className="btn btn-square btn-ghost">

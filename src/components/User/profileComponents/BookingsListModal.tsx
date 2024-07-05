@@ -38,7 +38,7 @@ function BookingsListModal({ isOpen, onClose, userId, page, setPage }) {
   const [bookings, setBookings] = useState([]);
   const [bookingDetails, setBookingDetails] = useState(null);
   const [error, setError] = useState('')
-  const [fetchBookings, { isLoading }] = useFetchUserBookingsMutation()
+  const [fetchBookings] = useFetchUserBookingsMutation()
   const [fetchBookingDetails] = useFetchBookingDetailsMutation()
   const [getBookedSlots] = useGetFilledSlotsMutation()
   const [cancelBooking] = useCancelBookingMutation()
@@ -330,12 +330,12 @@ function BookingsListModal({ isOpen, onClose, userId, page, setPage }) {
                         </div>
                       </div>
                     ))
-                  ):
-                  (
-                    <div className="flex justify-center items-center">
-                    <img src={noBookingsIng} className='h-60 mb-16' />
-                  </div>
-                  )
+                  ) :
+                    (
+                      <div className="flex justify-center items-center">
+                        <img src={noBookingsIng} className='h-60 mb-16' />
+                      </div>
+                    )
                   }
                 </div>
                 {bookings.length ? (<Pagination className="mt-3">
@@ -360,7 +360,7 @@ function BookingsListModal({ isOpen, onClose, userId, page, setPage }) {
                       <PaginationNext onClick={handleNextPageClick} />
                     </PaginationItem>
                   </PaginationContent>
-                </Pagination>):null}
+                </Pagination>) : null}
               </>
             )}
           </ModalBody>

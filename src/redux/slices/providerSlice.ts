@@ -132,7 +132,7 @@ export const providerApiSlice = apiSlice.injectEndpoints({
 
     useFetchServicesUsedProvider: builder.mutation({
       query: (lotId) => ({
-        url: `${PROVIDER_URL}/getServicesCount/${lotId}`,
+        url: `${PROVIDER_URL}/fetchServicesCount/${lotId}`,
         method: "GET",
         data: {},
         params: {},

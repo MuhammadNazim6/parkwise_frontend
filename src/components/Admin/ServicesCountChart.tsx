@@ -13,8 +13,8 @@ function ServicesCountChart() {
   const [fetchServicesCount] = useFetchServicesUsedCountMutation()
   useEffect(() => {
     handleFetchServicesCount()
-  },[])
-  
+  }, [])
+
   const handleFetchServicesCount = async () => {
     const res = await fetchServicesCount(null).unwrap()
     if (res.success) {

@@ -30,7 +30,6 @@ export default function LoginForm(props) {
   const [commonLogin, { isLoading }] = useCommonLoginMutation();
   const [sign] = useUserSignGoogleMutation()
 
-  const { userInfo } = useSelector((state: RootState) => state.auth);
   const { uLoggedIn } = useSelector((state: RootState) => state.auth);
   const { pLoggedIn } = useSelector((state: RootState) => state.auth);
   const { aLoggedIn } = useSelector((state: RootState) => state.auth);
@@ -68,7 +67,7 @@ export default function LoginForm(props) {
           localStorage.setItem('token', signed.token)
           navigate('/', { replace: true })
         } else {
-          alert('Try another login method')
+          setCommonError(signed.message);
         }
       } catch (error) {
         console.error(error);
@@ -178,7 +177,7 @@ export default function LoginForm(props) {
                 {showPassword ? (< FaEye />) : (<FaEyeSlash />)}
               </button>
             </div>
-            {commonError && <p className="text-red-400 pl-2 text-xl font-medium">{commonError}</p>}
+            {commonError && <p className="text-red-400 pl-2 text-lg font-medium mt-2">{commonError}</p>}
           </div>
           <div className="mt-8 flex justify-between items-center">
             <div className=""></div>

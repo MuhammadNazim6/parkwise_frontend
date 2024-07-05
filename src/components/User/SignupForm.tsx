@@ -69,7 +69,7 @@ export default function SignupForm(props) {
           dispatch(setCredentials({ ...googleUserData, id: signed.data.id, mobile }))
           navigate('/user/find', { replace: true })
         } else {
-          console.error('Try another login method');
+          setCommonError(signed.message);
         }
       } catch (error) {
         console.error(error);
@@ -77,13 +77,6 @@ export default function SignupForm(props) {
     },
 
   });
-
-
-  const onFailure = (res) => {
-    console.error('Login failed, ', res);
-  }
-
-
 
   useEffect(() => {
     if (uLoggedIn) {

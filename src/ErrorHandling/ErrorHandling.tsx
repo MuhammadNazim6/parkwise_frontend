@@ -6,10 +6,10 @@ export const onQueryStartedErrorToast = async (args, { queryFulfilled }) => {
   } catch (error) {
     if (error.error.data) {
       const status = error.error.status;
-      const errorResponse = error.error.data;
+      const errorResponse = error.error.data.message;
       // toast.error(errorResponse.message)
-      console.error(errorResponse);
-      
+      console.error(error);
+
       // Perform error handling based on the status code
       switch (status) {
         case 400:
@@ -20,6 +20,7 @@ export const onQueryStartedErrorToast = async (args, { queryFulfilled }) => {
           break;
         case 403:
           console.log('Forbidden. You do not have permission to access this resource.');
+          toast.error(errorResponse)
           break;
         case 404:
           console.log('Resource not found.');

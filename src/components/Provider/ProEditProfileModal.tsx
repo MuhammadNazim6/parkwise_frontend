@@ -2,13 +2,12 @@ import React, { useState, useRef } from 'react'
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { useUpdateProvProfileDetailsMutation, useProviderVerificationMutation, useProviderCheckOtpMutation } from '@/redux/slices/providerSlice';
-import { setCredentials, setProviderCredentials } from '@/redux/slices/authSlice';
+import { setProviderCredentials } from '@/redux/slices/authSlice';
 import { useDispatch } from 'react-redux';
 import { useToast } from "@/components/ui/use-toast"
 import {
   InputOTP,
   InputOTPGroup,
-  InputOTPSeparator,
   InputOTPSlot,
 } from "@/components/ui/input-otp"
 import Lottie from 'lottie-react';
@@ -26,7 +25,6 @@ function ProEditProfileModal({ isOpen, onClose, profileDetails, setProviderDetai
   const [checkOtp] = useProviderCheckOtpMutation()
   const dispatch = useDispatch()
   const { toast } = useToast()
-
 
   const checkOtpFn = async () => {
     const data = {

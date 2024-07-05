@@ -8,7 +8,6 @@ import { Loader } from '@/components/Common/BootstrapElems';
 import toast from 'react-hot-toast';
 
 
-
 const validationSchema = Yup.object().shape({
   password: Yup.string()
     .required('Password is required')
