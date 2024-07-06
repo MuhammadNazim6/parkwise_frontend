@@ -32,7 +32,7 @@ function App() {
       id: userInfo ? userInfo.id : 'guest',
     
     }
-    new Feedback(options).renderButton()
+    // new Feedback(options).renderButton()
   }, [])
 
   useEffect(() => {
