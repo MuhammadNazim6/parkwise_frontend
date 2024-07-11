@@ -54,11 +54,11 @@ export const adminApiSlice = apiSlice.injectEndpoints({
         headers: {},
       }),
     }),
-    getProviders: builder.mutation<SuccessGetResponse, void>({
-      query: (data) => ({
-        url: `${ADMIN_URL}/getApprovedProviders`,
+    getProviders: builder.mutation({
+      query: (page) => ({
+        url: `${ADMIN_URL}/getApprovedProviders?page=${page}`,
         method: "GET",
-        data: data,
+        data: {},
         params: {},
         headers: {},
       }),
