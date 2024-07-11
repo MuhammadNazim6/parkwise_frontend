@@ -36,20 +36,20 @@ export const adminApiSlice = apiSlice.injectEndpoints({
         headers: {},
       }),
     }),
-    getRequests: builder.mutation<SuccessGetResponse, void>({
-      query: (data) => ({
-        url: `${ADMIN_URL}/getProvidersRequests`,
+    getRequests: builder.mutation({
+      query: (page) => ({
+        url: `${ADMIN_URL}/getProvidersRequests?page=${page}`,
         method: "GET",
-        data: data,
+        data: {},
         params: {},
         headers: {},
       }),
     }),
-    getUsers: builder.mutation<SuccessGetResponse, void>({
-      query: (data) => ({
-        url: `${ADMIN_URL}/getUsers`,
+    getUsers: builder.mutation({
+      query: (page) => ({
+        url: `${ADMIN_URL}/getUsers?page=${page}`,
         method: "GET",
-        data: data,
+        data: {},
         params: {},
         headers: {},
       }),
@@ -99,7 +99,7 @@ export const adminApiSlice = apiSlice.injectEndpoints({
         headers: {},
       }),
     }),
-    fetchServicesUsedCount: builder.mutation({
+    fetchServicesUsedCountAdmin: builder.mutation({
       query: () => ({
         url: `${ADMIN_URL}/fetchServicesCount`,
         method: "GET",
@@ -109,7 +109,7 @@ export const adminApiSlice = apiSlice.injectEndpoints({
       }),
     }),
 
-    fetchTotalBookingsToday: builder.mutation({
+    fetchTotalBookingsTodayAdmin: builder.mutation({
       query: () => ({
         url: `${ADMIN_URL}/fetchTotalBookingsToday`,
         method: "GET",
@@ -118,9 +118,9 @@ export const adminApiSlice = apiSlice.injectEndpoints({
         headers: {},
       }),
     }),
-    fetchMontlyBookings: builder.mutation({
+    fetchMontlyBookingsAdmin: builder.mutation({
       query: () => ({
-        url: `${ADMIN_URL}/fetchMonthly`,
+        url: `${ADMIN_URL}/fetchMonthlyAdmin`,
         method: "GET",
         data: {},
         params: {},
@@ -128,7 +128,7 @@ export const adminApiSlice = apiSlice.injectEndpoints({
       }),
     }),
 
-    fetchWeeklyBookings: builder.mutation({
+    fetchWeeklyBookingsAdmin: builder.mutation({
       query: () => ({
         url: `${ADMIN_URL}/fetchWeekly`,
         method: "GET",
@@ -138,9 +138,19 @@ export const adminApiSlice = apiSlice.injectEndpoints({
       }),
     }),
 
-    fetchDailyyBookings: builder.mutation({
+    fetchDailyyBookingsAdmin: builder.mutation({
       query: () => ({
         url: `${ADMIN_URL}/fetchDaily`,
+        method: "GET",
+        data: {},
+        params: {},
+        headers: {},
+      }),
+    }),
+
+    fetchAppSuggestions: builder.mutation({
+      query: (page) => ({
+        url: `${ADMIN_URL}/getSuggestions?page=${page}`,
         method: "GET",
         data: {},
         params: {},
@@ -162,10 +172,11 @@ export const {
   useBlockUnblockUserMutation,
   useAcceptReqMutation,
   useRejectReqMutation,
-  useFetchServicesUsedCountMutation,
-  useFetchMontlyBookingsMutation,
-  useFetchWeeklyBookingsMutation,
-  useFetchDailyyBookingsMutation,
-  useFetchTotalBookingsTodayMutation  
+  useFetchServicesUsedCountAdminMutation,
+  useFetchMontlyBookingsAdminMutation,
+  useFetchWeeklyBookingsAdminMutation,
+  useFetchDailyyBookingsAdminMutation,
+  useFetchTotalBookingsTodayAdminMutation,
+  useFetchAppSuggestionsMutation
 
 } = adminApiSlice;

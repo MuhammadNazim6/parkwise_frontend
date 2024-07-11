@@ -7,6 +7,7 @@ import AdminUsers from '@/screens/Admin/AdminUsers'
 import AdminRequests from '@/screens/Admin/AdminRequests'
 import NotFoundPage from '@/screens/Common/NotFoundPage';
 import AdminProtect from './protected/adminProtect'
+import AdminSuggestions from '@/screens/Admin/AdminSuggestions'
 
 
 function AdminRoutes() {
@@ -18,6 +19,7 @@ function AdminRoutes() {
           <Route path='requests' element={<AdminRequests />} />
           <Route path='providers' element={<AdminProviders />} />
           <Route path='users' element={<AdminUsers />} />
+          <Route path='suggestions' element={<AdminSuggestions />} />
         </Route>
       </Route>
 

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { PieChart, Pie } from 'recharts';
 import { Tooltip, ResponsiveContainer } from 'recharts';
-import { useFetchServicesUsedCountMutation } from '@/redux/slices/adminSlice';
+import { useFetchServicesUsedCountAdminMutation } from '@/redux/slices/adminSlice';
 
 function ServicesCountChart() {
   const [servicesData, setServicesData] = useState([
@@ -10,7 +10,7 @@ function ServicesCountChart() {
     { name: 'ev charging', value: 0 }
   ])
 
-  const [fetchServicesCount] = useFetchServicesUsedCountMutation()
+  const [fetchServicesCount] = useFetchServicesUsedCountAdminMutation()
   useEffect(() => {
     handleFetchServicesCount()
   }, [])
@@ -33,7 +33,7 @@ function ServicesCountChart() {
             cx="50%"
             cy="50%"
             outerRadius={80}
-            fill="#8884d8"
+            fill="#285d8f"
             label
           />
           <Tooltip />

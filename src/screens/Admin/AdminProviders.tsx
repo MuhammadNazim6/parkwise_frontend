@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { useGetProvidersMutation, useBlockUnblockProviderMutation } from '@/redux/slices/adminSlice';
 import { useToast } from "@/components/ui/use-toast"
 import Lottie from 'lottie-react'
-import adminLoader from '../../assets/Animation/adminLoader.json'
+import adminLoader from '../../assets/Animation/loaderAdmin.json'
 
 
 function AdminProviders() {
@@ -37,9 +37,9 @@ function AdminProviders() {
   }
 
   return (
-    <div className="flex justify-center bg-gray-100 min-h-screen ">
+    <div className="flex justify-center bg-gray-100 min-h-screen pt-4">
       <div className="h-full sm:w-2/3 w-full">
-        <p className='sm:text-2xl md:text-3xl text-lg text-center md:m-4 text-black font-bold p-3'>Providers list</p>
+        <p className='sm:text-2xl md:text-2xl text-lg text-center md:m-4 text-black font-bold p-3'>Providers list</p>
         {!isLoading ? (providers.length > 0 ?
           (providers.map((provider) => (
             <div key={provider._id} className="flex bg-gray-100">
@@ -60,20 +60,20 @@ function AdminProviders() {
                     </div>
                   </div>
                   <div className="text-sm text-gray-700 mt-2">{provider.email}</div>
-                  {/* <div className="text-xs text-gray-500 mt-2">{user.mobile}</div> */}
+                  <div className="text-xs text-gray-500 mt-2">{provider.mobile}</div>
                 </div>
               </div>
             </div>
           ))
           ) : (
-          <div className="flex bg-gray-100 justify-center items-center h-64">
-            <div className="text-gray-700 text-lg">No providers found</div>
+            <div className="flex bg-gray-100 justify-center items-center h-96">
+            <div className="text-gray-400 text-xl">No Providers found</div>
           </div>
           ))
           : (
-            <div className="flex justify-center items-center mt-14">
-              <Lottie animationData={adminLoader} className='w-[450px]' />
-            </div>
+            <div className="flex justify-center items-center h-[450px]">
+            <Lottie animationData={adminLoader} className='w-[150px]' />
+          </div>
           )
         }
       </div>

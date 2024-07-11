@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useFetchTotalBookingsTodayProvMutation } from '@/redux/slices/providerSlice';
 import ServicesCountChart from '@/components/Provider/ServicesCountChart';
-import MonthlyWeeklyDailyGraph from '@/components/Provider/MonthlyWeeklyDailyGraph';    //make prov side
+import MonthlyWeeklyDailyGraph from '@/components/Provider/MonthlyWeeklyDailyGraph';   
 import { useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
 import { motion } from "framer-motion"

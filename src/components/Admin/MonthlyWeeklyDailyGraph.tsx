@@ -1,18 +1,18 @@
 import React, { useEffect, useState } from 'react'
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import {
-  useFetchMontlyBookingsMutation,
-  useFetchWeeklyBookingsMutation,
-  useFetchDailyyBookingsMutation,
+  useFetchMontlyBookingsAdminMutation,
+  useFetchWeeklyBookingsAdminMutation,
+  useFetchDailyyBookingsAdminMutation,
 } from '@/redux/slices/adminSlice';
 
 function MonthlyWeeklyDailyGraph() {
   const [isActive, setIsActive] = useState('')
   const [barGraphData, setBarGraphData] = useState([])
 
-  const [fetchMonthlyBookings] = useFetchMontlyBookingsMutation()
-  const [fetchWeeklyBookings] = useFetchWeeklyBookingsMutation()
-  const [fetchDailyBoookings] = useFetchDailyyBookingsMutation()
+  const [fetchMonthlyBookings] = useFetchMontlyBookingsAdminMutation()
+  const [fetchWeeklyBookings] = useFetchWeeklyBookingsAdminMutation()
+  const [fetchDailyBoookings] = useFetchDailyyBookingsAdminMutation()
 
   useEffect(() => {
     handlefetchMonthly()
@@ -61,7 +61,7 @@ function MonthlyWeeklyDailyGraph() {
           <Legend />
           <CartesianGrid strokeDasharray="3 3" />
           <Bar dataKey="count" fill="#8884d8" background={{ fill: '#eee' }} />
-          <Bar dataKey="amount" stackId="a" fill="#82ca9d" />
+          <Bar dataKey="amount" stackId="a" fill="#234f79" />
         </BarChart>
       </ResponsiveContainer>
       <div className="flex space-x-8 justify-center">

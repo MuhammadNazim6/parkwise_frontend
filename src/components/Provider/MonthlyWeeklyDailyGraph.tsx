@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import {
-  useFetchMontlyBookingsMutation,
-  useFetchWeeklyBookingsMutation,
-  useFetchDailyBookingsMutation,
+  useFetchMontlyBookingsProviderMutation,
+  useFetchWeeklyBookingsProviderMutation,
+  useFetchDailyBookingsProviderMutation,
 } from '@/redux/slices/providerSlice';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
@@ -15,9 +15,9 @@ function MonthlyWeeklyDailyGraph() {
   const [isActive, setIsActive] = useState('')
   const [barGraphData, setBarGraphData] = useState([])
 
-  const [fetchMonthlyBookings] = useFetchMontlyBookingsMutation()
-  const [fetchWeeklyBookings] = useFetchWeeklyBookingsMutation()
-  const [fetchDailyBoookings] = useFetchDailyBookingsMutation()
+  const [fetchMonthlyBookings] = useFetchMontlyBookingsProviderMutation()
+  const [fetchWeeklyBookings] = useFetchWeeklyBookingsProviderMutation()
+  const [fetchDailyBoookings] = useFetchDailyBookingsProviderMutation()
 
   useEffect(() => {
     handlefetchMonthly()
