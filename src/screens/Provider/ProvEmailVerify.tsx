@@ -13,7 +13,7 @@ function ProvEmailVerify(props) {
   const inputRefs = useRef<HTMLInputElement[]>([]);
   const [enteredOtp, setEnteredOtp] = useState(['', '', '', '', '', ''])
   const [register, { isLoading: isRegistering }] = useProviderRegisterMutation()
-  const [check] = useProviderCheckOtpMutation()
+  const [check,{isLoading:isChecking}] = useProviderCheckOtpMutation()
   const [commonError, setCommonError] = useState('')
   const [otpResendText, setOtpResendText] = useState('')
   const [waiToSendOtp, setWaitToSendOtp] = useState(false)
@@ -139,7 +139,7 @@ function ProvEmailVerify(props) {
 
               </div>
               {waiToSendOtp ? <p className='text-lg  w-80'>Try again after {otpTimer} seconds</p> : <p className='text-lg w-80'><span>didn't recieve otp ?? </span><span onClick={resendOtpFn} className='text-blue-500 hover:text-blue-800 active:scale-[.98] active:duration-75 transition-all cursor-pointer'> resend OTP</span></p>}
-              { isVerifying || isRegistering ? <div className='mt-10'><Loader/></div> : <button type='submit' className='text-white mt-5 bg-secondary-provider p-3 w-3/6 lg:w-5/6 text-base font-medium ml-2 hover:scale-[1.02] rounded-lg active:scale-[.98] active:duration-75 transition-all'>Verify</button> }
+              { isChecking || isRegistering ? <div className='mt-10'><Loader/></div> : <button type='submit' className='text-white mt-5 bg-secondary-provider p-3 w-3/6 lg:w-5/6 text-base font-medium ml-2 hover:scale-[1.02] rounded-lg active:scale-[.98] active:duration-75 transition-all'>Verify</button> }
             </div>
           </form>
         </div>
