@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import SignupForm from '../../components/User/SignupForm';
-import LogoImg from "../../assets/Images/WhatsApp_Image_2024-05-07_at_20.13.27_bb0ad381-removebg-preview.png";
+import loginImg from "../../assets/Images/loginImg.png";
 
 
 interface MyComponentProps {
@@ -12,9 +12,9 @@ function UserSignup() {
   return (
     <div className='flex w-full h-screen lg:bg-primary-blue'>
       <div className="hidden lg:flex h-full w-1/2 items-center  justify-center">
-        <div className="w-1/2">
-          <img src={LogoImg} className='' />
-        </div>
+      <div className="bg-back flex justify-center items-center">
+        <img src={loginImg} className='w-4/5 h-4/5' />
+      </div>
       </div>
       <div className="w-full flex items-center justify-center lg:w-1/2 bg-white m-2 mr-0 rounded-l-3xl overflow-hidden">
         <SignupForm />
