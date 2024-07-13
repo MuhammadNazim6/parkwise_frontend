@@ -20,10 +20,12 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
+import { LoaderWhite } from '@/components/Common/BootstrapElems'
+
 
 function AdminLayoutComponent() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [logoutAdmin] = useAdminLogoutMutation()
+  const [logoutAdmin, { isLoading: isLoggingOut }] = useAdminLogoutMutation()
   const handleSidebarToggle = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
@@ -54,22 +56,27 @@ function AdminLayoutComponent() {
           </div>
           <div className="flex-1 px-2 mx-2 text-lg">Parkwise Admin</div>
           <div className="flex-none hidden md:block">
-            <span className='mr-16 flex items-center cursor-pointer'><span><RiLogoutBoxLine className='mr-2' /></span><span>
-              <AlertDialog>
-                <AlertDialogTrigger>Logout</AlertDialogTrigger>
-                <AlertDialogContent>
-                  <AlertDialogHeader>
-                    <AlertDialogTitle>Are you sure to logout?</AlertDialogTitle>
-                    <AlertDialogDescription>
-                    </AlertDialogDescription>
-                  </AlertDialogHeader>
-                  <AlertDialogFooter>
-                    <AlertDialogCancel>Cancel</AlertDialogCancel>
-                    <AlertDialogAction><span onClick={handleLogout}>Continue</span></AlertDialogAction>
-                  </AlertDialogFooter>
-                </AlertDialogContent>
-              </AlertDialog>
-            </span></span>
+            {isLoggingOut ? <div className="w-28 mt-1"><LoaderWhite /></div> :
+              <>
+                <span className='mr-16 flex items-center cursor-pointer'><span><RiLogoutBoxLine className='mr-2' /></span>
+                  <span>
+                    <AlertDialog>
+                      <AlertDialogTrigger>Logout</AlertDialogTrigger>
+                      <AlertDialogContent>
+                        <AlertDialogHeader>
+                          <AlertDialogTitle>Are you sure to logout?</AlertDialogTitle>
+                          <AlertDialogDescription>
+                          </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                          <AlertDialogCancel>Cancel</AlertDialogCancel>
+                          <AlertDialogAction><span onClick={handleLogout}>Continue</span></AlertDialogAction>
+                        </AlertDialogFooter>
+                      </AlertDialogContent>
+                    </AlertDialog>
+                  </span></span>
+              </>
+            }
           </div>
         </div>
       </div>

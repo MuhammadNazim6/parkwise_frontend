@@ -1,6 +1,5 @@
 import React from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import LogoImg from "../../assets/Images/parkwise-high-resolution-logo-transparent.png";
 import { Button } from "@/components/ui/button"
 import { FaPowerOff } from "react-icons/fa6";
 import { useProviderLogoutMutation } from '@/redux/slices/providerSlice';
@@ -17,11 +16,13 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
 import { useDispatch } from 'react-redux';
+import { Loader } from '@/components/Common/BootstrapElems'
+
 
 
 const ProvNavbar = () => {
 
-  const [logout] = useProviderLogoutMutation()
+  const [logout, { isLoading: isLoggingOut }] = useProviderLogoutMutation()
   const navigate = useNavigate()
   const dispatch = useDispatch()
 
@@ -38,23 +39,23 @@ const ProvNavbar = () => {
           {/* <img src={LogoImg} /> */}
         </div>
         <div className="p-3">
-          
+
           <AlertDialog>
-              <AlertDialogTrigger>
-              <Button className='bg-black rounded-md active:scale-[.98] active:duration-75 transition-all hover:scale-[1.025] ease-in-out'>Logout <FaPowerOff className='ml-2 ' /></Button>
-              </AlertDialogTrigger>
-              <AlertDialogContent>
-                <AlertDialogHeader>
-                  <AlertDialogTitle>Are you sure to logout?</AlertDialogTitle>
-                  <AlertDialogDescription>
-                  </AlertDialogDescription>
-                </AlertDialogHeader>
-                <AlertDialogFooter>
-                  <AlertDialogCancel>Cancel</AlertDialogCancel>
-                  <AlertDialogAction><span onClick={handleLogout}>Continue</span></AlertDialogAction>
-                </AlertDialogFooter>
-              </AlertDialogContent>
-            </AlertDialog>
+            <AlertDialogTrigger>
+              {isLoggingOut ? <div className="w-28 mt-1"><Loader /></div> : <Button className='bg-black rounded-md active:scale-[.98] active:duration-75 transition-all hover:scale-[1.025] ease-in-out'> Logout <FaPowerOff className='ml-2 ' /></Button>}
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Are you sure to logout?</AlertDialogTitle>
+                <AlertDialogDescription>
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogAction><span onClick={handleLogout}>Continue</span></AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
         </div>
       </div>
     </div>

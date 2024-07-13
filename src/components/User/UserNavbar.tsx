@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { Link, useNavigate, NavLink } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import LogoImg from "../../assets/Images/parkwise-high-resolution-logo-transparent.png";
@@ -17,6 +17,8 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
 import { RootState } from '@/redux/store';
+import { Loader } from '@/components/Common/BootstrapElems'
+
 
 
 function Navbar() {
@@ -33,7 +35,7 @@ function Navbar() {
   }
   const { userInfo } = useSelector((state: RootState) => state.auth)
  
-  const [logout, { isLoading }] = useLogoutMutation()
+  const [logout, { isLoading:isLoggingOut }] = useLogoutMutation()
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const handleLogout = async () => {
@@ -63,7 +65,7 @@ function Navbar() {
 
         {userInfo ? (
           <AlertDialog>
-            <AlertDialogTrigger>   <li className='text-md w-28' >Logout </li>
+            <AlertDialogTrigger>  { isLoggingOut ? <div className="w-28 mt-1"><Loader/></div> : <li className='text-md w-28'>Logout </li> }
             </AlertDialogTrigger>
             <AlertDialogContent>
               <AlertDialogHeader>

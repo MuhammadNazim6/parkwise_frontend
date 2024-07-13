@@ -4,19 +4,21 @@ import { useRegisterMutation, useUserCheckOtpMutation, useUserVerificationMutati
 import { setCredentials, deleteEmailInfo } from '../../redux/slices/authSlice';
 import { useNavigate } from 'react-router-dom';
 import { RootState } from '@/redux/store';
+import { Loader } from '@/components/Common/BootstrapElems'
+
 
 function UserEmailVerify(props) {
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const inputRefs = useRef<HTMLInputElement[]>([]);
   const [enteredOtp, setEnteredOtp] = useState(['', '', '', '', '', ''])
-  const [register, { isLoading }] = useRegisterMutation()
+  const [register, { isLoading: isRegistering }] = useRegisterMutation()
   const [check] = useUserCheckOtpMutation()
   const [commonError, setCommonError] = useState('')
   const [otpResendText, setOtpResendText] = useState('')
   const [waiToSendOtp, setWaitToSendOtp] = useState(false)
   const [otpTimer, setOtpTimer] = useState(60)
-  const [verify] = useUserVerificationMutation()
+  const [verify, { isLoading: isVerifying }] = useUserVerificationMutation()
 
   useEffect(() => {
     if (otpTimer === 0) {
@@ -106,7 +108,7 @@ function UserEmailVerify(props) {
       <div className="hidden relative lg:flex h-full w-1/2 items-center justify-center">
         <div className="flex flex-col">
           <div className="p-32">
-            <h1 className='text-2xl text-center text-black leading-normal'>Please enter the OTP sent to your email {emailInfo.email} and verify that its you</h1>
+            <h1 className='text-xl text-center text-black leading-normal'>Please enter the OTP sent to your email {emailInfo.email} and verify that its you</h1>
           </div>
         </div>
       </div>
@@ -137,7 +139,7 @@ function UserEmailVerify(props) {
 
               </div>
               {waiToSendOtp ? <div className="flex justify-center"><p className='text-lg  w-80'>Try again after {otpTimer} seconds</p></div> : <div className='flex justify-center'><p className='text-lg w-80'><span>didn't recieve otp ?? </span><span onClick={resendOtpFn} className='text-blue-500 hover:text-blue-800 active:scale-[.98] active:duration-75 transition-all cursor-pointer'> resend OTP</span></p></div>}
-              <button type='submit' className='text-white mt-5 bg-secondary-blue p-3 w-3/6 lg:w-5/6 text-base font-medium ml-2 hover:scale-[1.02] rounded-lg active:scale-[.98] active:duration-75 transition-all'>Verify</button>
+              {isVerifying || isRegistering ? <div className='mt-10'><Loader /></div> : <button type='submit' className='text-white mt-5 bg-secondary-blue p-3 w-3/6 lg:w-5/6 text-base font-medium ml-2 hover:scale-[1.02] rounded-lg active:scale-[.98] active:duration-75 transition-all'>Verify</button>}
             </div>
           </form>
         </div>

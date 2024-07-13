@@ -1,13 +1,11 @@
 import * as React from 'react';
 import { useState, useEffect, useRef } from 'react';
-import { FaGoogle } from 'react-icons/fa';
 import { useNavigate, Link } from 'react-router-dom';
-import { useRegisterMutation, useUserVerificationMutation, useUserSignGoogleMutation } from '../../redux/slices/userApiSlice';
+import { useUserVerificationMutation, useUserSignGoogleMutation } from '../../redux/slices/userApiSlice';
 import { useSelector, useDispatch } from 'react-redux';
 import { Loader } from '../Common/BootstrapElems'
 import { FaEyeSlash, FaEye } from "react-icons/fa";
 import { setCredentials, setEmailInfo } from '../../redux/slices/authSlice';
-import { toast } from '../../script/toast'
 import axios from 'axios';
 import { GoogleLogin, useGoogleLogin } from '@react-oauth/google';
 import { RootState } from '@/redux/store';
@@ -20,7 +18,6 @@ export default function SignupForm(props) {
   const [mobile, setMobile] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [image, setImage] = useState(null)
 
   const [nameError, setNameError] = useState('')
   const [emailError, setEmailError] = useState('')
@@ -38,7 +35,6 @@ export default function SignupForm(props) {
   const [loading, setLoading] = useState(false);
 
 
-  const { userInfo } = useSelector((state: RootState) => state.auth)
   const { uLoggedIn } = useSelector((state: RootState) => state.auth);
 
 
