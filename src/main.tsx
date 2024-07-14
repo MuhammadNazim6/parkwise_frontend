@@ -5,7 +5,7 @@ import { Provider } from 'react-redux'
 import { store } from './redux/store'
 import { ThemeProvider } from "@material-tailwind/react";
 import { SocketProvider } from './context/SocketProvider'
-import { BrowserRouter, useNavigate } from 'react-router-dom';
+import { BrowserRouter } from 'react-router-dom';
 
 
 
