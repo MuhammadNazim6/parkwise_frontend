@@ -213,7 +213,7 @@ function UserChats() {
 
   const addToMessages = async () => {
     if (text.length) {
-      setMessages((prev) => [...prev, { senderId: userInfo.id, recieverId: receiverId, message: text }])
+      setMessages((prev) => [...prev, { senderId: userInfo.id, recieverId: receiverId, message: text, updatedAt: Date.now() }])
       socket.emit('chatMessage', { sender: userInfo.id, recipient: receiverId, message: text });
       setShowEmoji(false)
 
@@ -362,7 +362,6 @@ function UserChats() {
               </div>
 
               <div className='flex space-x-9 justify-end'>
-                {/* <IoMdCall className='text-2xl cursor-pointer' /> */}
                 <FaVideo onClick={handleVideoCall} className='text-xl cursor-pointer' />
               </div>
             </DrawerHeader>
@@ -371,8 +370,9 @@ function UserChats() {
               {messages.map((msg) => {
                 return (
                   <>
-                    <div className={`chat ${msg.senderId === userInfo.id ? 'chat-end' : 'chat-start'}`}>
-                      <div className={`chat-bubble rounded-lg shadow-xl text-sm text-white ${msg.senderId === userInfo.id ? 'bg-blue-500' : 'bg-blue-800'}`}>{msg.message}</div>
+                    <div className={`chat ${msg.senderId === userInfo.id ? 'chat-end' : 'chat-start'} mt-2 relative`}>
+                      {msg.senderId === userInfo.id && (<time className="text-xs opacity-50 absolute z-10 text-white right-5 bottom-2">{calculateTime(msg.updatedAt)}</time>)}
+                      <div className={`chat-bubble rounded-lg shadow-xl text-sm text-white ${msg.senderId === userInfo.id ? 'bg-blue-500' : 'bg-blue-800'}`}><span className='mr-10'>{msg.message}</span></div>
                     </div>
                   </>
                 )
@@ -381,17 +381,17 @@ function UserChats() {
 
             </DrawerBody>
             <div className="fixed bottom-0 right-0 bg-white h-14 rounded-md w-full">
-              <form className='w-full ml-7 relative' onSubmit={enterButtonSend}>
+              <form className='w-full mx-5 relative' onSubmit={enterButtonSend}>
                 <input type='text' value={text} onChange={(e) => setText(e.target.value)} className='w-11/12 rounded-lg shadow-xl px-12' />
               </form>
-              <BsEmojiSmile onClick={toggleEmojiModal} className='absolute left-10 bottom-6 hover:text-gray-500 active:scale-[1.08] text-2xl transition-opacity cursor-pointer' />
+              <BsEmojiSmile onClick={toggleEmojiModal} className='absolute left-8 bottom-6 hover:text-gray-500 active:scale-[1.08] text-2xl transition-opacity cursor-pointer' />
 
               <div className='absolute left-7 bottom-16'>
                 <EmojiPicker open={showEmoji} onEmojiClick={handleEmogiClick} />
               </div>
-              <TbSend2 className={`absolute right-10 bottom-6 text-2xl transition-opacity cursor-pointer ${!text.length ? 'opacity-0' : 'opacity-100'}`}
+              <TbSend2 className={`absolute right-6 xs:right-9 sm:right-12 bottom-6 text-2xl transition-opacity cursor-pointer ${!text.length ? 'opacity-0' : 'opacity-100'}`}
               />
-              <TbSend onClick={addToMessages} className={`absolute right-10  bottom-6 text-2xl transition-opacity cursor-pointer ${text.length ? 'opacity-0' : 'opacity-100'}`}
+              <TbSend onClick={addToMessages} className={`absolute right-6 xs:right-9 sm:right-12 bottom-6 text-2xl transition-opacity cursor-pointer ${text.length ? 'opacity-0' : 'opacity-100'}`}
               />
             </div>
             <DrawerFooter>
@@ -420,7 +420,6 @@ function UserChats() {
               </div>
 
               <div className='flex space-x-9 justify-end'>
-                {/* <IoMdCall className='text-2xl cursor-pointer hover:text-gray-600' /> */}
                 <FaVideo onClick={handleVideoCall} className='text-2xl cursor-pointer hover:text-gray-600' />
               </div>
             </div>
@@ -430,12 +429,9 @@ function UserChats() {
             {messages.map((msg) => {
               return (
                 <>
-                  <div className={`chat ${msg.senderId === userInfo.id ? 'chat-end' : 'chat-start'} mt-2 `}>
-                    {/* <div className="chat-header">
-                      Anakin
-                    </div> */}
-                    {msg.senderId === userInfo.id && (<time className="text-xs opacity-50">{calculateTime(msg.updatedAt)}</time>)}
-                    <div className={`chat-bubble rounded-lg  shadow-xl text-sm text-white ${msg.senderId === userInfo.id ? 'bg-blue-500' : 'bg-blue-800'}`}>{msg.message}</div>
+                  <div className={`chat ${msg.senderId === userInfo.id ? 'chat-end' : 'chat-start'} mt-2 relative`}>
+                    {msg.senderId === userInfo.id && (<time className="text-xs opacity-50 absolute z-10 text-white right-5 bottom-2">{calculateTime(msg.updatedAt)}</time>)}
+                    <div className={`chat-bubble rounded-lg shadow-xl text-sm text-white ${msg.senderId === userInfo.id ? 'bg-blue-500' : 'bg-blue-800'}`}><span className='mr-12'>{msg.message}</span></div>
                   </div>
                 </>
               )
@@ -447,13 +443,12 @@ function UserChats() {
               <input type='text' value={text} onChange={(e) => setText(e.target.value)} className='px-12 w-11/12 rounded-lg shadow-xl ' />
             </form>
             <BsEmojiSmile onClick={toggleEmojiModal} className='absolute left-3 bottom-6 hover:text-gray-500 active:scale-[1.08] text-2xl transition-opacity cursor-pointer' />
-
             <div className='absolute left-3 bottom-16'>
               <EmojiPicker open={showEmoji} onEmojiClick={handleEmogiClick} />
             </div>
-            <TbSend2 className={`absolute right-20 bottom-6 text-2xl transition-opacity cursor-pointer ${!text.length ? 'opacity-0' : 'opacity-100'}`}
+            <TbSend2 className={`absolute md:right-14 lg:right-16 xl:right-20 bottom-6 text-2xl transition-opacity cursor-pointer ${!text.length ? 'opacity-0' : 'opacity-100'}`}
             />
-            <TbSend onClick={addToMessages} className={`absolute right-20 bottom-6 text-2xl transition-opacity cursor-pointer ${text.length ? 'opacity-0' : 'opacity-100'}`}
+            <TbSend onClick={addToMessages} className={`absolute md:right-14 lg:right-16 xl:right-20 bottom-6 text-2xl transition-opacity cursor-pointer ${text.length ? 'opacity-0' : 'opacity-100'}`}
             />
           </div>
           <div ref={pageEndRef} />

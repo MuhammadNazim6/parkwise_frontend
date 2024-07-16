@@ -6,7 +6,7 @@ import Lottie from 'lottie-react'
 import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '@/redux/store';
-import { useUpdateProfileMutation, useFetchUserProfilePicMutation, useGetUserDetailsMutation, useFetchUserBookingsCountMutation } from '@/redux/slices/userApiSlice';
+import { useUpdateProfileMutation, useFetchUserProfilePicMutation, useGetUserDetailsMutation, useFetchUserBookingsCountMutation ,useFetchUserChatCountMutation} from '@/redux/slices/userApiSlice';
 import { setCredentials } from '@/redux/slices/authSlice';
 import boxLoader from '../../assets/Animation/boxLoader.json'
 import profile_icon from '../../assets/Images/profile-icon.jpg'
@@ -40,6 +40,7 @@ function UserProfile() {
   const [getProfilePic] = useFetchUserProfilePicMutation()
   const [getUserDetails] = useGetUserDetailsMutation()
   const [getUserBookingsCount] = useFetchUserBookingsCountMutation()
+  const [getChatCount] = useFetchUserChatCountMutation()
   const { toast } = useToast()
   const { isOpen: isBookingsModalOpen, onOpen: openBookingsModal, onClose: closeBookingsModal } = useDisclosure()
   const { isOpen: isOtpModalOpen, onOpen: openOtpModal, onClose: closeOtpModal } = useDisclosure()
@@ -55,11 +56,13 @@ function UserProfile() {
   const [otpErr, setOtpErr] = useState('')
   const [bookingCount, setBookingCount] = useState(0)
   const [bookingsPage, setBookingsPage] = useState(1)
+  const [chatCount, setChatCount] = useState(0)
 
   useEffect(() => {
     fetchUserProfilePic()
     fetchUserDetails()
     fetchBookingsCount()
+    fetchChatCount()
   }, [userInfo])
 
   const fetchUserProfilePic = async () => {
@@ -79,6 +82,12 @@ function UserProfile() {
     const response = await getUserBookingsCount(userInfo.id).unwrap()
     if (response.success) {
       setBookingCount(response.data)
+    }
+  }
+  const fetchChatCount = async () => {
+    const response = await getChatCount(userInfo.id).unwrap()
+    if (response.success) {
+      setChatCount(response.data)
     }
   }
 
@@ -300,12 +309,12 @@ function UserProfile() {
                 <span className='cursor-pointer'>
                   <CountUp
                     className='md:text-2xl'
-                    end={33}
+                    end={chatCount}
                     duration={4}
                     delay={1}
                   />
                 </span>
-                <p className='text-sm cursor-pointer text-nowrap'>Messages</p>
+                <p className='text-sm cursor-pointer text-nowrap'>Chats</p>
               </Link>
             </div>
             <div className="flex bg-gray-100 justify-between m-5 rounded-lg shadow-md transition-transform hover:scale-[1.01] ease-in-out duration-300">

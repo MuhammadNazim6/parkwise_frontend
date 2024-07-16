@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import {
   Modal,
   ModalOverlay,
@@ -16,14 +16,29 @@ import { Formik } from "formik";
 import * as Yup from "yup";
 import Lottie from 'lottie-react';
 import boxLoader from '../../../assets/Animation/boxLoader.json'
+import { FaEyeSlash, FaEye } from "react-icons/fa";
+
 
 
 const UserChangePassModal = ({ isOpen, onClose, userId, userEmail }) => {
+  const [showCurrPass, setShowCurrPass] = useState(false);
+  const [showNewPass, setShowNewPass] = useState(false);
+  const [showConfirmPass, setShowConfirmPass] = useState(false);
+
   const passwordRegex = /^(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?])(?=.*[a-zA-Z0-9]).{6,}$/;
   const { toast } = useToast()
   const [checkPassword, { isLoading: isCheckLoading }] = useCheckUserPasswordMutation()
   const [changePassword, { isLoading }] = useComChangePasswordMutation()
 
+  const toggleCurrPassVisibility = () => {
+    setShowCurrPass(!showCurrPass);
+  };
+  const toggleConfPassVisibility = () => {
+    setShowConfirmPass(!showConfirmPass);
+  }
+  const toggleNewPassVisibility = () => {
+    setShowNewPass(!showNewPass);
+  }
   return (
     <div className="">
       <Modal closeOnOverlayClick={false} isOpen={isOpen} onClose={onClose} size={'2xl'}>
@@ -100,12 +115,42 @@ const UserChangePassModal = ({ isOpen, onClose, userId, userEmail }) => {
                 return (
                   <>
                     <form onSubmit={handleSubmit}>
-                      <div className="">
-                        <FloatingLabelInput label='Current password' id='currentPass' type='text' value={values.currentPass} onChange={handleChange} errorMsg={errors.currentPass} touched={touched.currentPass} />
-                        <FloatingLabelInput label='New password' id='newPass' type='text' value={values.newPass} onChange={handleChange} errorMsg={errors.newPass} touched={touched.newPass} />
-                        <FloatingLabelInput label='Confirm password' id='confirmPass' type='text' value={values.confirmPass} onChange={handleChange} errorMsg={errors.confirmPass} touched={touched.confirmPass} />
+                      <div className="w-full">
+
+                        <div className="flex justify-between w-full relative">
+                          <FloatingLabelInput label='Current password' id='currentPass' type={showCurrPass ? 'text' : 'password'} value={values.currentPass} onChange={handleChange} errorMsg={errors.currentPass} touched={touched.currentPass} />
+                          <button
+                            type="button"
+                            onClick={toggleCurrPassVisibility}
+                            className="absolute right-3 top-10 flex justify-center items-center text-xl md:text-2xl text-gray-400"
+                          >
+                            {showCurrPass ? (<FaEyeSlash />) : (<FaEye />)}
+                          </button>
+                        </div>
+
+                        <div className="flex justify-between w-full relative">
+                          <FloatingLabelInput label='New password' id='newPass' type={showNewPass ? 'text' : 'password'} value={values.newPass} onChange={handleChange} errorMsg={errors.newPass} touched={touched.newPass} />
+                          <button
+                            type="button"
+                            onClick={toggleNewPassVisibility}
+                            className="absolute right-3 top-10 flex justify-center items-center text-xl md:text-2xl text-gray-400"
+                          >
+                            {showNewPass ? (<FaEyeSlash />) : (<FaEye />)}
+                          </button>
+                        </div>
+
+                        <div className="flex justify-between w-full relative">
+                          <FloatingLabelInput label='Confirm password' id='confirmPass' type={showConfirmPass ? 'text' : 'password'} value={values.confirmPass} onChange={handleChange} errorMsg={errors.confirmPass} touched={touched.confirmPass} />
+                          <button
+                            type="button"
+                            onClick={toggleConfPassVisibility}
+                            className="absolute right-3 top-10 flex justify-center items-center text-xl md:text-2xl text-gray-400"
+                          >
+                            {showConfirmPass ? (<FaEyeSlash />) : (<FaEye />)}
+                          </button>
+                        </div>
                       </div>
-                    
+
 
                       <div className="flex justify-end">
                         {isCheckLoading || isLoading ? (
@@ -114,10 +159,10 @@ const UserChangePassModal = ({ isOpen, onClose, userId, userEmail }) => {
                           </div>
 
                         ) : (<div className="mt-5">
-                          <button type='submit' className='btn bg-primary-provider hover:bg-secondary-provider text-sm  text-white font-semibold p-1 m-2 w-24 rounded transition-colors duration-300'>
+                          <button type='submit' className='btn bg-primary-blue text-black hover:bg-secondary-provider text-sm font-semibold p-1 m-2 w-24 rounded transition-colors duration-300'>
                             Save
                           </button>
-                          <button type='button' onClick={onClose} className='btn bg-gray-400 hover:bg-gray-300 text-sm  text-white font-semibold p-1 m-2 w-24 rounded transition-colors duration-300'>
+                          <button type='button' onClick={onClose} className='btn bg-gray-400 hover:bg-gray-300 text-sm  text-black font-semibold p-1 m-2 w-24 rounded transition-colors duration-300'>
                             Cancel
                           </button>
                         </div>)}

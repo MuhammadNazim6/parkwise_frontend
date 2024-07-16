@@ -4,7 +4,7 @@ const FloatingLabelInput = ({ label, id, type, value, onChange, errorMsg, touche
   const [isFocused, setIsFocused] = useState(false);
 
   return (
-    <div className="relative mt-6">
+    <div className="relative mt-6 w-full">
       <input
         type={type}
         id={id}

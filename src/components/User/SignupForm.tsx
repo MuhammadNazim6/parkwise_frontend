@@ -45,7 +45,6 @@ export default function SignupForm(props) {
     setShowCPassword(!showCPassword);
   }
 
-
   const Glogin = useGoogleLogin({
     onSuccess: async (response) => {
       try {

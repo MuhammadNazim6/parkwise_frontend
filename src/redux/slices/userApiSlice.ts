@@ -239,6 +239,17 @@ export const userApiSlice = apiSlice.injectEndpoints({
       onQueryStarted: onQueryStartedErrorToast
     }),
 
+    fetchUserChatCount: builder.mutation({
+      query: (userId) => ({
+        url: `${USER_URL}/chatCount/${userId}`,
+        method: "GET",
+        data: {},
+        params: {},
+        headers: {},
+      }),
+      onQueryStarted: onQueryStartedErrorToast
+    }),
+
     fetchFeedbacks: builder.mutation({
       query: (lotId) => ({
         url: `${USER_URL}/getLotFeedbacks/${lotId}`,
@@ -287,6 +298,7 @@ export const {
   useRescheduleSlotsMutation,
   useGetUserDetailsMutation,
   useFetchUserBookingsCountMutation,
+  useFetchUserChatCountMutation,
   useFetchFeedbacksMutation,
   useAddFeedbackMutation
 } = userApiSlice;

@@ -19,8 +19,6 @@ import {
 import { RootState } from '@/redux/store';
 import { Loader } from '@/components/Common/BootstrapElems'
 
-
-
 function Navbar() {
 
   const activeStyle = {
@@ -30,12 +28,11 @@ function Navbar() {
   };
 
   const [nav, setNav] = useState(true)
-  const handleNav = () => {
+  const toggleNav = () => {
     setNav(!nav)
   }
   const { userInfo } = useSelector((state: RootState) => state.auth)
- 
-  const [logout, { isLoading:isLoggingOut }] = useLogoutMutation()
+  const [logout, { isLoading: isLoggingOut }] = useLogoutMutation()
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const handleLogout = async () => {
@@ -44,11 +41,15 @@ function Navbar() {
     dispatch(userLogout())
     setNav(!nav)
     navigate('')
-
+  }
+  
+  const handleNavRouting = (route)=>{
+    navigate(route)
+    toggleNav()
   }
   return (
     <div className='flex justify-between items-center h-24 max-w-[1240px] mx-auto px-4  text-black'>
-      <h1 className='w-full text-3xl font-bold'><img className='w-40 cursor-pointer' src={LogoImg} /></h1>
+      <h1 className='w-full text-3xl font-bold'><img className='w-40 cursor-pointer' onClick={() => navigate('')} src={LogoImg} /></h1>
       <ul className='hidden md:flex'>
         <NavLink to='/' end style={({ isActive }) => (isActive ? activeStyle : undefined)}>
           <li className='p-4 cursor-pointer text-md w-28 '>Home</li>
@@ -65,7 +66,7 @@ function Navbar() {
 
         {userInfo ? (
           <AlertDialog>
-            <AlertDialogTrigger>  { isLoggingOut ? <div className="w-28 mt-1"><Loader/></div> : <li className='text-md w-28'>Logout </li> }
+            <AlertDialogTrigger>  {isLoggingOut ? <div className="w-28 mt-1"><Loader /></div> : <li className='text-md w-28'>Logout </li>}
             </AlertDialogTrigger>
             <AlertDialogContent>
               <AlertDialogHeader>
@@ -87,19 +88,17 @@ function Navbar() {
             List your property
           </button>
         </Link>
-
-
       </ul>
-      <div onClick={handleNav} className='block md:hidden '>
+      <div onClick={toggleNav} className='block md:hidden'>
         {!nav ? <AiOutlineClose size={25} className='cursor-pointer' /> : <AiOutlineMenu size={25} className='cursor-pointer' />}
       </div>
-      <div className={!nav ? 'fixed left-0 top-0 w-[70%] h-full border-r bg-white ease-in-out duration-500  md:hidden z-20' : 'fixed left-[-100%] top-0 w-[60%] h-full border-r border-r-gray-900 bg-primary-blue ease-in-out duration-700 z-20'}>
+      <div className={!nav ? 'fixed left-0 top-0 w-[70%] h-full border-r bg-white ease-in-out duration-500  md:hidden z-30 shadow-2xl' : 'fixed left-[-100%] top-0 w-[60%] h-full border-r border-r-gray-900 bg-primary-blue ease-in-out duration-700 z-20'}>
         <ul className=' p-4'>
-          <li className='p-4 mt-6'><NavLink style={({ isActive }) => (isActive ? activeStyle : undefined)} to="/">Home</NavLink></li>
-          <li className='p-4 border-t-2'><NavLink style={({ isActive }) => (isActive ? activeStyle : undefined)} to="/user/find">Find spots</NavLink></li>
-          {userInfo ? (<li className='p-4 border-t-2'><NavLink style={({ isActive }) => (isActive ? activeStyle : undefined)} to="/user/profile">Profile</NavLink></li>) : null}
+          <li  onClick={()=>handleNavRouting('/')} className='p-4'><NavLink style={({ isActive }) => (isActive ? activeStyle : undefined)} to="/">Home</NavLink></li>
+          <li  onClick={()=>handleNavRouting('/user/find')} className='p-4 border-t-2'><NavLink style={({ isActive }) => (isActive ? activeStyle : undefined)} to="/user/find">Find spots</NavLink></li>
+          {userInfo ? (<li  onClick={()=>handleNavRouting('/user/profile')} className='p-4 border-t-2'><NavLink style={({ isActive }) => (isActive ? activeStyle : undefined)} to="/user/profile">Profile</NavLink></li>) : null}
 
-          {userInfo ? (<li className='p-4 border-t-2'><NavLink style={({ isActive }) => (isActive ? activeStyle : undefined)} to="/user/chats">Chats</NavLink></li>) : null}
+          {userInfo ? (<li  onClick={()=>handleNavRouting('/user/chats')} className='p-4 border-t-2'><NavLink style={({ isActive }) => (isActive ? activeStyle : undefined)} to="/user/chats">Chats</NavLink></li>) : null}
 
           <li className='p-4 border-t-2'>{userInfo ? (
             <AlertDialog>
@@ -119,6 +118,8 @@ function Navbar() {
           ) : (<Link to="/login">Signin</Link>)}</li>
           <li className='p-4 border-t-2 capitalize'><Link to="/provider/signup">List your property</Link></li>
         </ul>
+      </div>
+      <div className={!nav ? 'h-screen w-[100%] fixed right-0 top-0 ease-in-out duration-1000 z-20 bg-black bg-opacity-35' : 'left-[10%] ease-in-out duration-1000'} onClick={toggleNav}>
       </div>
     </div>
   )

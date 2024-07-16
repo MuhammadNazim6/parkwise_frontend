@@ -17,9 +17,9 @@ function Banner2() {
           <img className="absolute top-48 left-96 w-1/2 rounded-xl hidden xl:block" style={{ maxWidth: '140px', height: 'auto' }} src={overlapImg} alt="Overlapping Image" />
         </div>
 
-        <div className="md:w-1/2 md:pr-8">
-          <h1 className='font-bold text-4xl md:text-3xl p-5 mt-5'> "How It Works: Your Step-by-Step Guide to Seamless Parking"</h1>
-          <p className='text-slate-600 mt-4 md:text-lg p-2'>Locate Parking: Simply search a location or enable live location to instantly find nearby parking spots.</p>
+        <div className="md:w-1/2 md:pr-8 text-center md:text-start">
+          <h1 className='font-bold text-2xl md:text-3xl p-5 mt-5 '> How It Works: Your Step-by-Step Guide to Seamless Parking</h1>
+          <p className='text-slate-600 mt-4 md:text-lg p-2 '>Locate Parking: Simply search a location or enable live location to instantly find nearby parking spots.</p>
           <p className='text-slate-600 mt-4 md:text-lg p-2'>Review and Reserve: Browse through available options, check real-time availability, and reserve your spot with just a few taps.</p>
           <p className='text-slate-600 mt-4 md:text-lg p-2'>Navigate with Ease: Use our integrated navigation system to effortlessly reach your reserved parking space, ensuring a stress-free parking experience.</p>
         </div>

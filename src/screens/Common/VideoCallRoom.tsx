@@ -25,7 +25,7 @@ function VideoCallRoom() {
 
   return (
     <div>
-      <div ref={videoChat} />
+      <div className='bg-black h-screen' ref={videoChat} />
     </div>
   )
 }
