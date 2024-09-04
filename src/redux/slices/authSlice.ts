@@ -38,7 +38,6 @@ const authSlice = createSlice({
       state.providerInfo = action.payload;
       localStorage.setItem("providerInfo", JSON.stringify(action.payload));
     },
-
     providerLogout: (state) => {
       state.pLoggedIn = false;
       localStorage.removeItem('pLoggedIn');
@@ -53,7 +52,6 @@ const authSlice = createSlice({
       localStorage.setItem("adminInfo", JSON.stringify(action.payload));
       localStorage.removeItem('token')
     },
-
     adminLogout: (state) => {
       state.aLoggedIn = false;
       localStorage.removeItem('aLoggedIn');
@@ -65,12 +63,10 @@ const authSlice = createSlice({
       state.emailInfo = action.payload;
       localStorage.setItem('emailInfo', JSON.stringify(action.payload))
     },
-
     deleteEmailInfo: (state) => {
       state.emailInfo = null;
       localStorage.removeItem("emailInfo");
     }
-
   }
 })
 

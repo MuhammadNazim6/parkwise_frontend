@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import { IoMdBatteryCharging } from "react-icons/io";
 import HeroImage from "../../assets/Images/68477b6e-7741-423d-86b1-bf94fde5f12b_1344x896.jpg";
 import { Slider } from "@/components/ui/slider"
@@ -13,6 +13,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { setSearchData } from "@/redux/slices/searchSlice";
 import { RootState } from "@/redux/store";
 import { BiCurrentLocation } from "react-icons/bi";
+import { IoFilterSharp } from "react-icons/io5";
+import { BsFilterLeft } from "react-icons/bs";
+
+
 import {
   Pagination,
   PaginationContent,
@@ -135,12 +139,12 @@ function UserFindLots() {
       </div>
 
       <div className="md:block hidden w-1/6 fixed text-sm pt-4 bg-blue-300 rounded-tr-2xl glass mt-3">
-        <div className="flex justify-start px-8 text-xl text-gray-700 font-semibold tracking-widest rounded-t-2xl">
-          Filters
+        <div className="flex justify-start px-8 text-[15px] text-gray-700 tracking-widest rounded-t-2xl">
+          Filter
         </div>
         <div className="p-6 pb-1 mt-4">
-          <div className="text-[15px] p-1 text-gray-800 tracking-wider flex justify-start mb-3 ml-1">
-            Slot Price: <span className="ml-2 text-[16px]">Rs {price}</span>
+          <div className="text-[14px] p-1 text-gray-800 tracking-wider flex justify-start mb-3 ml-1">
+            Slot Price: <span className="ml-2 text-[14px]">Rs {price}</span>
           </div>
           <div className="text-lg text-black tracking-wider flex justify-center items-center cursor-pointer ml-1">
             <Slider
@@ -154,7 +158,7 @@ function UserFindLots() {
         </div>
 
         {/* SERVICES CHECKBOX */}
-        <div className="text-md text-gray-800 tracking-wider lg:p-12 p-6 shadow-xl rounded-b-xl h-screen ">
+        <div className="text-md text-gray-800 tracking-wider  md:p-2 lg:p-8 shadow-xl rounded-b-xl h-screen ">
           <label className="flex text-[14px] items-center cursor-pointer mb-4 hover:bg-gray-100 p-2 rounded transition-colors duration-300" htmlFor="airPressure">
             <Checkbox
               id={AIR_PRESSURE}
@@ -182,6 +186,57 @@ function UserFindLots() {
         </div>
       </div>
 
+      <div className="block md:hidden absolute">
+        <div className="dropdown dropdown-right p-1">
+          <div tabIndex={0} role="button" className="m-1 p-1"><BsFilterLeft  className="text-2xl"/>  </div>
+          <ul tabIndex={0} className="dropdown-content bg-white menu z-[1] w-96 p-2 rounded-4xl shadow-lg rounded-lg">
+
+            <div className="p-6 pb-1 mt-4">
+              <div className="text-[14px] p-1 text-gray-800 tracking-wider flex justify-start mb-3 ml-1">
+                Slot Price: <span className="ml-2 text-[14px]">Rs {price}</span>
+              </div>
+              <div className="text-lg text-black tracking-wider flex justify-center items-center cursor-pointer ml-1">
+                <Slider
+                  defaultValue={[price]}
+                  max={400}
+                  step={20}
+                  onValueChange={handlePriceChange}
+                  className="w-full"
+                />
+              </div>
+            </div>
+
+            <div className="text-md text-gray-800 lg:p-12 p-6">
+              <label className="flex items-center cursor-pointer mb-2 text-[14px] hover:bg-gray-100 p-2 rounded transition-colors duration-300">
+                <Checkbox
+                  id={AIR_PRESSURE}
+                  onClick={() => handleServiceChange(AIR_PRESSURE)}
+                  className="mr-3 cursor-pointer"
+                />
+                Air Pressure
+              </label>
+              <label className="flex items-center cursor-pointer mb-2 text-[14px] hover:bg-gray-100 p-2 rounded transition-colors duration-300">
+                <Checkbox
+                  id={WATER_SERVICE}
+                  onClick={() => handleServiceChange(WATER_SERVICE)}
+                  className="mr-3 cursor-pointer"
+                />
+                Water Service
+              </label>
+              <label className="flex items-center mb-2 cursor-pointer text-[14px] hover:bg-gray-100 p-2 rounded transition-colors duration-300">
+                <Checkbox
+                  id={EV_CHARGING}
+                  onClick={() => handleServiceChange(EV_CHARGING)}
+                  className="mr-3 cursor-pointer"
+                />
+                EV Charging
+              </label>
+            </div>
+
+          </ul>
+        </div>
+      </div>
+
       {
         isLoading ? (
           <div className="md:px-16 md:w-5/6 h-screen ml-auto bg-white relative">
@@ -191,7 +246,7 @@ function UserFindLots() {
             </div>
           </div>
         ) : (parkingLots.length > 0 ? (
-          <div className="md:px-16 md:w-5/6 h-screen ml-auto bg-white">
+          <div className="md:px-16 md:w-5/6 h-screen ml-auto bg-white md:mt-0 mt-7">
             <ul className="p-4">
               {/* Parking lot list */}
               {parkingLots.map((lot) => (

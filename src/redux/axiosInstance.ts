@@ -17,7 +17,7 @@ axiosInstance.interceptors.request.use((config) => {
 
 axiosInstance.interceptors.response.use((response) => {
   console.log(response.request.status);
-  
+
   return response;
 
 }, async (error) => {
@@ -40,3 +40,6 @@ axiosInstance.interceptors.response.use((response) => {
 })
 
 export default axiosInstance
+
+
+

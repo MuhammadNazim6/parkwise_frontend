@@ -70,7 +70,6 @@ export default function SignupForm(props) {
         console.error(error);
       }
     },
-
   });
 
   useEffect(() => {

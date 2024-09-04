@@ -13,8 +13,6 @@ import { useGetSenderNameMutation } from './redux/slices/commonSlice';
 import { useSocket } from './context/SocketProvider';
 import Feedback from '@betahuhn/feedback-js'
 
-
-
 function App() {
   const { userInfo, providerInfo } = useSelector((state: RootState) => state.auth)
   const [getSenderName] = useGetSenderNameMutation()
@@ -114,14 +112,12 @@ function App() {
   return (
     <ChakraProvider>
       <GoogleOAuthProvider clientId={clientId}>
-        {/* <BrowserRouter> */}
         <HotToast
           position="top-right"
           reverseOrder={false}
         />
         <AppRouter />
         <Toaster />
-        {/* </BrowserRouter> */}
       </GoogleOAuthProvider>
     </ChakraProvider>
   )
