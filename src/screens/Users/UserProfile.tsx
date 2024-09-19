@@ -222,9 +222,14 @@ function UserProfile() {
                   .min(10, "Enter a valid mobile number")
                   .max(10, "Enter a valid mobile number")
                   .required("Mobile number is required"),
-                email: Yup.string()
-                  .email("Invalid email address")
-                  .required("Email is required"),
+                email:Yup.string()
+                .trim()
+                .lowercase()
+                .matches(
+                  /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/,
+                  "Please enter a valid email address"
+                )
+                .required("Email is required")
               })}
             >
               {(props) => {

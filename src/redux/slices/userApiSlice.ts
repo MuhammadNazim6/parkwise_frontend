@@ -261,10 +261,32 @@ export const userApiSlice = apiSlice.injectEndpoints({
       onQueryStarted: onQueryStartedErrorToast
     }),
 
+    checkIsAllowedToRate: builder.mutation({
+      query: (data) => ({
+        url: `${USER_URL}/checkIsAllowedToRate/${data.lotId}/${data.userId}`,
+        method: "GET",
+        data: {},
+        params: {},
+        headers: {},
+      }),
+      onQueryStarted: onQueryStartedErrorToast
+    }),
+
     addFeedback: builder.mutation({
       query: (data) => ({
         url: `${USER_URL}/addFeedback`,
         method: "POST",
+        data: data,
+        params: {},
+        headers: {},
+      }),
+      onQueryStarted: onQueryStartedErrorToast
+    }),
+
+    deleteFeedback: builder.mutation({
+      query: (data) => ({
+        url: `${USER_URL}/deleteFeedback`,
+        method: "DELETE",
         data: data,
         params: {},
         headers: {},
@@ -300,5 +322,7 @@ export const {
   useFetchUserBookingsCountMutation,
   useFetchUserChatCountMutation,
   useFetchFeedbacksMutation,
-  useAddFeedbackMutation
+  useAddFeedbackMutation,
+  useDeleteFeedbackMutation,
+  useCheckIsAllowedToRateMutation
 } = userApiSlice;
