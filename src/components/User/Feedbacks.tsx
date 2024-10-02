@@ -70,7 +70,7 @@ function Feedbacks({ lotId }) {
   const calculateAvgRating = () => {
     const total = feedbacks.reduce((a, c) => a + c.rating, 0);
     const avg = total / feedbacks.length;
-    if (avg == 0) {
+    if (feedbacks.length == 0) {
       setAvgRating(0)
     } else {
       setAvgRating(avg)

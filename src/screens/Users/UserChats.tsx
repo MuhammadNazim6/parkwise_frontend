@@ -8,9 +8,7 @@ import {
   DrawerBody,
   DrawerFooter,
   DrawerHeader,
-  DrawerOverlay,
   DrawerContent,
-  DrawerCloseButton,
   useBreakpointValue
 } from '@chakra-ui/react'
 import { IoChevronBackSharp } from "react-icons/io5";
@@ -297,38 +295,63 @@ function UserChats() {
           </div>
         </Collapse>
 
-        {filteredConnections.length ? (filteredConnections.map((user, index) => {
-          return (
-
-            <div key={user.secondPersonId._id} className={`flex w-full border-b border-slate-100 ${user.secondPersonId._id === receiverId ? 'bg-slate-200' : ''}`} onClick={openDrawer}>
-              <div className="flex p-3 w-full cursor-pointer" onClick={() => handleFetchMessages(user.secondPersonId._id)}>
-                <div className="flex w-full space-x-2">
-                  <Wrap>
-                    <WrapItem>
-                      <Avatar name={user.secondPersonId.parkingName} src='https://bit.ly/tioluwani-kolawole' />
-                    </WrapItem>
-                  </Wrap>
-                  <div className="w-full text-sm font-semibold mt-2 capitalize">
-                    <div className="flex justify-between">
-                      <p>{user.secondPersonId.parkingName}</p>
+        {getConnectionsLoading ? (
+          // Placeholder animationss heree
+          <div className='mt-4'>
+            {Array.from({ length: 4 }).map((_, index) => (
+              <div
+                key={index}
+                className="flex w-full border-b border-slate-100 animate-pulse mt-1"
+              >
+                <div className="flex p-3 w-full">
+                  <div className="flex w-full space-x-2">
+                    <div className="rounded-full bg-slate-300 h-10 w-10"></div>
+                    <div className="flex-1 space-y-3">
+                      <div className="w-3/4 h-4 bg-slate-300 rounded"></div>
+                      <div className="w-full h-3 bg-slate-300 rounded"></div>
                     </div>
-                    <p className='text-[12px] font-normal text-gray-700'> {user.lastMessage}</p>
                   </div>
                 </div>
+                <div className="flex justify-start p-4">
+                  <div className="w-12 h-3 bg-slate-300 rounded"></div>
+                </div>
               </div>
-              <div className="flex justify-start bg-grady-500 p-4">
-                <p className='text-[12px] font-normal text-gray-600'> {calculateTime(user.updatedAt)}</p>
-              </div>
-            </div>
-          )
-        })) :
-          (
-            <div className="flex justify-center items-start mt-24">
-              <img src={no_messagesImg} className='h-60 opacity-75' />
-            </div>
-          )
+            ))}
+          </div>)
+          :
+          (filteredConnections.length ? (filteredConnections.map((user, index) => {
+            return (
 
-        }
+              <div key={user.secondPersonId._id} className={`flex w-full border-b border-slate-100 ${user.secondPersonId._id === receiverId ? 'bg-slate-200' : ''}`} onClick={openDrawer}>
+                <div className="flex p-3 w-full cursor-pointer" onClick={() => handleFetchMessages(user.secondPersonId._id)}>
+                  <div className="flex w-full space-x-2">
+                    <Wrap>
+                      <WrapItem>
+                        <Avatar name={user.secondPersonId.parkingName} src='https://bit.ly/tioluwani-kolawole' />
+                      </WrapItem>
+                    </Wrap>
+                    <div className="w-full text-sm font-semibold mt-2 capitalize">
+                      <div className="flex justify-between">
+                        <p>{user.secondPersonId.parkingName}</p>
+                      </div>
+                      <p className='text-[12px] font-normal text-gray-700'> {user.lastMessage}</p>
+                    </div>
+                  </div>
+                </div>
+                <div className="flex justify-start bg-grady-500 p-4">
+                  <p className='text-[12px] font-normal text-gray-600'> {user.updatedAt ? calculateTime(user.updatedAt) : calculateTime(new Date())}</p>
+                </div>
+              </div>
+            )
+          })) :
+            (
+              <div className="flex justify-center items-start mt-24">
+                <img src={no_messagesImg} className='h-60 opacity-75' />
+              </div>
+            )
+
+          )}
+
 
         {/* DRAWER */}
         {isFullScreen && <Drawer
@@ -370,10 +393,35 @@ function UserChats() {
               {messages.map((msg) => {
                 return (
                   <>
-                    <div className={`chat ${msg.senderId === userInfo.id ? 'chat-end' : 'chat-start'} mt-2 relative`}>
-                      {msg.senderId === userInfo.id && (<time className="text-xs opacity-50 absolute z-10 text-white right-5 bottom-2">{calculateTime(msg.updatedAt)}</time>)}
-                      <div className={`chat-bubble rounded-lg shadow-xl text-sm text-white ${msg.senderId === userInfo.id ? 'bg-blue-500' : 'bg-blue-800'}`}><span className='mr-10'>{msg.message}</span></div>
-                    </div>
+                    {getMessagesLoading ?
+                      (
+                        // Chat bubble skeleton
+                        <div>
+                          {Array.from({ length: 3 }).map((_, index) => (
+                            <div
+                              key={index}
+                              className={`chat ${index % 2 === 0 ? 'chat-end' : 'chat-start'} mt-2 relative animate-pulse`}
+                            >
+                              <div
+                                className={`chat-bubble rounded-lg shadow-xl text-sm p-2 ${index % 2 === 0 ? 'bg-slate-300' : 'bg-slate-400'
+                                  }`}
+                              >
+                                <div className="w-28 h-4 bg-gray-300 rounded mb-2"></div>
+                                <div className="w-20 h-4 bg-gray-300 rounded"></div>
+                              </div>
+
+                              {index % 2 === 0 && (
+                                <div className="absolute right-5 bottom-2">
+                                  <div className="w-8 h-3 bg-gray-300 rounded"></div>
+                                </div>
+                              )}
+                            </div>
+                          ))}
+                        </div>) :
+                      (<div className={`chat ${msg.senderId === userInfo.id ? 'chat-end' : 'chat-start'} mt-2 relative`}>
+                        {msg.senderId === userInfo.id && (<time className="text-xs opacity-50 absolute z-10 text-white right-5 bottom-2">{calculateTime(msg.updatedAt)}</time>)}
+                        <div className={`chat-bubble rounded-lg shadow-xl text-sm text-white ${msg.senderId === userInfo.id ? 'bg-blue-500' : 'bg-blue-800'}`}><span className='mr-10'>{msg.message}</span></div>
+                      </div>)}
                   </>
                 )
               })}
@@ -426,16 +474,40 @@ function UserChats() {
           </div>
 
           <div className="p-5">
-            {messages.map((msg) => {
-              return (
-                <>
-                  <div className={`chat ${msg.senderId === userInfo.id ? 'chat-end' : 'chat-start'} mt-2 relative`}>
-                    {msg.senderId === userInfo.id && (<time className="text-xs opacity-50 absolute z-10 text-white right-5 bottom-2">{calculateTime(msg.updatedAt)}</time>)}
-                    <div className={`chat-bubble rounded-lg shadow-xl text-sm text-white ${msg.senderId === userInfo.id ? 'bg-blue-500' : 'bg-blue-800'}`}><span className='mr-12'>{msg.message}</span></div>
+            {
+              // Chat bubble skeleton
+              getMessagesLoading ? (<div>
+                {Array.from({ length: 3 }).map((_, index) => (
+                  <div
+                    key={index}
+                    className={`chat ${index % 2 === 0 ? 'chat-end' : 'chat-start'} mt-2 relative animate-pulse`}
+                  >
+                    <div
+                      className={`chat-bubble rounded-lg shadow-xl text-sm p-2 ${index % 2 === 0 ? 'bg-slate-300' : 'bg-slate-400'
+                        }`}
+                    >
+                      <div className="w-28 h-4 bg-gray-300 rounded mb-2"></div>
+                      <div className="w-20 h-4 bg-gray-300 rounded"></div>
+                    </div>
+
+                    {index % 2 === 0 && (
+                      <div className="absolute right-5 bottom-2">
+                        <div className="w-8 h-3 bg-gray-300 rounded"></div>
+                      </div>
+                    )}
                   </div>
-                </>
-              )
-            })}
+                ))}
+              </div>) :
+                (messages.map((msg) => {
+                  return (
+                    <>
+                      <div className={`chat ${msg.senderId === userInfo.id ? 'chat-end' : 'chat-start'} mt-2 relative`}>
+                        {msg.senderId === userInfo.id && (<time className="text-xs opacity-50 absolute z-10 text-white right-5 bottom-2">{calculateTime(msg.updatedAt)}</time>)}
+                        <div className={`chat-bubble rounded-lg shadow-xl text-sm text-white ${msg.senderId === userInfo.id ? 'bg-blue-500' : 'bg-blue-800'}`}><span className='mr-12'>{msg.message}</span></div>
+                      </div>
+                    </>
+                  )
+                }))}
             <div className='h-4' ref={messagesEndRef} />
           </div>
           <div className="fixed bottom-0 right-2  bg-white h-14 rounded-md w-[56%] mr-2">
